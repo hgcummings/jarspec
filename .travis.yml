@@ -2,8 +2,6 @@ language: java
 jdk:
 - oraclejdk8
 after_success:
-- echo $TRAVIS_BUILD_DIR
-- pwd
 - mvn site
 - cd ./target/site
 - git config --global user.email "hgcummings.jarspec@travis-ci.org"
