@@ -16,8 +16,8 @@ public class AdditionSpec implements Specification {
                 int result = 1 + 1;
 
                 return by(
-                    it("should equal 2", () -> assertEquals(2, result)),
-                    it("should equal 3", () -> assertEquals(3, result))
+                    it("equals 2", () -> assertEquals(2, result)),
+                    it("equals 3", () -> assertEquals(3, result))
                 );
             })
         );

@@ -15,7 +15,7 @@ public interface ExceptionBehaviour {
      */
     default public <T extends Throwable> SpecificationNode itThrows(Class<T> throwable, String forCase, Test testCase) {
         return new SpecificationNode.Statement(
-            String.format("should throw %s %s", throwable.getSimpleName(), forCase),
+            String.format("throws %s %s", throwable.getSimpleName(), forCase),
             () -> {
                 Throwable exception = null;
                 try {

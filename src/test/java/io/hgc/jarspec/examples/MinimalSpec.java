@@ -11,8 +11,8 @@ import static org.junit.Assert.assertTrue;
 public class MinimalSpec implements Specification {
     @Override
     public SpecificationNode root() {
-        return describe("A specification", () ->
-            it("should contain a statement with a test", () -> assertTrue(true))
+        return describe("This specification", () ->
+            it("contains a statement with a test", () -> assertTrue(true))
         );
     }
 }

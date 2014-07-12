@@ -6,8 +6,8 @@
 public class MinimalSpec implements Specification {
     @Override
     public SpecificationNode root() {
-        return describe("A specification", () ->
-            it("should contain a statement with a test", () -> assertTrue(true))
+        return describe("This specification", () ->
+            it("contains a statement with a test", () -> assertTrue(true))
         );
     }
 }
@@ -43,7 +43,7 @@ Then you can add the dependency to your project...
     </dependencies>
 ```
 
-*Optionally* configure SureFire to pick up classes named ...Spec (but you can stick with the ...Test convention if you like)
+Optionally configure SureFire to pick up classes named *Spec (but you can stick with the *Test convention if you like)
 
 ```xml
     <build>

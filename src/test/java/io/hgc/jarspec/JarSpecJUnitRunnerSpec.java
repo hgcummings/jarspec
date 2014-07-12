@@ -8,6 +8,9 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/**
+ * Using {@link io.hgc.jarspec.examples.AdditionSpec} to test the main runner class
+ */
 @RunWith(JarSpecJUnitRunner.class)
 public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour {
     @Override
@@ -32,17 +35,17 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                         assertEquals("addition", description.getMethodName());
 
                         assertEquals(2, description.getChildren().size());
-                        assertEquals("addition of 1+1 should equal 2", description.getChildren().get(0).getMethodName());
-                        assertEquals("addition of 1+1 should equal 3", description.getChildren().get(1).getMethodName());
+                        assertEquals("addition of 1+1 equals 2", description.getChildren().get(0).getMethodName());
+                        assertEquals("addition of 1+1 equals 3", description.getChildren().get(1).getMethodName());
                     })
                 )),
-                it("should report failures correctly", () -> {
+                it("reports failures correctly", () -> {
                     JUnitCore jUnitCore = new JUnitCore();
                     Result result = jUnitCore.run(runner);
                     assertEquals(2, result.getRunCount());
                     assertEquals(1, result.getFailureCount());
                     Failure failure = result.getFailures().get(0);
-                    assertEquals("addition of 1+1 should equal 3", failure.getDescription().getMethodName());
+                    assertEquals("addition of 1+1 equals 3", failure.getDescription().getMethodName());
                 })
             );
         });
