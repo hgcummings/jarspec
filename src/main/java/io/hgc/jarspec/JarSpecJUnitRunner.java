@@ -1,12 +1,11 @@
 package io.hgc.jarspec;
 
-import org.junit.internal.AssumptionViolatedException;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
-import sun.security.krb5.internal.crypto.Des;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class JarSpecJUnitRunner<T extends Supplier<Specification>> extends Runner {
@@ -25,14 +24,22 @@ public class JarSpecJUnitRunner<T extends Supplier<Specification>> extends Runne
     @Override
     public Description getDescription() {
         Specification specification = testInstance.get();
-        return createDescriptionTree(specification);
+        return visitTree(specification, Optional.empty());
     }
 
-    private Description createDescriptionTree(Specification specification) {
-        Description description = createDescriptionNode(specification);
+    private Description visitTree(Specification specification, Optional<RunNotifier> notifier) {
+        return visitTree(testInstance.get(), notifier, "");
+    }
+
+    private Description visitTree(Specification specification, Optional<RunNotifier> notifier, String prefix) {
+        String text = prefix + specification.description();
+        Description description = Description.createTestDescription(testClass, text);
+        if (notifier.isPresent()) {
+            runTest(specification.test(), notifier.get(), description);
+        }
         if (specification.children().length > 0) {
             for (Specification child : specification.children()) {
-                description.addChild(createDescriptionTree(child));
+                description.addChild(visitTree(child, notifier, text + " "));
             }
         }
         return description;
@@ -40,31 +47,19 @@ public class JarSpecJUnitRunner<T extends Supplier<Specification>> extends Runne
 
     @Override
     public void run(RunNotifier notifier) {
-        Specification specification = testInstance.get();
-        run(notifier, specification);
+        visitTree(testInstance.get(), Optional.of(notifier));
     }
 
-    private void run(RunNotifier notifier, Specification specification) {
-        if (specification.children().length > 0) {
-            for (Specification child : specification.children()) {
-                if (child.test().isPresent()) {
-                    Description description = createDescriptionNode(child);
-                    try {
-                        notifier.fireTestStarted(description);
-                        child.test().get().run();
-                    } catch (Throwable e) {
-                        notifier.fireTestFailure(new Failure(description, e));
-                    } finally {
-                        notifier.fireTestFinished(description);
-                    }
-                }
-
-                run(notifier, child);
+    private void runTest(Optional<Runnable> test, RunNotifier notifier, Description description) {
+        if (test.isPresent()) {
+            try {
+                notifier.fireTestStarted(description);
+                test.get().run();
+            } catch (Throwable e) {
+                notifier.fireTestFailure(new Failure(description, e));
+            } finally {
+                notifier.fireTestFinished(description);
             }
         }
-    }
-
-    private Description createDescriptionNode(Specification specification) {
-        return Description.createTestDescription(testClass, specification.description());
     }
 }

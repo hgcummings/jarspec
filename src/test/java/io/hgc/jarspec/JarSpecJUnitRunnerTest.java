@@ -45,27 +45,27 @@ public class JarSpecJUnitRunnerTest {
     }
 
     @Test
-    public void descriptionTextShouldMatchDescribe() {
+    public void descriptionTextShouldIncludeParentContext() {
         Description description = runner.getDescription();
         assertEquals("addition", description.getMethodName());
 
         assertEquals(1, description.getChildren().size());
         description = description.getChildren().get(0);
-        assertEquals("of 1+1", description.getMethodName());
+        assertEquals("addition of 1+1", description.getMethodName());
 
         assertEquals(2, description.getChildren().size());
-        assertEquals("should equal 2", description.getChildren().get(0).getMethodName());
-        assertEquals("should equal 3", description.getChildren().get(1).getMethodName());
+        assertEquals("addition of 1+1 should equal 2", description.getChildren().get(0).getMethodName());
+        assertEquals("addition of 1+1 should equal 3", description.getChildren().get(1).getMethodName());
     }
 
     @Test
-    public void reportsCorrectResults() {
+    public void reportsFailuresCorrectly() {
         JUnitCore jUnitCore = new JUnitCore();
         Result result = jUnitCore.run(runner);
         assertEquals(2, result.getRunCount());
         assertEquals(1, result.getFailureCount());
         Failure failure = result.getFailures().get(0);
-        assertEquals("should equal 3", failure.getDescription().getMethodName());
+        assertEquals("addition of 1+1 should equal 3", failure.getDescription().getMethodName());
     }
 
     protected static void verifyDescriptionTestClass(Description description, Class testClass) {
