@@ -15,5 +15,6 @@ after_success:
   - git init
   - git remote add origin https://github.com/hgcummings/jarspec.git
   - git checkout -b gh-pages
-  - git commit -am "Update site"
+  - git add .
+  - git commit -m "Update maven generated site"
   - git push -f origin gh-pages
