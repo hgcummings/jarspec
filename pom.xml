@@ -22,9 +22,11 @@
         <developerConnection>scm:git:git@github.com:hgcummings/jarspec.git</developerConnection>
     </scm>
     <issueManagement>
-        <url>https://huboard.com/hgcummings/jarspec#/milestones</url>
+        <system>GitHub</system>
+        <url>https://github.com/hgcummings/jarspec/issues</url>
     </issueManagement>
     <ciManagement>
+        <system>Travis CI</system>
         <url>https://travis-ci.org/hgcummings/jarspec</url>
     </ciManagement>
     <developers>

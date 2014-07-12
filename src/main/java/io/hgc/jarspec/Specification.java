@@ -12,9 +12,9 @@ public interface Specification {
     public SpecificationNode root();
 
     /**
-     * @param unit a description for a unit of behaviour
-     * @param specification sub-root for the behaviour of the unit
-     * @return the root of the overall specification
+     * @param unit description of a unit of behaviour
+     * @param specification nested specification for the behaviour of the unit
+     * @return the overall specification
      */
     default public SpecificationNode describe(String unit, BySingle specification) {
         try {
@@ -25,9 +25,9 @@ public interface Specification {
     }
 
     /**
-     * @param unit a description for a unit of behaviour
-     * @param specifications sub-specifications for the behaviour of the unit
-     * @return the overall root
+     * @param unit description of a unit of behaviour
+     * @param specifications nested specifications for the behaviour of the unit
+     * @return the overall specification
      */
     default public SpecificationNode describe(String unit, ByMultiple specifications) {
         try {
@@ -38,9 +38,9 @@ public interface Specification {
     }
 
     /**
-     * @param statement a single description about the behaviour of a unit
-     * @param test automated test for the description
-     * @return a root consisting of single automatically verifiable description
+     * @param statement a statement about the behaviour of a unit
+     * @param test an automated test for the statement
+     * @return a specification consisting of single automatically verifiable statement
      */
     default public SpecificationNode it(String statement, Test test) {
         return new SpecificationNode.Statement(statement, test);

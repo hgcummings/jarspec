@@ -16,13 +16,13 @@ import java.util.Optional;
  * @param <T> Specification class
  */
 public class JarSpecJUnitRunner<T extends Specification> extends Runner {
-    private Class<T> testClass;
-    private T testInstance;
+    private Class<T> specClass;
+    private T specification;
 
-    public JarSpecJUnitRunner(Class<T> testClass) throws InstantiationException {
-        this.testClass = testClass;
+    public JarSpecJUnitRunner(Class<T> specClass) throws InstantiationException {
+        this.specClass = specClass;
         try {
-            testInstance = testClass.newInstance();
+            specification = specClass.newInstance();
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -30,17 +30,17 @@ public class JarSpecJUnitRunner<T extends Specification> extends Runner {
 
     @Override
     public Description getDescription() {
-        return visitTree(testInstance.root(), Optional.empty());
+        return visitTree(specification.root(), Optional.empty());
     }
 
     @Override
     public void run(RunNotifier notifier) {
-        visitTree(testInstance.root(), Optional.of(notifier));
+        visitTree(specification.root(), Optional.of(notifier));
     }
 
     private Description visitTree(SpecificationNode specificationNode, Optional<RunNotifier> notifier) {
-        Description description = Description.createTestDescription(testClass, specificationNode.description());
-        visitTree(testInstance.root(), notifier, "").forEach(description::addChild);
+        Description description = Description.createTestDescription(specClass, specificationNode.description());
+        visitTree(specification.root(), notifier, "").forEach(description::addChild);
         return description;
     }
 
@@ -50,7 +50,7 @@ public class JarSpecJUnitRunner<T extends Specification> extends Runner {
         List<Description> descriptions = new ArrayList<>();
 
         if (specificationNode.test().isPresent()) {
-            Description description = Description.createTestDescription(testClass, text);
+            Description description = Description.createTestDescription(specClass, text);
             descriptions.add(description);
 
             if (notifier.isPresent()) {
