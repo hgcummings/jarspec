@@ -12,8 +12,8 @@ after_success:
 - git checkout -b gh-pages
 - git add .
 - git commit -m "Update maven generated site"
-- git push -f origin gh-pages
+- git push -fq origin gh-pages
 env:
   global:
-  - secure: JXiibYGCgD7hxm40eDUZSQ3F1tO6zMhNixUTDYcSgQvQhQuZcQDNOIVgVQ0gC/cXQbkDhWnNXyGjeiWDw7BVHjXlUT2+kxVtr0w4Tja4k2PE0QhSAgxkpEvruBthrchrVKZ3o4hBYoPqbZIIcuyXGkcU2TG4kQzZiK76UEAP5xA=
-  - secure: ETZ68+8NbLfStMFqImoZwGFW54QKds+XihLXVy03Q3ZrntH+zRFFnClNyAKkUnfWcbC5NDomRFRJQhMVsB4h6srL+rqg373k93oWZwJ52lgA4tiQPNY7qABRo1xPck4IX1zyAlNfzPfrAN6+WvO9qEUioadd9prRw4OApTrTr/U=
+  - secure: M3NfQJJ4eAo6iLNH1+/fpOnPnb5LwnrvPfxsb8KeP9Cn5I6p0Ga3uBsHYgxEZu/DygocDNLdzZJ5WF3Z49wtHXPdnWB5Ui1s42sbXczLhGVDKu6VOo8Z0oMLTKSiRwb1LOMxOVCBa1FZo+Zv5HGFTJCyPs3B7w9Lla7S+13KCLw=
+  - secure: Umn7Lgz/h/6WW0Q0CMPCjEIDGcqARE6/GvN9/CFx576F/nICzWxhKicfyWUmEf2LXZ43/7qCyC58m0zP4q7gzUteCCSu/TL1YMuhu7DYwm535eTiKWDUpVJo0+dqdqU4e/97lcetqwL93LJNKmEUOwI3BVhp+5DCxZFLOGvZb8Y=
