@@ -1,22 +1,20 @@
 language: java
 jdk:
 - oraclejdk8
+after_success:
+- echo $TRAVIS_BUILD_DIR
+- pwd
+- mvn site
+- cd ./target/site
+- git config --global user.email "hgcummings.jarspec@travis-ci.org"
+- git config --global user.name "Travis CI"
+- git init
+- git remote add origin https://$GITHUB_USER:$GITHUB_PASS@github.com/hgcummings/jarspec.git
+- git checkout -b gh-pages
+- git add .
+- git commit -m "Update maven generated site"
+- git push -f origin gh-pages
 env:
   global:
-    secure: fK/qZvODLsMfqoJ5fP/tQPToW+XuqrJcgcGKoxFOYXVBbPbSN3tPXG6UHhM9q0oploMNtQpzZtyt0MvlHXrx0eIg3ITpoJ1NngI0T7qCcUGr/u5aF2PDdwWvFIxxH6McLT8GULpYvK76i4c/s9M+v1oJdkg09YvL8TRMtlPJdUc=
-after_success:
-  - echo $TRAVIS_BUILD_DIR
-  - pwd
-  - mvn site
-  - openssl aes-256-cbc -k "$KEY_PASS" -d -a -in id_rsa.enc -out deploy_key
-  - chmod 600 ./deploy_key
-  - echo -e "Host github.com\n  IdentityFile $TRAVIS_BUILD_DIR/deploy_key" > ~/.ssh/config
-  - cd ./target/site
-  - git config --global user.email "hgcummings.jarspec@travis-ci.org"
-  - git config --global user.name "Travis CI"
-  - git init
-  - git remote add origin https://github.com/hgcummings/jarspec.git
-  - git checkout -b gh-pages
-  - git add .
-  - git commit -m "Update maven generated site"
-  - git push -f origin gh-pages
+  - secure: JXiibYGCgD7hxm40eDUZSQ3F1tO6zMhNixUTDYcSgQvQhQuZcQDNOIVgVQ0gC/cXQbkDhWnNXyGjeiWDw7BVHjXlUT2+kxVtr0w4Tja4k2PE0QhSAgxkpEvruBthrchrVKZ3o4hBYoPqbZIIcuyXGkcU2TG4kQzZiK76UEAP5xA=
+  - secure: ETZ68+8NbLfStMFqImoZwGFW54QKds+XihLXVy03Q3ZrntH+zRFFnClNyAKkUnfWcbC5NDomRFRJQhMVsB4h6srL+rqg373k93oWZwJ52lgA4tiQPNY7qABRo1xPck4IX1zyAlNfzPfrAN6+WvO9qEUioadd9prRw4OApTrTr/U=
