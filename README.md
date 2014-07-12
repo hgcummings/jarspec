@@ -71,4 +71,4 @@ JavaDocs (along with test/coverage results) can be found under the [Project repo
 
 ## When?
 
-Might not ever be released for real, as I still haven't decided yet if it's a good idea. However, you can see [issues and milestones on huboard](https://huboard.com/hgcummings/jarspec#/milestones).
+See [open milestones](https://github.com/hgcummings/jarspec/issues/milestones) for an indication of progress and roadmap.
