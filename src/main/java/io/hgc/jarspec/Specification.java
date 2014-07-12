@@ -1,11 +1,6 @@
 package io.hgc.jarspec;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.*;
 
 public abstract class Specification {
     private Specification() {}
@@ -14,13 +9,13 @@ public abstract class Specification {
 
     protected abstract String description();
 
-    protected abstract Specification[] children();
+    protected abstract List<Specification> children();
 
-    public static Specification describe(String description, Supplier<Specification> test) {
-        return new Node(description, new Specification[]{test.get()});
+    public static Specification describe(String description, DescribeSingle test) {
+        return new Node(description, all(test.get()));
     }
 
-    public static Specification describes(String description, Supplier<Specification[]> tests) {
+    public static Specification describe(String description, DescribeMultiple tests) {
         return new Node(description, tests.get());
     }
 
@@ -28,11 +23,18 @@ public abstract class Specification {
         return new Leaf(description, test);
     }
 
+    @SafeVarargs
+    public static<T> List<T> all(T... elems) {
+        List<T> list = new ArrayList<>();
+        Collections.addAll(list, elems);
+        return list;
+    }
+
     protected static class Node extends Specification {
         private String description;
-        private Specification[] children;
+        private List<Specification> children;
 
-        public Node(String description, Specification[] children) {
+        public Node(String description, List<Specification> children) {
             this.description = description;
             this.children = children;
         }
@@ -48,7 +50,7 @@ public abstract class Specification {
         }
 
         @Override
-        protected Specification[] children() {
+        protected List<Specification> children() {
             return children;
         }
     }
@@ -73,8 +75,8 @@ public abstract class Specification {
         }
 
         @Override
-        protected Specification[] children() {
-            return new Specification[0];
+        protected List<Specification> children() {
+            return Collections.EMPTY_LIST;
         }
     }
 }

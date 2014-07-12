@@ -37,7 +37,7 @@ public class JarSpecJUnitRunner<T extends Supplier<Specification>> extends Runne
         if (notifier.isPresent()) {
             runTest(specification.test(), notifier.get(), description);
         }
-        if (specification.children().length > 0) {
+        if (specification.children().size() > 0) {
             for (Specification child : specification.children()) {
                 description.addChild(visitTree(child, notifier, text + " "));
             }
