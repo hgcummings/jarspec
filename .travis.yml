@@ -1,3 +1,15 @@
 language: java
 jdk:
-  - oraclejdk8
+- oraclejdk8
+env:
+  global:
+    secure: fK/qZvODLsMfqoJ5fP/tQPToW+XuqrJcgcGKoxFOYXVBbPbSN3tPXG6UHhM9q0oploMNtQpzZtyt0MvlHXrx0eIg3ITpoJ1NngI0T7qCcUGr/u5aF2PDdwWvFIxxH6McLT8GULpYvK76i4c/s9M+v1oJdkg09YvL8TRMtlPJdUc=
+after_success:
+  - openssl aes-256-cbc -k "$KEY_PASS" -d -a -in id_rsa.enc -out deploy_key
+  - ssh-add ./deploy_key
+  - cd target/site
+  - git init
+  - git remote add origin https://github.com/hgcummings/jarspec.git
+  - git checkout -n gh-pages
+  - git commit -am "Update site"
+  - git push -f origin gh-pages
