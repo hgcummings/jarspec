@@ -1,5 +1,4 @@
-[![Build status](https://travis-ci.org/hgcummings/jarspec.svg?branch=master)](https://travis-ci.org/hgcummings/jarspec) | [Project reports](http://hgc.io/jarspec/project-reports.html)
-
+[![Build status](https://travis-ci.org/hgcummings/jarspec.svg?branch=master)](https://travis-ci.org/hgcummings/jarspec)
 ## What?
 [RSpec](http://rspec.info/)/[Jasmine](http://jasmine.github.io/2.0/introduction.html) style tests for native Java 8, a bit like the following:
 
@@ -37,9 +36,9 @@ Then you can add the dependency to your project...
     <dependencies>
         ....
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <artifactId>jarspec</artifactId>
+            <groupId>io.hgc</groupId>
+            <version>0.1.0-SNAPSHOT</version>
         </dependency>
         ....
     </dependencies>
@@ -67,6 +66,8 @@ Optionally configure SureFire to pick up classes named *Spec (but you can stick 
 ```
 
 Then you can start writing specs. For now, see [the project's own tests](https://github.com/hgcummings/jarspec/tree/master/src/test/java) for more examples.
+
+JavaDocs (along with test/coverage results) can be found under the [Project reports](http://hgc.io/jarspec/project-reports.html)
 
 ## When?
 
