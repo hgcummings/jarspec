@@ -9,7 +9,7 @@ import java.util.List;
 public interface ByMultiple {
     /**
      * @return multiple {@link SpecificationNode} children
-     * @throws Exception
+     * @throws Exception indicates a test failure
      */
     List<SpecificationNode> get() throws Exception;
 }

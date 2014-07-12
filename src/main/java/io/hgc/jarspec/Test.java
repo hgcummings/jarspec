@@ -7,8 +7,7 @@ package io.hgc.jarspec;
 public interface Test {
     /**
      * Implementation of a test for a single statement in a root.
-     * Should throw an exception if the test fails.
-     * @throws Exception
+     * @throws Exception indicates a test failure
      */
     void run() throws Exception;
 }

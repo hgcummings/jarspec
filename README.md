@@ -7,7 +7,7 @@ public class MinimalSpec implements Specification {
     @Override
     public SpecificationNode root() {
         return describe("A specification", () ->
-            it("contains a statement with a test", () -> assertTrue(true))
+            it("should contain a statement with a test", () -> assertTrue(true))
         );
     }
 }
@@ -15,7 +15,7 @@ public class MinimalSpec implements Specification {
 
 ## Why?
 
-Allows for more expressive test names without very_long_underscore_ridden_test_method_names, and for more flexible test structure. Java 8 features such as Lambda expressions make this kind of syntax possible without an insane amount of boilerplate.
+Allows for more expressive test names without very_long_underscore_ridden_test_method_names, and for more flexible test structure. Java 8 features such as lambda expressions make this kind of syntax possible without an insane amount of boilerplate.
 
 ## How?
 

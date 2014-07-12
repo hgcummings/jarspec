@@ -17,7 +17,8 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
             return by(
                 describe("constructor", () ->
                         itThrows(RuntimeException.class, "for inaccessible test class", () -> {
-                            Runner invalid = new JarSpecJUnitRunner<>(InaccessibleTestClass.class);
+                            new JarSpecJUnitRunner<>(InaccessibleTestClass.class);
+                            fail("This line should not be reached");
                         })
                 ),
                 describe("test count", () ->

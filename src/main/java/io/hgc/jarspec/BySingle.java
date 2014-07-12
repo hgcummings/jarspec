@@ -7,7 +7,7 @@ package io.hgc.jarspec;
 public interface BySingle {
     /**
      * @return the {@link SpecificationNode} child
-     * @throws Exception
+     * @throws Exception indicates a test failure
      */
     SpecificationNode get() throws Exception;
 }
