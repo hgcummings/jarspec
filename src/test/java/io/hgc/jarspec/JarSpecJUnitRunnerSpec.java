@@ -3,7 +3,7 @@ package io.hgc.jarspec;
 import io.hgc.jarspec.examples.AdditionSpec;
 import io.hgc.jarspec.examples.AssumptionFailureSpec;
 import io.hgc.jarspec.examples.ErrorInDescribeSpec;
-import io.hgc.jarspec.examples.ExceptionSpec;
+import io.hgc.jarspec.examples.ErrorInRootSpec;
 import org.junit.runner.*;
 import org.junit.runner.notification.Failure;
 
@@ -79,6 +79,17 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                         it("allows other statements in the same spec to proceed", () ->
                             assertTrue(result.getFailureCount() < result.getRunCount()))
                     );
+                }),
+                describe("root error", () -> {
+                    Result result = new JUnitCore().run(ErrorInRootSpec.class);
+
+                    return it("causes a single init failure for spec class", () -> {
+                        assertEquals(1, result.getFailureCount());
+                        Failure failure = result.getFailures().get(0);
+                        String displayName = failure.getDescription().getDisplayName();
+                        assertTrue(displayName.contains("initializationError"));
+                        assertTrue(displayName.contains(ErrorInRootSpec.class.getName()));
+                    });
                 })
             );
         });
