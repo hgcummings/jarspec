@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.function.Supplier;
 
 public abstract class Specification {
+    private Specification() {}
+
     protected abstract Collection<Runnable> tests();
 
     public static Specification describe(String description, Supplier<Specification> test) {

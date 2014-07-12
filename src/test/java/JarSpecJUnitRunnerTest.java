@@ -15,8 +15,8 @@ import static org.junit.Assert.assertEquals;
 
 public class JarSpecJUnitRunnerTest {
     @Test
-    public void testStandardJUnitRunner() throws InitializationError {
-        Runner runner = new JarSpecJUnitRunner(TestClass.class);
+    public void testJarspecJUnitRunner() throws InitializationError {
+        Runner runner = new JarSpecJUnitRunner<>(TestClass.class);
         RunNotifier runNotifier = new RunNotifier();
 
         assertEquals(2, runner.testCount());
