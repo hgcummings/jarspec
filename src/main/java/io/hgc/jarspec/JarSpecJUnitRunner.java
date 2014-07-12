@@ -5,6 +5,8 @@ import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -28,21 +30,31 @@ public class JarSpecJUnitRunner<T extends Supplier<Specification>> extends Runne
     }
 
     private Description visitTree(Specification specification, Optional<RunNotifier> notifier) {
-        return visitTree(testInstance.get(), notifier, "");
+        Description description = Description.createTestDescription(testClass, specification.statement());
+        visitTree(testInstance.get(), notifier, "").forEach(description::addChild);
+        return description;
     }
 
-    private Description visitTree(Specification specification, Optional<RunNotifier> notifier, String prefix) {
-        String text = prefix + specification.description();
-        Description description = Description.createTestDescription(testClass, text);
-        if (notifier.isPresent()) {
-            runTestIfPresent(specification.test(), notifier.get(), description);
-        }
-        if (specification.children().size() > 0) {
-            for (Specification child : specification.children()) {
-                description.addChild(visitTree(child, notifier, text + " "));
+    private List<Description> visitTree(Specification specification, Optional<RunNotifier> notifier, String prefix) {
+        String text = prefix + specification.statement();
+
+        List<Description> descriptions = new ArrayList<>();
+
+        if (specification.test().isPresent()) {
+            Description description = Description.createTestDescription(testClass, text);
+            descriptions.add(description);
+
+            if (notifier.isPresent()) {
+                runTest(specification.test().get(), notifier.get(), description);
             }
         }
-        return description;
+
+        if (specification.children().size() > 0) {
+            for (Specification child : specification.children()) {
+                descriptions.addAll(visitTree(child, notifier, text + " "));
+            }
+        }
+        return descriptions;
     }
 
     @Override
@@ -50,15 +62,13 @@ public class JarSpecJUnitRunner<T extends Supplier<Specification>> extends Runne
         visitTree(testInstance.get(), Optional.of(notifier));
     }
 
-    private void runTestIfPresent(Optional<Test> test, RunNotifier notifier, Description description) {
-        if (test.isPresent()) {
-            try {
-                notifier.fireTestStarted(description);
-                test.get().run();
-            } catch (Throwable e) {
-                notifier.fireTestFailure(new Failure(description, e));
-            }
-            notifier.fireTestFinished(description);
+    private void runTest(Test test, RunNotifier notifier, Description description) {
+        try {
+            notifier.fireTestStarted(description);
+            test.run();
+        } catch (Throwable e) {
+            notifier.fireTestFailure(new Failure(description, e));
         }
+        notifier.fireTestFinished(description);
     }
 }

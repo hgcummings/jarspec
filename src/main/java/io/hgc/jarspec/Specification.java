@@ -7,42 +7,41 @@ public abstract class Specification {
 
     protected abstract Optional<Test> test();
 
-    protected abstract String description();
+    protected abstract String statement();
 
     protected abstract List<Specification> children();
 
-    public static Specification describe(String description, DescribeSingle test) {
+    public static Specification describe(String unit, BySingle specification) {
         try {
-            return new Node(description, all(test.get()));
+            return new Aggregate(unit, by(specification.get()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static Specification describe(String description, DescribeMultiple tests) {
+    public static Specification describe(String unit, ByMultiple specifications) {
         try {
-            return new Node(description, tests.get());
+            return new Aggregate(unit, specifications.get());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static Specification it(String description, Test test) {
-        return new Leaf(description, test);
+    public static Specification it(String statement, Test test) {
+        return new Single(statement, test);
     }
 
-    @SafeVarargs
-    public static<T> List<T> all(T... elems) {
-        List<T> list = new ArrayList<>();
-        Collections.addAll(list, elems);
+    public static List<Specification> by(Specification... tests) {
+        List<Specification> list = new ArrayList<>();
+        Collections.addAll(list, tests);
         return list;
     }
 
-    protected static class Node extends Specification {
+    protected static class Aggregate extends Specification {
         private String description;
         private List<Specification> children;
 
-        public Node(String description, List<Specification> children) {
+        public Aggregate(String description, List<Specification> children) {
             this.description = description;
             this.children = children;
         }
@@ -53,7 +52,7 @@ public abstract class Specification {
         }
 
         @Override
-        protected String description() {
+        protected String statement() {
             return description;
         }
 
@@ -63,12 +62,12 @@ public abstract class Specification {
         }
     }
 
-    protected static class Leaf extends Specification {
-        private String description;
+    protected static class Single extends Specification {
+        private String statement;
         private Test test;
 
-        public Leaf(String description, Test test) {
-            this.description = description;
+        public Single(String statement, Test test) {
+            this.statement = statement;
             this.test = test;
         }
 
@@ -78,13 +77,13 @@ public abstract class Specification {
         }
 
         @Override
-        protected String description() {
-            return description;
+        protected String statement() {
+            return statement;
         }
 
         @Override
         protected List<Specification> children() {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 }

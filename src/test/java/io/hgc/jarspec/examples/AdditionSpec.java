@@ -17,13 +17,9 @@ public class AdditionSpec implements Supplier<Specification> {
             describe("of 1+1", () -> {
                 int result = 1 + 1;
 
-                return all(
-                    it("should equal 2", () -> {
-                        assertEquals(2, result);
-                    }),
-                    it("should equal 3", () -> {
-                        assertEquals(3, result);
-                    })
+                return by(
+                    it("should equal 2", () -> assertEquals(2, result)),
+                    it("should equal 3", () -> assertEquals(3, result))
                 );
             })
         );

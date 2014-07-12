@@ -14,36 +14,29 @@ import static org.junit.Assert.*;
 public class JarSpecJUnitRunnerSpec implements Supplier<Specification> {
     @Override
     public Specification get() {
-        return describe("JUnit Runner", () -> {
+        return describe("JUnit runner", () -> {
             Runner runner = new JarSpecJUnitRunner<>(AdditionSpec.class);
-            return all(
+            return by(
                 describe("constructor", () ->
-                    it("should throw runtime exception for illegal access", () -> {
-                        RuntimeException exception = null;
-                        try {
-                            new JarSpecJUnitRunner<>(PrivateTestClass.class);
-                        } catch (RuntimeException e) {
-                            exception = e;
-                        }
-                        assertNotNull(exception);
-                    })
+                        it("throws runtime exception for illegal access", () -> {
+                            RuntimeException exception = null;
+                            try {
+                                new JarSpecJUnitRunner<>(PrivateTestClass.class);
+                            } catch (RuntimeException e) {
+                                exception = e;
+                            }
+                            assertNotNull(exception);
+                        })
                 ),
                 describe("test count", () ->
-                    it("should match number of tests", () -> {
-                        assertEquals(2, runner.testCount());
-                    })
+                        it("matches number of tests", () -> assertEquals(2, runner.testCount()))
                 ),
-                describe("description", () -> all(
-                    it("class should match provided class", () -> {
-                        verifyDescriptionTestClass(runner.getDescription(), AdditionSpec.class);
-                    }),
-                    it("text should include parent context", () -> {
+                describe("description", () -> by(
+                    it("returns correct test class for all tests", () ->
+                        verifyDescriptionTestClass(runner.getDescription(), AdditionSpec.class)),
+                    it("includes parent context in test names", () -> {
                         Description description = runner.getDescription();
                         assertEquals("addition", description.getMethodName());
-
-                        assertEquals(1, description.getChildren().size());
-                        description = description.getChildren().get(0);
-                        assertEquals("addition of 1+1", description.getMethodName());
 
                         assertEquals(2, description.getChildren().size());
                         assertEquals("addition of 1+1 should equal 2", description.getChildren().get(0).getMethodName());
