@@ -68,4 +68,4 @@ Then you can start writing specs. For now, see [the project's own tests](https:/
 
 ## When?
 
-Might not ever be released for real, as I still haven't decided yet if it's a good idea. However, you can see [issues and milestones on huboard](https://huboard.com/hgcummings/jarspec).
+Might not ever be released for real, as I still haven't decided yet if it's a good idea. However, you can see [issues and milestones on huboard](https://huboard.com/hgcummings/jarspec#/milestones).
