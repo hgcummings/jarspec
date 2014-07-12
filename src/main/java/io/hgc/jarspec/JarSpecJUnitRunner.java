@@ -8,9 +8,11 @@ import sun.security.krb5.internal.crypto.Des;
 import java.util.function.Supplier;
 
 public class JarSpecJUnitRunner<T extends Supplier<Specification>> extends Runner {
+    private Class<T> testClass;
     private T testInstance;
 
     public JarSpecJUnitRunner(Class<T> testClass) {
+        this.testClass = testClass;
         try {
             testInstance = testClass.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
@@ -20,7 +22,7 @@ public class JarSpecJUnitRunner<T extends Supplier<Specification>> extends Runne
 
     @Override
     public Description getDescription() {
-        return null;
+        return Description.createSuiteDescription(testClass);
     }
 
     @Override
