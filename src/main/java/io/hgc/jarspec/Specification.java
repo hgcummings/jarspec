@@ -11,32 +11,6 @@ public abstract class Specification {
 
     protected abstract List<Specification> children();
 
-    public static Specification describe(String unit, BySingle specification) {
-        try {
-            return new Aggregate(unit, by(specification.get()));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static Specification describe(String unit, ByMultiple specifications) {
-        try {
-            return new Aggregate(unit, specifications.get());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static Specification it(String statement, Test test) {
-        return new Single(statement, test);
-    }
-
-    public static List<Specification> by(Specification... tests) {
-        List<Specification> list = new ArrayList<>();
-        Collections.addAll(list, tests);
-        return list;
-    }
-
     protected static class Aggregate extends Specification {
         private String description;
         private List<Specification> children;

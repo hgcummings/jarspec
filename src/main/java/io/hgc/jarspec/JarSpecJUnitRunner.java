@@ -8,9 +8,8 @@ import org.junit.runner.notification.RunNotifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
-public class JarSpecJUnitRunner<T extends Supplier<Specification>> extends Runner {
+public class JarSpecJUnitRunner<T extends UnitSpec> extends Runner {
     private Class<T> testClass;
     private T testInstance;
 
@@ -25,13 +24,13 @@ public class JarSpecJUnitRunner<T extends Supplier<Specification>> extends Runne
 
     @Override
     public Description getDescription() {
-        Specification specification = testInstance.get();
+        Specification specification = testInstance.specification();
         return visitTree(specification, Optional.empty());
     }
 
     private Description visitTree(Specification specification, Optional<RunNotifier> notifier) {
         Description description = Description.createTestDescription(testClass, specification.statement());
-        visitTree(testInstance.get(), notifier, "").forEach(description::addChild);
+        visitTree(testInstance.specification(), notifier, "").forEach(description::addChild);
         return description;
     }
 
@@ -59,7 +58,7 @@ public class JarSpecJUnitRunner<T extends Supplier<Specification>> extends Runne
 
     @Override
     public void run(RunNotifier notifier) {
-        visitTree(testInstance.get(), Optional.of(notifier));
+        visitTree(testInstance.specification(), Optional.of(notifier));
     }
 
     private void runTest(Test test, RunNotifier notifier, Description description) {

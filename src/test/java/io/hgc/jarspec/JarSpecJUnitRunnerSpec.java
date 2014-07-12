@@ -1,31 +1,24 @@
 package io.hgc.jarspec;
 
 import io.hgc.jarspec.examples.AdditionSpec;
+import io.hgc.jarspec.mixins.ExceptionBehaviour;
 import org.junit.runner.*;
 import org.junit.runner.notification.Failure;
 
 import java.util.List;
-import java.util.function.Supplier;
 
-import static io.hgc.jarspec.Specification.*;
 import static org.junit.Assert.*;
 
 @RunWith(JarSpecJUnitRunner.class)
-public class JarSpecJUnitRunnerSpec implements Supplier<Specification> {
+public class JarSpecJUnitRunnerSpec implements UnitSpec, ExceptionBehaviour {
     @Override
-    public Specification get() {
+    public Specification specification() {
         return describe("JUnit runner", () -> {
             Runner runner = new JarSpecJUnitRunner<>(AdditionSpec.class);
             return by(
                 describe("constructor", () ->
-                        it("throws runtime exception for illegal access", () -> {
-                            RuntimeException exception = null;
-                            try {
-                                new JarSpecJUnitRunner<>(PrivateTestClass.class);
-                            } catch (RuntimeException e) {
-                                exception = e;
-                            }
-                            assertNotNull(exception);
+                        itThrows(RuntimeException.class, "for inaccessible test class", () -> {
+                            Runner invalid = new JarSpecJUnitRunner<>(InaccessibleTestClass.class);
                         })
                 ),
                 describe("test count", () ->
@@ -65,10 +58,13 @@ public class JarSpecJUnitRunnerSpec implements Supplier<Specification> {
         }
     }
 
-    private static class PrivateTestClass implements Supplier<Specification> {
+    public static class InaccessibleTestClass implements UnitSpec {
+        private InaccessibleTestClass() {
+        }
+
         @Override
-        public Specification get() {
-            return null;
+        public Specification specification() {
+            return it("should be true", () -> assertTrue(true));
         }
     }
 }
