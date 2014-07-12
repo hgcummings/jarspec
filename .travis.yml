@@ -7,9 +7,9 @@ env:
 after_success:
   - openssl aes-256-cbc -k "$KEY_PASS" -d -a -in id_rsa.enc -out deploy_key
   - ssh-add ./deploy_key
-  - cd target/site
+  - cd ./target/site
   - git init
   - git remote add origin https://github.com/hgcummings/jarspec.git
-  - git checkout -n gh-pages
+  - git checkout -b gh-pages
   - git commit -am "Update site"
   - git push -f origin gh-pages
