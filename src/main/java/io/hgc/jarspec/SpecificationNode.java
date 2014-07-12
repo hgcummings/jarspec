@@ -15,11 +15,11 @@ public abstract class SpecificationNode {
     abstract List<SpecificationNode> children();
 
     static class Aggregate extends SpecificationNode {
-        private String description;
+        private String unit;
         private List<SpecificationNode> children;
 
-        public Aggregate(String description, List<SpecificationNode> children) {
-            this.description = description;
+        public Aggregate(String unit, List<SpecificationNode> children) {
+            this.unit = unit;
             this.children = children;
         }
 
@@ -30,7 +30,7 @@ public abstract class SpecificationNode {
 
         @Override
         String description() {
-            return description;
+            return unit;
         }
 
         @Override
@@ -56,6 +56,31 @@ public abstract class SpecificationNode {
         @Override
         String description() {
             return behaviour;
+        }
+
+        @Override
+        List<SpecificationNode> children() {
+            return Collections.emptyList();
+        }
+    }
+
+    static class SpecError extends SpecificationNode {
+        private final String unit;
+        private final Exception exception;
+
+        public SpecError(String unit, Exception exception) {
+            this.unit = unit;
+            this.exception = exception;
+        }
+
+        @Override
+        Optional<Test> test() {
+            return Optional.of(() -> { throw exception; });
+        }
+
+        @Override
+        String description() {
+            return unit;
         }
 
         @Override

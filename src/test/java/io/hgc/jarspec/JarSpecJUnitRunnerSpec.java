@@ -1,6 +1,8 @@
 package io.hgc.jarspec;
 
 import io.hgc.jarspec.examples.AdditionSpec;
+import io.hgc.jarspec.examples.ErrorInDescribeSpec;
+import io.hgc.jarspec.examples.ExceptionSpec;
 import org.junit.runner.*;
 import org.junit.runner.notification.Failure;
 
@@ -39,6 +41,32 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                         assertEquals("addition of 1+1 equals 3", description.getChildren().get(1).getMethodName());
                     })
                 )),
+                describe("setup error", () -> {
+                    Result result = new JUnitCore().run(ErrorInDescribeSpec.class);
+
+                    return by(
+                        it("causes failure in multi-child describe nodes", () -> {
+                            assertTrue(result.getFailureCount() > 0);
+                            for (Failure failure : result.getFailures()) {
+                                if (failure.getDescription().getMethodName().contains("broken multi-child describe")) {
+                                    return;
+                                }
+                            }
+                            fail();
+                        }),
+                        it("causes failure in single-child describe nodes", () -> {
+                            assertTrue(result.getFailureCount() > 0);
+                            for (Failure failure : result.getFailures()) {
+                                if (failure.getDescription().getMethodName().contains("broken single-child describe")) {
+                                    return;
+                                }
+                            }
+                            fail();
+                        }),
+                        it("allows other statements in the same spec to proceed", () ->
+                            assertTrue(result.getFailureCount() < result.getRunCount()))
+                    );
+                }),
                 it("reports failures correctly", () -> {
                     JUnitCore jUnitCore = new JUnitCore();
                     Result result = jUnitCore.run(runner);

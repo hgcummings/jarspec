@@ -20,7 +20,7 @@ public interface Specification {
         try {
             return new SpecificationNode.Aggregate(unit, by(specification.get()));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return new SpecificationNode.SpecError(unit, e);
         }
     }
 
@@ -33,7 +33,7 @@ public interface Specification {
         try {
             return new SpecificationNode.Aggregate(unit, specifications.get());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return new SpecificationNode.SpecError(unit, e);
         }
     }
 
