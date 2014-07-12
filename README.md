@@ -15,7 +15,7 @@ public class MinimalSpec implements UnitSpec {
 
 ## Why?
 
-Allows for more expressive test names without very_long_underscore_ridden_test_method_names, and for more flexible test structure.
+Allows for more expressive test names without very_long_underscore_ridden_test_method_names, and for more flexible test structure. Java 8 features such as Lambda expressions make this kind of syntax possible without an insane amount of boilerplate.
 
 ## How?
 
@@ -66,7 +66,6 @@ Then you can add the dependency to your project...
 
 Then you can start writing specs. For now, see [the project's own tests](https://github.com/hgcummings/jarspec/tree/master/src/test/java) for more examples.
 
-When?
-=====
+## When?
 
 Might not ever be released for real, as I still haven't decided yet if it's a good idea. However, you can see [issues and milestones on huboard](https://huboard.com/hgcummings/jarspec).
