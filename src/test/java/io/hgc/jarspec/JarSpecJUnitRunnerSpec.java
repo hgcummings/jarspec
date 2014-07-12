@@ -1,7 +1,6 @@
 package io.hgc.jarspec;
 
 import io.hgc.jarspec.examples.AdditionSpec;
-import io.hgc.jarspec.mixins.ExceptionBehaviour;
 import org.junit.runner.*;
 import org.junit.runner.notification.Failure;
 
@@ -10,9 +9,9 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(JarSpecJUnitRunner.class)
-public class JarSpecJUnitRunnerSpec implements UnitSpec, ExceptionBehaviour {
+public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour {
     @Override
-    public Specification specification() {
+    public SpecificationNode root() {
         return describe("JUnit runner", () -> {
             Runner runner = new JarSpecJUnitRunner<>(AdditionSpec.class);
             return by(
@@ -58,12 +57,12 @@ public class JarSpecJUnitRunnerSpec implements UnitSpec, ExceptionBehaviour {
         }
     }
 
-    public static class InaccessibleTestClass implements UnitSpec {
+    public static class InaccessibleTestClass implements Specification {
         private InaccessibleTestClass() {
         }
 
         @Override
-        public Specification specification() {
+        public SpecificationNode root() {
             return it("should be true", () -> assertTrue(true));
         }
     }

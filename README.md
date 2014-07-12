@@ -3,9 +3,9 @@
 
 ```java
 @RunWith(JarSpecJUnitRunner.class)
-public class MinimalSpec implements UnitSpec {
+public class MinimalSpec implements Specification {
     @Override
-    public Specification specification() {
+    public SpecificationNode root() {
         return describe("A specification", () ->
             it("contains a statement with a test", () -> assertTrue(true))
         );

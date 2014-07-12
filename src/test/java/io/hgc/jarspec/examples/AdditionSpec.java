@@ -1,16 +1,16 @@
 package io.hgc.jarspec.examples;
 
-import io.hgc.jarspec.UnitSpec;
-import io.hgc.jarspec.JarSpecJUnitRunner;
 import io.hgc.jarspec.Specification;
+import io.hgc.jarspec.SpecificationNode;
+import io.hgc.jarspec.JarSpecJUnitRunner;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
 
 @RunWith(JarSpecJUnitRunner.class)
-public class AdditionSpec implements UnitSpec {
+public class AdditionSpec implements Specification {
     @Override
-    public Specification specification() {
+    public SpecificationNode root() {
         return describe("addition", () ->
             describe("of 1+1", () -> {
                 int result = 1 + 1;

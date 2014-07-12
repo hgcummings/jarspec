@@ -3,13 +3,13 @@ package io.hgc.jarspec;
 import java.util.List;
 
 /**
- * Represents multiple sub-specifications that make up a single specification
+ * Returns multiple {@link SpecificationNode} that represent the direct children of another
  */
 @FunctionalInterface
 public interface ByMultiple {
     /**
-     * @return multiple nested Specifications
+     * @return multiple {@link SpecificationNode} children
      * @throws Exception
      */
-    List<Specification> get() throws Exception;
+    List<SpecificationNode> get() throws Exception;
 }

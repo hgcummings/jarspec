@@ -12,9 +12,9 @@ import java.util.Optional;
 /**
  * Test runner for executing JarSpec specifications under JUnit
  *
- * @param <T> Spec class
+ * @param <T> Specification class
  */
-public class JarSpecJUnitRunner<T extends UnitSpec> extends Runner {
+public class JarSpecJUnitRunner<T extends Specification> extends Runner {
     private Class<T> testClass;
     private T testInstance;
 
@@ -29,36 +29,36 @@ public class JarSpecJUnitRunner<T extends UnitSpec> extends Runner {
 
     @Override
     public Description getDescription() {
-        return visitTree(testInstance.specification(), Optional.empty());
+        return visitTree(testInstance.root(), Optional.empty());
     }
 
     @Override
     public void run(RunNotifier notifier) {
-        visitTree(testInstance.specification(), Optional.of(notifier));
+        visitTree(testInstance.root(), Optional.of(notifier));
     }
 
-    private Description visitTree(Specification specification, Optional<RunNotifier> notifier) {
-        Description description = Description.createTestDescription(testClass, specification.statement());
-        visitTree(testInstance.specification(), notifier, "").forEach(description::addChild);
+    private Description visitTree(SpecificationNode specificationNode, Optional<RunNotifier> notifier) {
+        Description description = Description.createTestDescription(testClass, specificationNode.description());
+        visitTree(testInstance.root(), notifier, "").forEach(description::addChild);
         return description;
     }
 
-    private List<Description> visitTree(Specification specification, Optional<RunNotifier> notifier, String prefix) {
-        String text = prefix + specification.statement();
+    private List<Description> visitTree(SpecificationNode specificationNode, Optional<RunNotifier> notifier, String prefix) {
+        String text = prefix + specificationNode.description();
 
         List<Description> descriptions = new ArrayList<>();
 
-        if (specification.test().isPresent()) {
+        if (specificationNode.test().isPresent()) {
             Description description = Description.createTestDescription(testClass, text);
             descriptions.add(description);
 
             if (notifier.isPresent()) {
-                runTest(specification.test().get(), notifier.get(), description);
+                runTest(specificationNode.test().get(), notifier.get(), description);
             }
         }
 
-        if (specification.children().size() > 0) {
-            for (Specification child : specification.children()) {
+        if (specificationNode.children().size() > 0) {
+            for (SpecificationNode child : specificationNode.children()) {
                 descriptions.addAll(visitTree(child, notifier, text + " "));
             }
         }

@@ -1,67 +1,59 @@
 package io.hgc.jarspec;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Represents a Specification consisting of statements about behaviour and automated tests
- * for those statements. Can be created using the helper methods in {@link UnitSpec}.
+ * for those statements. Primary interface for all specs written with JarSpec.
  */
-public abstract class Specification {
-    private Specification() {}
+public interface Specification {
+    public SpecificationNode root();
 
-    protected abstract Optional<Test> test();
-
-    protected abstract String statement();
-
-    protected abstract List<Specification> children();
-
-    protected static class Aggregate extends Specification {
-        private String description;
-        private List<Specification> children;
-
-        public Aggregate(String description, List<Specification> children) {
-            this.description = description;
-            this.children = children;
-        }
-
-        @Override
-        protected Optional<Test> test() {
-            return Optional.empty();
-        }
-
-        @Override
-        protected String statement() {
-            return description;
-        }
-
-        @Override
-        protected List<Specification> children() {
-            return children;
+    /**
+     * @param unit a description for a unit of behaviour
+     * @param specification sub-root for the behaviour of the unit
+     * @return the root of the overall specification
+     */
+    default public SpecificationNode describe(String unit, BySingle specification) {
+        try {
+            return new SpecificationNode.Aggregate(unit, by(specification.get()));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
-    protected static class Single extends Specification {
-        private String statement;
-        private Test test;
-
-        public Single(String statement, Test test) {
-            this.statement = statement;
-            this.test = test;
+    /**
+     * @param unit a description for a unit of behaviour
+     * @param specifications sub-specifications for the behaviour of the unit
+     * @return the overall root
+     */
+    default public SpecificationNode describe(String unit, ByMultiple specifications) {
+        try {
+            return new SpecificationNode.Aggregate(unit, specifications.get());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+    }
 
-        @Override
-        protected Optional<Test> test() {
-            return Optional.of(test);
-        }
+    /**
+     * @param statement a single description about the behaviour of a unit
+     * @param test automated test for the description
+     * @return a root consisting of single automatically verifiable description
+     */
+    default public SpecificationNode it(String statement, Test test) {
+        return new SpecificationNode.Statement(statement, test);
+    }
 
-        @Override
-        protected String statement() {
-            return statement;
-        }
-
-        @Override
-        protected List<Specification> children() {
-            return Collections.emptyList();
-        }
+    /**
+     * Convenience method providing a concise syntax for combining specifications into a list
+     * @param specificationNodes specifications to be combined
+     * @return a List containing all of the specifications in the order provided
+     */
+    default public List<SpecificationNode> by(SpecificationNode... specificationNodes) {
+        List<SpecificationNode> list = new ArrayList<>();
+        Collections.addAll(list, specificationNodes);
+        return list;
     }
 }

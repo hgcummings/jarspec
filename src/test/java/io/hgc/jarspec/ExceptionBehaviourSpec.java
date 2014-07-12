@@ -1,7 +1,6 @@
 package io.hgc.jarspec;
 
 import io.hgc.jarspec.examples.ExceptionSpec;
-import io.hgc.jarspec.mixins.ExceptionBehaviour;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
@@ -10,9 +9,9 @@ import org.junit.runner.notification.Failure;
 import static org.junit.Assert.*;
 
 @RunWith(JarSpecJUnitRunner.class)
-public class ExceptionBehaviourSpec implements UnitSpec, ExceptionBehaviour {
+public class ExceptionBehaviourSpec implements Specification, ExceptionBehaviour {
     @Override
-    public Specification specification() {
+    public SpecificationNode root() {
         return describe("'itThrows' behaviour", () -> {
             Result result = new JUnitCore().run(ExceptionSpec.class);
 

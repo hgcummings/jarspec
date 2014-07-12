@@ -1,15 +1,15 @@
 package io.hgc.jarspec.examples;
 
-import io.hgc.jarspec.UnitSpec;
-import io.hgc.jarspec.mixins.ExceptionBehaviour;
-import io.hgc.jarspec.JarSpecJUnitRunner;
 import io.hgc.jarspec.Specification;
+import io.hgc.jarspec.SpecificationNode;
+import io.hgc.jarspec.ExceptionBehaviour;
+import io.hgc.jarspec.JarSpecJUnitRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(JarSpecJUnitRunner.class)
-public class ExceptionSpec implements UnitSpec, ExceptionBehaviour {
+public class ExceptionSpec implements Specification, ExceptionBehaviour {
     @Override
-    public Specification specification() {
+    public SpecificationNode root() {
         return describe("unstable code", () -> by(
             itThrows(ExpectedException.class, "on matching invocation", () -> {
                 throw new ExpectedException();

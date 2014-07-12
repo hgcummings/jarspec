@@ -1,12 +1,13 @@
 package io.hgc.jarspec;
 
 /**
- * Represents a single sub-specification that belongs to another specification
+ * Returns a single {@link SpecificationNode} that represents the only direct child of another
  */
 @FunctionalInterface
 public interface BySingle {
     /**
-     * @return a single nested Specification
+     * @return the {@link SpecificationNode} child
+     * @throws Exception
      */
-    Specification get() throws Exception;
+    SpecificationNode get() throws Exception;
 }
