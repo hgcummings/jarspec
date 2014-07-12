@@ -7,8 +7,11 @@ env:
 after_success:
   - mvn site
   - openssl aes-256-cbc -k "$KEY_PASS" -d -a -in id_rsa.enc -out deploy_key
+  - chmod 600 ./deploy_key
   - ssh-add ./deploy_key
   - cd ./target/site
+  - git config --global user.email "hgcummings.jarspec@travis-ci.org"
+  - git config --global user.name "Travis CI"
   - git init
   - git remote add origin https://github.com/hgcummings/jarspec.git
   - git checkout -b gh-pages
