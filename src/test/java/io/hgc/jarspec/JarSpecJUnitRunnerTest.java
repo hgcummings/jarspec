@@ -40,6 +40,26 @@ public class JarSpecJUnitRunnerTest {
         verifyDescriptionTestClass(description, TestClass.class);
     }
 
+    @Test
+    public void descriptionTextShouldMatchDescribe() {
+        Description description = runner.getDescription();
+        assertEquals("addition", description.getMethodName());
+
+        assertEquals(1, description.getChildren().size());
+        description = description.getChildren().get(0);
+        assertEquals("of 1+1", description.getMethodName());
+
+        assertEquals(2, description.getChildren().size());
+        assertEquals("should equal 2", description.getChildren().get(0).getMethodName());
+        assertEquals("should equal 3", description.getChildren().get(1).getMethodName());
+    }
+
+    @Test
+    public void reportsSuccesses() {
+        runner.getDescription();
+
+    }
+
     protected static void verifyDescriptionTestClass(Description description, Class testClass) {
         assertEquals(testClass, description.getTestClass());
 

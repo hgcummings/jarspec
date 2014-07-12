@@ -9,6 +9,10 @@ public abstract class Specification {
 
     protected abstract Collection<Runnable> tests();
 
+    protected abstract String description();
+
+    protected abstract Specification[] children();
+
     public static Specification describe(String description, Supplier<Specification> test) {
         return new Node(description, new Specification[]{test.get()});
     }
@@ -38,6 +42,16 @@ public abstract class Specification {
             }
             return tests;
         }
+
+        @Override
+        protected String description() {
+            return description;
+        }
+
+        @Override
+        protected Specification[] children() {
+            return children;
+        }
     }
 
     protected static class Leaf extends Specification {
@@ -54,6 +68,16 @@ public abstract class Specification {
             Collection<Runnable> tests = new ArrayList<>();
             tests.add(test);
             return tests;
+        }
+
+        @Override
+        protected String description() {
+            return description;
+        }
+
+        @Override
+        protected Specification[] children() {
+            return new Specification[0];
         }
     }
 }

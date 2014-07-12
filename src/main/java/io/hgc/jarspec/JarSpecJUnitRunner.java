@@ -22,16 +22,22 @@ public class JarSpecJUnitRunner<T extends Supplier<Specification>> extends Runne
 
     @Override
     public Description getDescription() {
-        return Description.createSuiteDescription(testClass);
+        Specification specification = testInstance.get();
+        return createDescriptionFromSpecification(specification);
+    }
+
+    private Description createDescriptionFromSpecification(Specification specification) {
+        Description description = Description.createTestDescription(testClass, specification.description());
+        if (specification.children().length > 0) {
+            for (Specification child : specification.children()) {
+                description.addChild(createDescriptionFromSpecification(child));
+            }
+        }
+        return description;
     }
 
     @Override
     public void run(RunNotifier notifier) {
 
-    }
-
-    @Override
-    public int testCount() {
-        return testInstance.get().tests().size();
     }
 }
