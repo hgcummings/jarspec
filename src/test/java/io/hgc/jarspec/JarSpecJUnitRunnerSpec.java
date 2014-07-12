@@ -1,6 +1,7 @@
 package io.hgc.jarspec;
 
 import io.hgc.jarspec.examples.AdditionSpec;
+import io.hgc.jarspec.examples.AssumptionFailureSpec;
 import io.hgc.jarspec.examples.ErrorInDescribeSpec;
 import io.hgc.jarspec.examples.ExceptionSpec;
 import org.junit.runner.*;
@@ -41,6 +42,18 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                         assertEquals("addition of 1+1 equals 3", description.getChildren().get(1).getMethodName());
                     })
                 )),
+                it("reports failures correctly", () -> {
+                    JUnitCore jUnitCore = new JUnitCore();
+                    Result result = jUnitCore.run(runner);
+                    assertEquals(2, result.getRunCount());
+                    assertEquals(1, result.getFailureCount());
+                    Failure failure = result.getFailures().get(0);
+                    assertEquals("addition of 1+1 equals 3", failure.getDescription().getMethodName());
+                }),
+                it("does not report assumption failures as test failures", () -> {
+                    Result result = new JUnitCore().run(AssumptionFailureSpec.class);
+                    assertEquals(0, result.getFailureCount());
+                }),
                 describe("setup error", () -> {
                     Result result = new JUnitCore().run(ErrorInDescribeSpec.class);
 
@@ -66,14 +79,6 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                         it("allows other statements in the same spec to proceed", () ->
                             assertTrue(result.getFailureCount() < result.getRunCount()))
                     );
-                }),
-                it("reports failures correctly", () -> {
-                    JUnitCore jUnitCore = new JUnitCore();
-                    Result result = jUnitCore.run(runner);
-                    assertEquals(2, result.getRunCount());
-                    assertEquals(1, result.getFailureCount());
-                    Failure failure = result.getFailures().get(0);
-                    assertEquals("addition of 1+1 equals 3", failure.getDescription().getMethodName());
                 })
             );
         });

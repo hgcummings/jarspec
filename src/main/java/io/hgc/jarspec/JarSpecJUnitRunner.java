@@ -1,5 +1,6 @@
 package io.hgc.jarspec;
 
+import org.junit.internal.AssumptionViolatedException;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
@@ -69,6 +70,8 @@ public class JarSpecJUnitRunner<T extends Specification> extends Runner {
         try {
             notifier.fireTestStarted(description);
             test.run();
+        } catch(AssumptionViolatedException e) {
+            notifier.fireTestAssumptionFailed(new Failure(description, e));
         } catch (Throwable e) {
             notifier.fireTestFailure(new Failure(description, e));
         }
