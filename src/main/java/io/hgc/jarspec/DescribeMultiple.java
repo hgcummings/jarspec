@@ -4,5 +4,5 @@ import java.util.List;
 
 @FunctionalInterface
 public interface DescribeMultiple {
-    List<Specification> get();
+    List<Specification> get() throws Exception;
 }

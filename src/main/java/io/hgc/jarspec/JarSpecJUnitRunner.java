@@ -12,11 +12,11 @@ public class JarSpecJUnitRunner<T extends Supplier<Specification>> extends Runne
     private Class<T> testClass;
     private T testInstance;
 
-    public JarSpecJUnitRunner(Class<T> testClass) {
+    public JarSpecJUnitRunner(Class<T> testClass) throws InstantiationException {
         this.testClass = testClass;
         try {
             testInstance = testClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
@@ -35,7 +35,7 @@ public class JarSpecJUnitRunner<T extends Supplier<Specification>> extends Runne
         String text = prefix + specification.description();
         Description description = Description.createTestDescription(testClass, text);
         if (notifier.isPresent()) {
-            runTest(specification.test(), notifier.get(), description);
+            runTestIfPresent(specification.test(), notifier.get(), description);
         }
         if (specification.children().size() > 0) {
             for (Specification child : specification.children()) {
@@ -50,16 +50,15 @@ public class JarSpecJUnitRunner<T extends Supplier<Specification>> extends Runne
         visitTree(testInstance.get(), Optional.of(notifier));
     }
 
-    private void runTest(Optional<Runnable> test, RunNotifier notifier, Description description) {
+    private void runTestIfPresent(Optional<Test> test, RunNotifier notifier, Description description) {
         if (test.isPresent()) {
             try {
                 notifier.fireTestStarted(description);
                 test.get().run();
             } catch (Throwable e) {
                 notifier.fireTestFailure(new Failure(description, e));
-            } finally {
-                notifier.fireTestFinished(description);
             }
+            notifier.fireTestFinished(description);
         }
     }
 }

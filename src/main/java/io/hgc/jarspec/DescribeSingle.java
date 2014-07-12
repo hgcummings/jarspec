@@ -2,5 +2,5 @@ package io.hgc.jarspec;
 
 @FunctionalInterface
 public interface DescribeSingle {
-    Specification get();
+    Specification get() throws Exception;
 }

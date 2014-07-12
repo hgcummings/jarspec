@@ -5,21 +5,29 @@ import java.util.*;
 public abstract class Specification {
     private Specification() {}
 
-    protected abstract Optional<Runnable> test();
+    protected abstract Optional<Test> test();
 
     protected abstract String description();
 
     protected abstract List<Specification> children();
 
     public static Specification describe(String description, DescribeSingle test) {
-        return new Node(description, all(test.get()));
+        try {
+            return new Node(description, all(test.get()));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static Specification describe(String description, DescribeMultiple tests) {
-        return new Node(description, tests.get());
+        try {
+            return new Node(description, tests.get());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static Specification it(String description, Runnable test) {
+    public static Specification it(String description, Test test) {
         return new Leaf(description, test);
     }
 
@@ -40,7 +48,7 @@ public abstract class Specification {
         }
 
         @Override
-        protected Optional<Runnable> test() {
+        protected Optional<Test> test() {
             return Optional.empty();
         }
 
@@ -57,15 +65,15 @@ public abstract class Specification {
 
     protected static class Leaf extends Specification {
         private String description;
-        private Runnable test;
+        private Test test;
 
-        public Leaf(String description, Runnable test) {
+        public Leaf(String description, Test test) {
             this.description = description;
             this.test = test;
         }
 
         @Override
-        protected Optional<Runnable> test() {
+        protected Optional<Test> test() {
             return Optional.of(test);
         }
 
