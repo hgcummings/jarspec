@@ -4,6 +4,7 @@ jdk:
 after_success:
 - mvn site
 - cd ./target/site
+- touch .nojekyll
 - git config --global user.email "hgcummings.jarspec@travis-ci.org"
 - git config --global user.name "Travis CI"
 - git init
