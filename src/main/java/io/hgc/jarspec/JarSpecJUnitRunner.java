@@ -9,6 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Test runner for executing JarSpec specifications under JUnit
+ *
+ * @param <T> Spec class
+ */
 public class JarSpecJUnitRunner<T extends UnitSpec> extends Runner {
     private Class<T> testClass;
     private T testInstance;
@@ -24,8 +29,12 @@ public class JarSpecJUnitRunner<T extends UnitSpec> extends Runner {
 
     @Override
     public Description getDescription() {
-        Specification specification = testInstance.specification();
-        return visitTree(specification, Optional.empty());
+        return visitTree(testInstance.specification(), Optional.empty());
+    }
+
+    @Override
+    public void run(RunNotifier notifier) {
+        visitTree(testInstance.specification(), Optional.of(notifier));
     }
 
     private Description visitTree(Specification specification, Optional<RunNotifier> notifier) {
@@ -54,11 +63,6 @@ public class JarSpecJUnitRunner<T extends UnitSpec> extends Runner {
             }
         }
         return descriptions;
-    }
-
-    @Override
-    public void run(RunNotifier notifier) {
-        visitTree(testInstance.specification(), Optional.of(notifier));
     }
 
     private void runTest(Test test, RunNotifier notifier, Description description) {

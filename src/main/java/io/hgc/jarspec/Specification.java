@@ -2,6 +2,10 @@ package io.hgc.jarspec;
 
 import java.util.*;
 
+/**
+ * Represents a Specification consisting of statements about behaviour and automated tests
+ * for those statements. Can be created using the helper methods in {@link UnitSpec}.
+ */
 public abstract class Specification {
     private Specification() {}
 
