@@ -7,6 +7,7 @@
     <groupId>io.hgc</groupId>
     <version>1.0-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
+    <description>RSpec/Jasmine style tests for native Java 8</description>
 
     <dependencies>
         <dependency>
