@@ -1,7 +1,9 @@
 package io.hgc.jarspec;
 
+import org.junit.internal.AssumptionViolatedException;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
+import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import sun.security.krb5.internal.crypto.Des;
 
@@ -23,14 +25,14 @@ public class JarSpecJUnitRunner<T extends Supplier<Specification>> extends Runne
     @Override
     public Description getDescription() {
         Specification specification = testInstance.get();
-        return createDescriptionFromSpecification(specification);
+        return createDescriptionTree(specification);
     }
 
-    private Description createDescriptionFromSpecification(Specification specification) {
-        Description description = Description.createTestDescription(testClass, specification.description());
+    private Description createDescriptionTree(Specification specification) {
+        Description description = createDescriptionNode(specification);
         if (specification.children().length > 0) {
             for (Specification child : specification.children()) {
-                description.addChild(createDescriptionFromSpecification(child));
+                description.addChild(createDescriptionTree(child));
             }
         }
         return description;
@@ -38,6 +40,31 @@ public class JarSpecJUnitRunner<T extends Supplier<Specification>> extends Runne
 
     @Override
     public void run(RunNotifier notifier) {
+        Specification specification = testInstance.get();
+        run(notifier, specification);
+    }
 
+    private void run(RunNotifier notifier, Specification specification) {
+        if (specification.children().length > 0) {
+            for (Specification child : specification.children()) {
+                if (child.test().isPresent()) {
+                    Description description = createDescriptionNode(child);
+                    try {
+                        notifier.fireTestStarted(description);
+                        child.test().get().run();
+                    } catch (Throwable e) {
+                        notifier.fireTestFailure(new Failure(description, e));
+                    } finally {
+                        notifier.fireTestFinished(description);
+                    }
+                }
+
+                run(notifier, child);
+            }
+        }
+    }
+
+    private Description createDescriptionNode(Specification specification) {
+        return Description.createTestDescription(testClass, specification.description());
     }
 }

@@ -6,7 +6,11 @@ import io.hgc.jarspec.Specification;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.Description;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
 import org.junit.runner.Runner;
+import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
@@ -55,9 +59,13 @@ public class JarSpecJUnitRunnerTest {
     }
 
     @Test
-    public void reportsSuccesses() {
-        runner.getDescription();
-
+    public void reportsCorrectResults() {
+        JUnitCore jUnitCore = new JUnitCore();
+        Result result = jUnitCore.run(runner);
+        assertEquals(2, result.getRunCount());
+        assertEquals(1, result.getFailureCount());
+        Failure failure = result.getFailures().get(0);
+        assertEquals("should equal 3", failure.getDescription().getMethodName());
     }
 
     protected static void verifyDescriptionTestClass(Description description, Class testClass) {

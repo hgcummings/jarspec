@@ -2,16 +2,21 @@ package io.hgc.jarspec;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public abstract class Specification {
     private Specification() {}
 
-    protected abstract Collection<Runnable> tests();
+    protected abstract Optional<Runnable> test();
 
     protected abstract String description();
 
     protected abstract Specification[] children();
+
+    public abstract void visitSpecifications(Consumer<Specification> visitor);
 
     public static Specification describe(String description, Supplier<Specification> test) {
         return new Node(description, new Specification[]{test.get()});
@@ -35,12 +40,8 @@ public abstract class Specification {
         }
 
         @Override
-        protected Collection<Runnable> tests() {
-            Collection<Runnable> tests = new ArrayList<>();
-            for (Specification child : children) {
-                tests.addAll(child.tests());
-            }
-            return tests;
+        protected Optional<Runnable> test() {
+            return Optional.empty();
         }
 
         @Override
@@ -51,6 +52,14 @@ public abstract class Specification {
         @Override
         protected Specification[] children() {
             return children;
+        }
+
+        @Override
+        public void visitSpecifications(Consumer<Specification> visitor) {
+            visitor.accept(this);
+            for (Specification child : children) {
+                visitor.accept(child);
+            }
         }
     }
 
@@ -64,10 +73,8 @@ public abstract class Specification {
         }
 
         @Override
-        protected Collection<Runnable> tests() {
-            Collection<Runnable> tests = new ArrayList<>();
-            tests.add(test);
-            return tests;
+        protected Optional<Runnable> test() {
+            return Optional.of(test);
         }
 
         @Override
@@ -78,6 +85,11 @@ public abstract class Specification {
         @Override
         protected Specification[] children() {
             return new Specification[0];
+        }
+
+        @Override
+        public void visitSpecifications(Consumer<Specification> visitor) {
+            visitor.accept(this);
         }
     }
 }
