@@ -1,3 +1,5 @@
+# ![JarSpec](logo.svg?raw=true)
+
 ## What?
 [RSpec](http://rspec.info/)/[Jasmine](http://jasmine.github.io/2.0/introduction.html) style tests for native Java 8, a bit like the following:
 
