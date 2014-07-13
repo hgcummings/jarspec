@@ -1,7 +1,7 @@
 # ![JarSpec](http://hgc.io/jarspec/images/logo.svg)
 
 ## What?
-[RSpec](http://rspec.info/)/[Jasmine](http://jasmine.github.io/2.0/introduction.html) style tests for native Java 8, a bit like the following:
+[RSpec](http://rspec.info/) (or [Jasmine](http://jasmine.github.io/2.0/introduction.html)/[Mocha](http://visionmedia.github.io/mocha/)) style tests for native Java 8, a bit like the following:
 
 ```java
 @RunWith(JarSpecJUnitRunner.class)
@@ -45,7 +45,7 @@ Then you can add the dependency to your project...
     </dependencies>
 ```
 
-Optionally configure SureFire to pick up classes named *Spec (but you can stick with the *Test convention if you like)
+Configure SureFire to pick up classes named *Spec (although you can stick with the default *Test convention if you prefer)
 
 ```xml
     <build>
@@ -66,7 +66,7 @@ Optionally configure SureFire to pick up classes named *Spec (but you can stick 
     </build>
 ```
 
-Then you can start writing specs. For now, see [wiki/Implementing Specifications](https://github.com/hgcummings/jarspec/wiki/Implementing-Specifications)) for more details.
+Then you can start writing specs. For now, see [wiki/Implementing Specifications](https://github.com/hgcummings/jarspec/wiki/Implementing-Specifications)) for more details, or the [project's own tests](https://github.com/hgcummings/jarspec/tree/master/src/test/java/io/hgc/jarspec) for examples.
 
 ## When?
 
