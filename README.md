@@ -1,4 +1,3 @@
-[![Build status](https://travis-ci.org/hgcummings/jarspec.svg?branch=master)](https://travis-ci.org/hgcummings/jarspec) [![Coverage Status](https://coveralls.io/repos/hgcummings/jarspec/badge.png)](http://hgc.io/jarspec/jacoco/index.html)
 ## What?
 [RSpec](http://rspec.info/)/[Jasmine](http://jasmine.github.io/2.0/introduction.html) style tests for native Java 8, a bit like the following:
 
@@ -65,10 +64,11 @@ Optionally configure SureFire to pick up classes named *Spec (but you can stick 
     </build>
 ```
 
-Then you can start writing specs. For now, see [the project's own tests](https://github.com/hgcummings/jarspec/tree/master/src/test/java) for more examples.
-
-JavaDocs (along with test/coverage results) can be found under the [Project reports](http://hgc.io/jarspec/project-reports.html)
+Then you can start writing specs. For now, see [the project's own tests](https://github.com/hgcummings/jarspec/tree/master/src/test/java) for more examples and the [API docs](http://hgc.io/jarspec/apidocs/index.html) (especially the [Specification interface](http://hgc.io/jarspec/apidocs/index.html)) for more details.
 
 ## When?
 
 See [open milestones](https://github.com/hgcummings/jarspec/issues/milestones) for an indication of progress and roadmap.
+
+---
+###### Developer resources: [Test results](http://hgc.io/jarspec/surefire-report.html) [![Build status](https://travis-ci.org/hgcummings/jarspec.svg?branch=master)](https://travis-ci.org/hgcummings/jarspec) [Coverage report](http://hgc.io/jarspec/jacoco/index.html) [![Coverage Status](https://coveralls.io/repos/hgcummings/jarspec/badge.png?branch=master)](https://coveralls.io/r/hgcummings/jarspec?branch=master) [Task board](https://huboard.com/hgcummings/jarspec)
