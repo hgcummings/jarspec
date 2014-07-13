@@ -17,12 +17,13 @@ import java.util.Optional;
  */
 public class JarSpecJUnitRunner<T extends Specification> extends Runner {
     private Class<T> specClass;
-    private T specification;
+    private SpecificationNode rootSpecification;
 
     public JarSpecJUnitRunner(Class<T> specClass) throws InstantiationException {
         this.specClass = specClass;
         try {
-            specification = specClass.newInstance();
+            T specification = specClass.newInstance();
+            rootSpecification = specification.root();
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -30,17 +31,17 @@ public class JarSpecJUnitRunner<T extends Specification> extends Runner {
 
     @Override
     public Description getDescription() {
-        return visitTree(specification.root(), Optional.empty());
+        return visitTree(rootSpecification, Optional.empty());
     }
 
     @Override
     public void run(RunNotifier notifier) {
-        visitTree(specification.root(), Optional.of(notifier));
+        visitTree(rootSpecification, Optional.of(notifier));
     }
 
     private Description visitTree(SpecificationNode specificationNode, Optional<RunNotifier> notifier) {
         Description description = Description.createTestDescription(specClass, specificationNode.description());
-        visitTree(specification.root(), notifier, "").forEach(description::addChild);
+        visitTree(rootSpecification, notifier, "").forEach(description::addChild);
         return description;
     }
 
