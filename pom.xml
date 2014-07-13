@@ -69,7 +69,7 @@
                         <include>**/*Spec.java</include>
                     </includes>
                     <excludes>
-                        <exclude>**/examples/*Spec.java</exclude>
+                        <exclude>**/fixtures/*.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

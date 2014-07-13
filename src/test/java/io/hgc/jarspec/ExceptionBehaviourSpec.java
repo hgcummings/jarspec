@@ -1,6 +1,6 @@
 package io.hgc.jarspec;
 
-import io.hgc.jarspec.examples.ExceptionSpec;
+import io.hgc.jarspec.fixtures.ExceptionSpec;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;

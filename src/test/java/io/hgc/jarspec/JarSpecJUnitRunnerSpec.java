@@ -1,9 +1,9 @@
 package io.hgc.jarspec;
 
-import io.hgc.jarspec.examples.AdditionSpec;
-import io.hgc.jarspec.examples.AssumptionFailureSpec;
-import io.hgc.jarspec.examples.ErrorInDescribeSpec;
-import io.hgc.jarspec.examples.ErrorInRootSpec;
+import io.hgc.jarspec.fixtures.AdditionSpec;
+import io.hgc.jarspec.fixtures.AssumptionFailureSpec;
+import io.hgc.jarspec.fixtures.ErrorInDescribeSpec;
+import io.hgc.jarspec.fixtures.ErrorInRootSpec;
 import org.junit.runner.*;
 import org.junit.runner.notification.Failure;
 
@@ -12,7 +12,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Using {@link io.hgc.jarspec.examples.AdditionSpec} to test the main runner class
+ * Using {@link io.hgc.jarspec.fixtures.AdditionSpec} to test the main runner class
  */
 @RunWith(JarSpecJUnitRunner.class)
 public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour {
