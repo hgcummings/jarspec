@@ -15,7 +15,7 @@ public class MinimalSpec implements Specification {
 
 ## Why?
 
-Allows for more expressive test names without very_long_underscore_ridden_test_method_names, and for more flexible test structure. Java 8 features such as lambda expressions make this kind of syntax possible without an insane amount of boilerplate.
+Allows for more expressive test names without very_long_underscore_ridden_test_method_names, and for more flexible test structure. Java 8 features such as lambda expressions make this kind of syntax possible without an insane amount of boilerplate. See [wiki/Motivation](https://github.com/hgcummings/jarspec/wiki/Motivation) for more.
 
 ## How?
 
@@ -64,7 +64,7 @@ Optionally configure SureFire to pick up classes named *Spec (but you can stick 
     </build>
 ```
 
-Then you can start writing specs. For now, see [the project's own tests](https://github.com/hgcummings/jarspec/tree/master/src/test/java) for more examples and the [API docs](http://hgc.io/jarspec/apidocs/index.html) (especially the [Specification interface](http://hgc.io/jarspec/apidocs/index.html)) for more details.
+Then you can start writing specs. For now, see [wiki/Implementing Specifications](https://github.com/hgcummings/jarspec/wiki/Implementing-Specifications)) for more details.
 
 ## When?
 

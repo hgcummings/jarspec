@@ -12,31 +12,28 @@ import static org.junit.Assert.*;
 public class ExceptionBehaviourSpec implements Specification, ExceptionBehaviour {
     @Override
     public SpecificationNode root() {
-        return describe("'itThrows' behaviour", () -> {
-            Result result = new JUnitCore().run(ExceptionSpec.class);
-
-            return by(
-                it("does not fail tests that throw an expected exception", () ->
-                    assertTrue(result.getFailureCount() < result.getRunCount())),
-                it("fails tests that throw an unexpected exception", () -> {
-                    assertTrue(result.getFailureCount() > 0);
-                    for (Failure failure : result.getFailures()) {
-                        if (failure.getDescription().getMethodName().contains("on non-matching invocation")) {
-                            return;
-                        }
+        Result result = new JUnitCore().run(ExceptionSpec.class);
+        return describe("'itThrows' behaviour", () -> by(
+            it("does not fail tests that throw an expected exception", () ->
+                assertTrue(result.getFailureCount() < result.getRunCount())),
+            it("fails tests that throw an unexpected exception", () -> {
+                assertTrue(result.getFailureCount() > 0);
+                for (Failure failure : result.getFailures()) {
+                    if (failure.getDescription().getMethodName().contains("on non-matching invocation")) {
+                        return;
                     }
-                    fail();
-                }),
-                it("fails tests that do not throw an exception", () -> {
-                    assertTrue(result.getFailureCount() > 0);
-                    for (Failure failure : result.getFailures()) {
-                        if (failure.getDescription().getMethodName().contains("on non-exception invocation")) {
-                            return;
-                        }
+                }
+                fail();
+            }),
+            it("fails tests that do not throw an exception", () -> {
+                assertTrue(result.getFailureCount() > 0);
+                for (Failure failure : result.getFailures()) {
+                    if (failure.getDescription().getMethodName().contains("on non-exception invocation")) {
+                        return;
                     }
-                    fail();
-                })
-            );
-        });
+                }
+                fail();
+            })
+        ));
     }
 }
