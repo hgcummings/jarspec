@@ -19,7 +19,7 @@ public interface Specification {
     default public SpecificationNode describe(String unit, BySingle specification) {
         try {
             return new SpecificationNode.Aggregate(unit, by(specification.get()));
-        } catch (Exception e) {
+        } catch (Throwable e) {
             return new SpecificationNode.SpecError(unit, e);
         }
     }
@@ -32,7 +32,7 @@ public interface Specification {
     default public SpecificationNode describe(String unit, ByMultiple specifications) {
         try {
             return new SpecificationNode.Aggregate(unit, specifications.get());
-        } catch (Exception e) {
+        } catch (Throwable e) {
             return new SpecificationNode.SpecError(unit, e);
         }
     }

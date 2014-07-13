@@ -68,9 +68,13 @@ public abstract class SpecificationNode {
         private final String unit;
         private final Exception exception;
 
-        public SpecError(String unit, Exception exception) {
+        public SpecError(String unit, Throwable throwable) {
             this.unit = unit;
-            this.exception = exception;
+            if (throwable instanceof Exception) {
+                this.exception = (Exception) throwable;
+            } else {
+                this.exception = new RuntimeException(throwable);
+            }
         }
 
         @Override

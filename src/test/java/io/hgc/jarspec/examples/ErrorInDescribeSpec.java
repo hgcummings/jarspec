@@ -34,6 +34,6 @@ public class ErrorInDescribeSpec implements Specification {
     }
 
     private void brokenSetupMethod() throws Exception {
-        throw new Exception("Setup failure thrown intentionally for test purposes");
+        throw new Error("Setup failure thrown intentionally for test purposes");
     }
 }
