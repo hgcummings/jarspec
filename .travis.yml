@@ -2,7 +2,7 @@ language: java
 jdk:
 - oraclejdk8
 after_success:
-- mvn site
+- mvn site coveralls:jacoco
 - cd ./target/site
 - touch .nojekyll
 - git config --global user.email "hgcummings.jarspec@travis-ci.org"
@@ -17,3 +17,4 @@ env:
   global:
   - secure: M3NfQJJ4eAo6iLNH1+/fpOnPnb5LwnrvPfxsb8KeP9Cn5I6p0Ga3uBsHYgxEZu/DygocDNLdzZJ5WF3Z49wtHXPdnWB5Ui1s42sbXczLhGVDKu6VOo8Z0oMLTKSiRwb1LOMxOVCBa1FZo+Zv5HGFTJCyPs3B7w9Lla7S+13KCLw=
   - secure: Umn7Lgz/h/6WW0Q0CMPCjEIDGcqARE6/GvN9/CFx576F/nICzWxhKicfyWUmEf2LXZ43/7qCyC58m0zP4q7gzUteCCSu/TL1YMuhu7DYwm535eTiKWDUpVJo0+dqdqU4e/97lcetqwL93LJNKmEUOwI3BVhp+5DCxZFLOGvZb8Y=
+  - secure: b+r3RPUvcyGJaLfl6MIbkM/bpdua1UOXcpB4eAdvR8J5P53BMST7hRbKQQoozS6BNxKoWsBLM6TE2pgLb/BFekehTXjA6Jfr1xOUa2A+6IHqJi9EPFrT7nYxwDwvqsjtYDnApzkv6oGhzYi1Yl2yaLAyEBM5Wx3LX/E1Y5jd0lQ=
