@@ -28,12 +28,23 @@ public class ErrorInDescribeSpec implements Specification {
                     fail("Test should not reach this point");
                 }));
             }),
+            describe("describe with unchecked Error", () -> {
+                uncheckedErrorMethod();
+
+                return by(it("shouldn't get this far", () -> {
+                    fail("Test should not reach this point");
+                }));
+            }),
             describe("successful describe", () ->
                 it("should pass", () -> assertTrue(true)))
         ));
     }
 
     private void brokenSetupMethod() throws Exception {
+        throw new Exception("Setup failure thrown intentionally for test purposes");
+    }
+
+    private void uncheckedErrorMethod() {
         throw new Error("Setup failure thrown intentionally for test purposes");
     }
 }

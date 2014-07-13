@@ -54,11 +54,11 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                     Result result = new JUnitCore().run(AssumptionFailureSpec.class);
                     assertEquals(0, result.getFailureCount());
                 }),
-                describe("setup error", () -> {
+                describe("error handling", () -> {
                     Result result = new JUnitCore().run(ErrorInDescribeSpec.class);
 
                     return by(
-                        it("causes failure in multi-child describe nodes", () -> {
+                        it("reports checked exceptions in multi-child describe nodes as failures", () -> {
                             assertTrue(result.getFailureCount() > 0);
                             for (Failure failure : result.getFailures()) {
                                 if (failure.getDescription().getMethodName().contains("broken multi-child describe")) {
@@ -67,10 +67,19 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                             }
                             fail();
                         }),
-                        it("causes failure in single-child describe nodes", () -> {
+                        it("reports checked exceptions in single-child describe nodes as failures", () -> {
                             assertTrue(result.getFailureCount() > 0);
                             for (Failure failure : result.getFailures()) {
                                 if (failure.getDescription().getMethodName().contains("broken single-child describe")) {
+                                    return;
+                                }
+                            }
+                            fail();
+                        }),
+                        it("reports unchecked exceptions in multi-child describe nodes as failures", () -> {
+                            assertTrue(result.getFailureCount() > 0);
+                            for (Failure failure : result.getFailures()) {
+                                if (failure.getDescription().getMethodName().contains("describe with unchecked Error")) {
                                     return;
                                 }
                             }
@@ -80,17 +89,15 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                             assertTrue(result.getFailureCount() < result.getRunCount()))
                     );
                 }),
-                describe("root error", () -> {
-                    Result result = new JUnitCore().run(ErrorInRootSpec.class);
-
-                    return it("causes a single init failure for spec class", () -> {
+                describe("root error", () ->
+                    it("causes a single init failure for spec class", () -> {
+                        Result result = new JUnitCore().run(ErrorInRootSpec.class);
                         assertEquals(1, result.getFailureCount());
                         Failure failure = result.getFailures().get(0);
                         String displayName = failure.getDescription().getDisplayName();
                         assertTrue(displayName.contains("initializationError"));
                         assertTrue(displayName.contains(ErrorInRootSpec.class.getName()));
-                    });
-                })
+                    }))
             );
         });
     }
