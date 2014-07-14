@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>JarSpecJUnitRunner.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">io.hgc:jarspec</a> &gt; <a href="index.source.html" class="el_package">io.hgc.jarspec</a> &gt; <span class="el_source">JarSpecJUnitRunner.java</span></div><h1>JarSpecJUnitRunner.java</h1><pre class="source lang-java linenums">package io.hgc.jarspec;
+
+import org.junit.internal.AssumptionViolatedException;
+import org.junit.runner.Description;
+import org.junit.runner.Runner;
+import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunNotifier;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Test runner for executing JarSpec specifications under JUnit
+ *
+ * @param &lt;T&gt; Specification class
+ */
+public class JarSpecJUnitRunner&lt;T extends Specification&gt; extends Runner {
+    private Class&lt;T&gt; specClass;
+    private SpecificationNode rootSpecification;
+
+<span class="fc" id="L22">    public JarSpecJUnitRunner(Class&lt;T&gt; specClass) throws InstantiationException {</span>
+<span class="fc" id="L23">        this.specClass = specClass;</span>
+        try {
+<span class="fc" id="L25">            T specification = specClass.newInstance();</span>
+<span class="fc" id="L26">            rootSpecification = specification.root();</span>
+<span class="fc" id="L27">        } catch (IllegalAccessException e) {</span>
+<span class="fc" id="L28">            throw new RuntimeException(e);</span>
+<span class="fc" id="L29">        }</span>
+<span class="fc" id="L30">    }</span>
+
+    @Override
+    public Description getDescription() {
+<span class="fc" id="L34">        return visitTree(rootSpecification, Optional.empty());</span>
+    }
+
+    @Override
+    public void run(RunNotifier notifier) {
+<span class="fc" id="L39">        visitTree(rootSpecification, Optional.of(notifier));</span>
+<span class="fc" id="L40">    }</span>
+
+    private Description visitTree(SpecificationNode specificationNode, Optional&lt;RunNotifier&gt; notifier) {
+<span class="fc" id="L43">        Description description = Description.createTestDescription(specClass, specificationNode.description());</span>
+<span class="fc" id="L44">        visitTree(rootSpecification, notifier, &quot;&quot;).forEach(description::addChild);</span>
+<span class="fc" id="L45">        return description;</span>
+    }
+
+    private List&lt;Description&gt; visitTree(SpecificationNode specificationNode, Optional&lt;RunNotifier&gt; notifier, String prefix) {
+<span class="fc" id="L49">        String text = prefix + specificationNode.description();</span>
+
+<span class="fc" id="L51">        List&lt;Description&gt; descriptions = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (specificationNode.test().isPresent()) {</span>
+<span class="fc" id="L54">            Description description = Description.createTestDescription(specClass, text);</span>
+<span class="fc" id="L55">            descriptions.add(description);</span>
+
+<span class="fc bfc" id="L57" title="All 2 branches covered.">            if (notifier.isPresent()) {</span>
+<span class="fc" id="L58">                runTest(specificationNode.test().get(), notifier.get(), description);</span>
+            }
+        }
+
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (specificationNode.children().size() &gt; 0) {</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">            for (SpecificationNode child : specificationNode.children()) {</span>
+<span class="fc" id="L64">                descriptions.addAll(visitTree(child, notifier, text + &quot; &quot;));</span>
+<span class="fc" id="L65">            }</span>
+        }
+<span class="fc" id="L67">        return descriptions;</span>
+    }
+
+    private void runTest(Test test, RunNotifier notifier, Description description) {
+        try {
+<span class="fc" id="L72">            notifier.fireTestStarted(description);</span>
+<span class="fc" id="L73">            test.run();</span>
+<span class="fc" id="L74">        } catch(AssumptionViolatedException e) {</span>
+<span class="fc" id="L75">            notifier.fireTestAssumptionFailed(new Failure(description, e));</span>
+<span class="fc" id="L76">        } catch (Throwable e) {</span>
+<span class="fc" id="L77">            notifier.fireTestFailure(new Failure(description, e));</span>
+<span class="fc" id="L78">        }</span>
+<span class="fc" id="L79">        notifier.fireTestFinished(description);</span>
+<span class="fc" id="L80">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>
