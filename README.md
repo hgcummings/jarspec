@@ -1,4 +1,4 @@
-# ![JarSpec](http://hgc.io/jarspec/images/logo.svg)
+# ![JarSpec](http://hgc.io/jarspec/0.2.0-SNAPSHOT/images/logo.svg)
 
 ## What?
 [RSpec](http://rspec.info/) (or [Jasmine](http://jasmine.github.io/2.0/introduction.html)/[Mocha](http://visionmedia.github.io/mocha/)) style tests for native Java 8, a bit like the following:
@@ -21,17 +21,9 @@ Allows for more expressive test names without very_long_underscore_ridden_test_m
 
 ## How?
 
-### Using Maven
+### Using Maven ![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.hgc/jarspec/badge.svg)
 
-You'd currently have to build from source to add to your local Maven repository...
-
-```
-git clone git@github.com:hgcummings/jarspec.git
-cd jarspec
-mvn clean install
-```
-
-Then you can add the dependency to your project...
+Add the dependency to your pom
 
 ```xml
     <dependencies>
@@ -39,7 +31,7 @@ Then you can add the dependency to your project...
         <dependency>
             <artifactId>jarspec</artifactId>
             <groupId>io.hgc</groupId>
-            <version>0.1.0-SNAPSHOT</version>
+            <version>0.1.0</version>
         </dependency>
         ....
     </dependencies>
@@ -73,4 +65,4 @@ Then you can start writing specs. For now, see [wiki/Implementing Specifications
 See [open milestones](https://github.com/hgcummings/jarspec/issues/milestones) for an indication of progress and roadmap.
 
 ---
-###### Developer resources: [Test results](http://hgc.io/jarspec/surefire-report.html) [![Build status](https://travis-ci.org/hgcummings/jarspec.svg?branch=master)](https://travis-ci.org/hgcummings/jarspec) [Coverage report](http://hgc.io/jarspec/jacoco/index.html) [![Coverage Status](https://coveralls.io/repos/hgcummings/jarspec/badge.png?branch=master)](https://coveralls.io/r/hgcummings/jarspec?branch=master) [Task board](https://huboard.com/hgcummings/jarspec)
+###### Developer resources: [Test results](http://hgc.io/jarspec/0.2.0-SNAPSHOT/surefire-report.html) [![Build status](https://travis-ci.org/hgcummings/jarspec.svg?branch=master)](https://travis-ci.org/hgcummings/jarspec) [Coverage report](http://hgc.io/jarspec/0.2.0-SNAPSHOT/jacoco/index.html) [![Coverage Status](https://coveralls.io/repos/hgcummings/jarspec/badge.png?branch=master)](https://coveralls.io/r/hgcummings/jarspec?branch=master) [Task board](https://huboard.com/hgcummings/jarspec)
