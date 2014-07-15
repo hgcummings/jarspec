@@ -25,7 +25,7 @@ Add JarSpec to your project dependencies. See instructions below for Maven and [
 
 Then you can start writing specs. See [wiki/Implementing Specifications](https://github.com/hgcummings/jarspec/wiki/Implementing-Specifications) for more details, or the [project's own tests](https://github.com/hgcummings/jarspec/tree/master/src/test/java/io/hgc/jarspec) for examples.
 
-### Using Maven [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.hgc/jarspec/badge.svg)](http://search.maven.org/#search|ga|1|g:"io.hgc"|a:"jarspec")
+### Using Maven [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.hgc/jarspec/badge.svg)](http://search.maven.org/#search|gav|1|g:"io.hgc"%20AND%20a:"jarspec")
 
 Add the dependency to your pom
 
