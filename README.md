@@ -23,9 +23,9 @@ Allows for more expressive test names without very_long_underscore_ridden_test_m
 
 Add JarSpec to your project dependencies. See instructions below for Maven and [the dependency info page](http://hgc.io/jarspec/0.1.0/dependency-info.html) for other build tools.
 
-Then you can start writing specs. See [wiki/Implementing Specifications](https://github.com/hgcummings/jarspec/wiki/Implementing-Specifications)) for more details, or the [project's own tests](https://github.com/hgcummings/jarspec/tree/master/src/test/java/io/hgc/jarspec) for examples.
+Then you can start writing specs. See [wiki/Implementing Specifications](https://github.com/hgcummings/jarspec/wiki/Implementing-Specifications) for more details, or the [project's own tests](https://github.com/hgcummings/jarspec/tree/master/src/test/java/io/hgc/jarspec) for examples.
 
-### Using Maven ![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.hgc/jarspec/badge.svg)
+### Using Maven [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.hgc/jarspec/badge.svg)](http://search.maven.org/#search|ga|1|g:"io.hgc"|a:"jarspec")
 
 Add the dependency to your pom
 
