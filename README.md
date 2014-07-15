@@ -19,13 +19,13 @@ public class MinimalSpec implements Specification {
 
 Allows for more expressive test names without very_long_underscore_ridden_test_method_names, and for more flexible test structure. Java 8 features such as lambda expressions make this kind of syntax possible without an insane amount of boilerplate. See [wiki/Motivation](https://github.com/hgcummings/jarspec/wiki/Motivation) for more.
 
-## How? ![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.hgc/jarspec/badge.svg)
+## How?
 
 Add JarSpec to your project dependencies. See instructions below for Maven and [the dependency info page](http://hgc.io/jarspec/0.1.0/dependency-info.html) for other build tools.
 
 Then you can start writing specs. See [wiki/Implementing Specifications](https://github.com/hgcummings/jarspec/wiki/Implementing-Specifications)) for more details, or the [project's own tests](https://github.com/hgcummings/jarspec/tree/master/src/test/java/io/hgc/jarspec) for examples.
 
-### Using Maven
+### Using Maven ![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.hgc/jarspec/badge.svg)
 
 Add the dependency to your pom
 
