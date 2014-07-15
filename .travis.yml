@@ -7,6 +7,7 @@ after_success:
 - git config --global user.name "Travis CI"
 - git clone -q https://$GITHUB_USER:$GITHUB_PASS@github.com/hgcummings/jarspec.git pages
 - cd pages
+- git checkout gh-pages
 - rm -rf $JARSPEC_VERSION
 - cp -r ../target/site $JARSPEC_VERSION
 - git add -A
