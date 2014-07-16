@@ -42,7 +42,7 @@ Add the dependency to your pom
     </dependencies>
 ```
 
-Configure SureFire to pick up classes named *Spec (although you can stick with the default *Test convention if you prefer)
+Configure SureFire to pick up classes named `*Spec` (although you can stick with the default `*Test` convention if you prefer)
 
 ```xml
     <build>
