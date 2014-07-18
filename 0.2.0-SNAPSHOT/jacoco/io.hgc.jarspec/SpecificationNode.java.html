@@ -8,6 +8,10 @@ import java.util.*;
 public abstract class SpecificationNode {
 <span class="fc" id="L9">    private SpecificationNode() {}</span>
 
+    public SpecificationNode skip() {
+<span class="fc" id="L12">        return new Statement(this.description(), Optional.&lt;Test&gt;empty());</span>
+    }
+
     abstract Optional&lt;Test&gt; test();
 
     abstract String description();
@@ -15,52 +19,52 @@ public abstract class SpecificationNode {
     abstract List&lt;SpecificationNode&gt; children();
 
     static class Aggregate extends SpecificationNode {
-        private String unit;
-        private List&lt;SpecificationNode&gt; children;
+        private final String unit;
+        private final List&lt;SpecificationNode&gt; children;
 
-<span class="fc" id="L21">        public Aggregate(String unit, List&lt;SpecificationNode&gt; children) {</span>
-<span class="fc" id="L22">            this.unit = unit;</span>
-<span class="fc" id="L23">            this.children = children;</span>
-<span class="fc" id="L24">        }</span>
+<span class="fc" id="L25">        public Aggregate(String unit, List&lt;SpecificationNode&gt; children) {</span>
+<span class="fc" id="L26">            this.unit = unit;</span>
+<span class="fc" id="L27">            this.children = children;</span>
+<span class="fc" id="L28">        }</span>
 
         @Override
         Optional&lt;Test&gt; test() {
-<span class="fc" id="L28">            return Optional.empty();</span>
+<span class="fc" id="L32">            return Optional.empty();</span>
         }
 
         @Override
         String description() {
-<span class="fc" id="L33">            return unit;</span>
+<span class="fc" id="L37">            return unit;</span>
         }
 
         @Override
         List&lt;SpecificationNode&gt; children() {
-<span class="fc" id="L38">            return children;</span>
+<span class="fc" id="L42">            return children;</span>
         }
     }
 
     static class Statement extends SpecificationNode {
-        private String behaviour;
-        private Test test;
+        private final String behaviour;
+        private final Optional&lt;Test&gt; test;
 
-<span class="fc" id="L46">        public Statement(String behaviour, Test test) {</span>
-<span class="fc" id="L47">            this.behaviour = behaviour;</span>
-<span class="fc" id="L48">            this.test = test;</span>
-<span class="fc" id="L49">        }</span>
+<span class="fc" id="L50">        public Statement(String behaviour, Optional&lt;Test&gt; test) {</span>
+<span class="fc" id="L51">            this.behaviour = behaviour;</span>
+<span class="fc" id="L52">            this.test = test;</span>
+<span class="fc" id="L53">        }</span>
 
         @Override
         Optional&lt;Test&gt; test() {
-<span class="fc" id="L53">            return Optional.of(test);</span>
+<span class="fc" id="L57">            return test;</span>
         }
 
         @Override
         String description() {
-<span class="fc" id="L58">            return behaviour;</span>
+<span class="fc" id="L62">            return behaviour;</span>
         }
 
         @Override
         List&lt;SpecificationNode&gt; children() {
-<span class="fc" id="L63">            return Collections.emptyList();</span>
+<span class="fc" id="L67">            return Collections.emptyList();</span>
         }
     }
 
@@ -68,28 +72,28 @@ public abstract class SpecificationNode {
         private final String unit;
         private final Exception exception;
 
-<span class="fc" id="L71">        public SpecError(String unit, Throwable throwable) {</span>
-<span class="fc" id="L72">            this.unit = unit;</span>
-<span class="fc bfc" id="L73" title="All 2 branches covered.">            if (throwable instanceof Exception) {</span>
-<span class="fc" id="L74">                this.exception = (Exception) throwable;</span>
+<span class="fc" id="L75">        public SpecError(String unit, Throwable throwable) {</span>
+<span class="fc" id="L76">            this.unit = unit;</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">            if (throwable instanceof Exception) {</span>
+<span class="fc" id="L78">                this.exception = (Exception) throwable;</span>
             } else {
-<span class="fc" id="L76">                this.exception = new RuntimeException(throwable);</span>
+<span class="fc" id="L80">                this.exception = new RuntimeException(throwable);</span>
             }
-<span class="fc" id="L78">        }</span>
+<span class="fc" id="L82">        }</span>
 
         @Override
         Optional&lt;Test&gt; test() {
-<span class="fc" id="L82">            return Optional.of(() -&gt; { throw exception; });</span>
+<span class="fc" id="L86">            return Optional.of(() -&gt; { throw exception; });</span>
         }
 
         @Override
         String description() {
-<span class="fc" id="L87">            return unit;</span>
+<span class="fc" id="L91">            return unit;</span>
         }
 
         @Override
         List&lt;SpecificationNode&gt; children() {
-<span class="fc" id="L92">            return Collections.emptyList();</span>
+<span class="fc" id="L96">            return Collections.emptyList();</span>
         }
     }
 }

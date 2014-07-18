@@ -3,6 +3,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Represents a Specification consisting of statements about behaviour and automated tests
@@ -18,9 +19,9 @@ public interface Specification {
      */
     default public SpecificationNode describe(String unit, BySingle specification) {
         try {
-<span class="fc" id="L21">            return new SpecificationNode.Aggregate(unit, by(specification.get()));</span>
-<span class="fc" id="L22">        } catch (Throwable e) {</span>
-<span class="fc" id="L23">            return new SpecificationNode.SpecError(unit, e);</span>
+<span class="fc" id="L22">            return new SpecificationNode.Aggregate(unit, by(specification.get()));</span>
+<span class="fc" id="L23">        } catch (Throwable e) {</span>
+<span class="fc" id="L24">            return new SpecificationNode.SpecError(unit, e);</span>
         }
     }
 
@@ -31,9 +32,9 @@ public interface Specification {
      */
     default public SpecificationNode describe(String unit, ByMultiple specifications) {
         try {
-<span class="fc" id="L34">            return new SpecificationNode.Aggregate(unit, specifications.get());</span>
-<span class="fc" id="L35">        } catch (Throwable e) {</span>
-<span class="fc" id="L36">            return new SpecificationNode.SpecError(unit, e);</span>
+<span class="fc" id="L35">            return new SpecificationNode.Aggregate(unit, specifications.get());</span>
+<span class="fc" id="L36">        } catch (Throwable e) {</span>
+<span class="fc" id="L37">            return new SpecificationNode.SpecError(unit, e);</span>
         }
     }
 
@@ -43,7 +44,15 @@ public interface Specification {
      * @return a specification consisting of single automatically verifiable statement
      */
     default public SpecificationNode it(String statement, Test test) {
-<span class="fc" id="L46">        return new SpecificationNode.Statement(statement, test);</span>
+<span class="fc" id="L47">        return new SpecificationNode.Statement(statement, Optional.of(test));</span>
+    }
+
+    /**
+     * @param statement a statement about the behaviour of a unit
+     * @return a specification consisting of single statement with no automated test
+     */
+    default public SpecificationNode it(String statement) {
+<span class="fc" id="L55">        return new SpecificationNode.Statement(statement, Optional.&lt;Test&gt;empty());</span>
     }
 
     /**
@@ -52,9 +61,9 @@ public interface Specification {
      * @return a List containing all of the specifications in the order provided
      */
     default public List&lt;SpecificationNode&gt; by(SpecificationNode... specificationNodes) {
-<span class="fc" id="L55">        List&lt;SpecificationNode&gt; list = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L56">        Collections.addAll(list, specificationNodes);</span>
-<span class="fc" id="L57">        return list;</span>
+<span class="fc" id="L64">        List&lt;SpecificationNode&gt; list = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L65">        Collections.addAll(list, specificationNodes);</span>
+<span class="fc" id="L66">        return list;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

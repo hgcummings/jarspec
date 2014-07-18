@@ -49,34 +49,36 @@ public class JarSpecJUnitRunner&lt;T extends Specification&gt; extends Runner {
 <span class="fc" id="L49">        String text = prefix + specificationNode.description();</span>
 
 <span class="fc" id="L51">        List&lt;Description&gt; descriptions = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L52">        Description description = Description.createTestDescription(specClass, text);</span>
 
-<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (specificationNode.test().isPresent()) {</span>
-<span class="fc" id="L54">            Description description = Description.createTestDescription(specClass, text);</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (specificationNode.test().isPresent()) {</span>
 <span class="fc" id="L55">            descriptions.add(description);</span>
 
 <span class="fc bfc" id="L57" title="All 2 branches covered.">            if (notifier.isPresent()) {</span>
 <span class="fc" id="L58">                runTest(specificationNode.test().get(), notifier.get(), description);</span>
             }
+<span class="fc bfc" id="L60" title="All 4 branches covered.">        } else if (specificationNode.children().size() == 0 &amp;&amp; notifier.isPresent()) {</span>
+<span class="fc" id="L61">            notifier.get().fireTestIgnored(description);</span>
         }
 
-<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (specificationNode.children().size() &gt; 0) {</span>
-<span class="fc bfc" id="L63" title="All 2 branches covered.">            for (SpecificationNode child : specificationNode.children()) {</span>
-<span class="fc" id="L64">                descriptions.addAll(visitTree(child, notifier, text + &quot; &quot;));</span>
-<span class="fc" id="L65">            }</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (specificationNode.children().size() &gt; 0) {</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">            for (SpecificationNode child : specificationNode.children()) {</span>
+<span class="fc" id="L66">                descriptions.addAll(visitTree(child, notifier, text + &quot; &quot;));</span>
+<span class="fc" id="L67">            }</span>
         }
-<span class="fc" id="L67">        return descriptions;</span>
+<span class="fc" id="L69">        return descriptions;</span>
     }
 
     private void runTest(Test test, RunNotifier notifier, Description description) {
         try {
-<span class="fc" id="L72">            notifier.fireTestStarted(description);</span>
-<span class="fc" id="L73">            test.run();</span>
-<span class="fc" id="L74">        } catch(AssumptionViolatedException e) {</span>
-<span class="fc" id="L75">            notifier.fireTestAssumptionFailed(new Failure(description, e));</span>
-<span class="fc" id="L76">        } catch (Throwable e) {</span>
-<span class="fc" id="L77">            notifier.fireTestFailure(new Failure(description, e));</span>
-<span class="fc" id="L78">        }</span>
-<span class="fc" id="L79">        notifier.fireTestFinished(description);</span>
-<span class="fc" id="L80">    }</span>
+<span class="fc" id="L74">            notifier.fireTestStarted(description);</span>
+<span class="fc" id="L75">            test.run();</span>
+<span class="fc" id="L76">        } catch(AssumptionViolatedException e) {</span>
+<span class="fc" id="L77">            notifier.fireTestAssumptionFailed(new Failure(description, e));</span>
+<span class="fc" id="L78">        } catch (Throwable e) {</span>
+<span class="fc" id="L79">            notifier.fireTestFailure(new Failure(description, e));</span>
+<span class="fc" id="L80">        }</span>
+<span class="fc" id="L81">        notifier.fireTestFinished(description);</span>
+<span class="fc" id="L82">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>
