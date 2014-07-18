@@ -7,8 +7,12 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Test runner for executing JarSpec specifications under JUnit
@@ -16,69 +20,78 @@ import java.util.Optional;
  * @param &lt;T&gt; Specification class
  */
 public class JarSpecJUnitRunner&lt;T extends Specification&gt; extends Runner {
-    private Class&lt;T&gt; specClass;
-    private SpecificationNode rootSpecification;
+    private final Class&lt;T&gt; specClass;
+    private final Map&lt;Description, Optional&lt;Test&gt;&gt; allTests;
+    private final Set&lt;Description&gt; soloTests;
+    private final Description topLevelDescription;
 
-<span class="fc" id="L22">    public JarSpecJUnitRunner(Class&lt;T&gt; specClass) throws InstantiationException {</span>
-<span class="fc" id="L23">        this.specClass = specClass;</span>
+<span class="fc" id="L28">    public JarSpecJUnitRunner(Class&lt;T&gt; specClass) throws InstantiationException {</span>
+<span class="fc" id="L29">        this.specClass = specClass;</span>
         try {
-<span class="fc" id="L25">            T specification = specClass.newInstance();</span>
-<span class="fc" id="L26">            rootSpecification = specification.root();</span>
-<span class="fc" id="L27">        } catch (IllegalAccessException e) {</span>
-<span class="fc" id="L28">            throw new RuntimeException(e);</span>
-<span class="fc" id="L29">        }</span>
-<span class="fc" id="L30">    }</span>
+<span class="fc" id="L31">            allTests = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L32">            soloTests = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L33">            topLevelDescription = visitTree(specClass.newInstance().root());</span>
+<span class="fc" id="L34">        } catch (IllegalAccessException e) {</span>
+<span class="fc" id="L35">            throw new RuntimeException(e);</span>
+<span class="fc" id="L36">        }</span>
+<span class="fc" id="L37">    }</span>
 
     @Override
     public Description getDescription() {
-<span class="fc" id="L34">        return visitTree(rootSpecification, Optional.empty());</span>
+<span class="fc" id="L41">        return topLevelDescription;</span>
     }
 
     @Override
     public void run(RunNotifier notifier) {
-<span class="fc" id="L39">        visitTree(rootSpecification, Optional.of(notifier));</span>
-<span class="fc" id="L40">    }</span>
-
-    private Description visitTree(SpecificationNode specificationNode, Optional&lt;RunNotifier&gt; notifier) {
-<span class="fc" id="L43">        Description description = Description.createTestDescription(specClass, specificationNode.description());</span>
-<span class="fc" id="L44">        visitTree(rootSpecification, notifier, &quot;&quot;).forEach(description::addChild);</span>
-<span class="fc" id="L45">        return description;</span>
-    }
-
-    private List&lt;Description&gt; visitTree(SpecificationNode specificationNode, Optional&lt;RunNotifier&gt; notifier, String prefix) {
-<span class="fc" id="L49">        String text = prefix + specificationNode.description();</span>
-
-<span class="fc" id="L51">        List&lt;Description&gt; descriptions = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L52">        Description description = Description.createTestDescription(specClass, text);</span>
-
-<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (specificationNode.test().isPresent()) {</span>
-<span class="fc" id="L55">            descriptions.add(description);</span>
-
-<span class="fc bfc" id="L57" title="All 2 branches covered.">            if (notifier.isPresent()) {</span>
-<span class="fc" id="L58">                runTest(specificationNode.test().get(), notifier.get(), description);</span>
+<span class="fc" id="L46">        allTests.forEach((description, test) -&gt; {</span>
+            final boolean included = soloTests.isEmpty() || soloTests.contains(description);
+            if (included &amp;&amp; test.isPresent()) {
+                runTest(description, test.get(), notifier);
+            } else {
+                notifier.fireTestIgnored(description);
             }
-<span class="fc bfc" id="L60" title="All 4 branches covered.">        } else if (specificationNode.children().size() == 0 &amp;&amp; notifier.isPresent()) {</span>
-<span class="fc" id="L61">            notifier.get().fireTestIgnored(description);</span>
-        }
+        });
+<span class="fc" id="L54">    }</span>
 
-<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (specificationNode.children().size() &gt; 0) {</span>
-<span class="fc bfc" id="L65" title="All 2 branches covered.">            for (SpecificationNode child : specificationNode.children()) {</span>
-<span class="fc" id="L66">                descriptions.addAll(visitTree(child, notifier, text + &quot; &quot;));</span>
-<span class="fc" id="L67">            }</span>
-        }
-<span class="fc" id="L69">        return descriptions;</span>
+    private Description visitTree(SpecificationNode specificationNode) {
+<span class="fc" id="L57">        final Description description = Description.createTestDescription(specClass, specificationNode.description());</span>
+<span class="fc" id="L58">        visitTree(specificationNode, &quot;&quot;, specificationNode.isSolo()).forEach(description::addChild);</span>
+<span class="fc" id="L59">        return description;</span>
     }
 
-    private void runTest(Test test, RunNotifier notifier, Description description) {
+    private List&lt;Description&gt; visitTree(SpecificationNode specificationNode, String prefix, boolean soloParent) {
+<span class="fc" id="L63">        final List&lt;Description&gt; descriptions = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L64">        final String text = prefix + specificationNode.description();</span>
+<span class="fc" id="L65">        final Description description = Description.createTestDescription(specClass, text);</span>
+<span class="fc bfc" id="L66" title="All 4 branches covered.">        final boolean isSolo = soloParent || specificationNode.isSolo();</span>
+
+<span class="fc bfc" id="L68" title="All 4 branches covered.">        if (specificationNode.test().isPresent() || specificationNode.children().isEmpty()) {</span>
+<span class="fc" id="L69">            descriptions.add(description);</span>
+<span class="fc" id="L70">            allTests.put(description, specificationNode.test());</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">            if (isSolo) {</span>
+<span class="fc" id="L72">                soloTests.add(description);</span>
+            }
+        }
+
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (!specificationNode.children().isEmpty()) {</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">            for (SpecificationNode child : specificationNode.children()) {</span>
+<span class="fc" id="L78">                descriptions.addAll(visitTree(child, text + &quot; &quot;, isSolo));</span>
+<span class="fc" id="L79">            }</span>
+        }
+
+<span class="fc" id="L82">        return descriptions;</span>
+    }
+
+    private void runTest(Description description, Test test, RunNotifier notifier) {
         try {
-<span class="fc" id="L74">            notifier.fireTestStarted(description);</span>
-<span class="fc" id="L75">            test.run();</span>
-<span class="fc" id="L76">        } catch(AssumptionViolatedException e) {</span>
-<span class="fc" id="L77">            notifier.fireTestAssumptionFailed(new Failure(description, e));</span>
-<span class="fc" id="L78">        } catch (Throwable e) {</span>
-<span class="fc" id="L79">            notifier.fireTestFailure(new Failure(description, e));</span>
-<span class="fc" id="L80">        }</span>
-<span class="fc" id="L81">        notifier.fireTestFinished(description);</span>
-<span class="fc" id="L82">    }</span>
+<span class="fc" id="L87">            notifier.fireTestStarted(description);</span>
+<span class="fc" id="L88">            test.run();</span>
+<span class="fc" id="L89">        } catch(AssumptionViolatedException e) {</span>
+<span class="fc" id="L90">            notifier.fireTestAssumptionFailed(new Failure(description, e));</span>
+<span class="fc" id="L91">        } catch (Throwable e) {</span>
+<span class="fc" id="L92">            notifier.fireTestFailure(new Failure(description, e));</span>
+<span class="fc" id="L93">        }</span>
+<span class="fc" id="L94">        notifier.fireTestFinished(description);</span>
+<span class="fc" id="L95">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>
