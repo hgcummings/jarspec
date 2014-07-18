@@ -1,5 +1,7 @@
 package io.hgc.jarspec;
 
+import java.util.Optional;
+
 /**
  * Mixin providing convenience method for Specifications making statements about exception behaviour
  */
@@ -16,7 +18,7 @@ public interface ExceptionBehaviour {
     default public <T extends Throwable> SpecificationNode itThrows(Class<T> throwable, String forCase, Test testCase) {
         return new SpecificationNode.Statement(
             String.format("throws %s %s", throwable.getSimpleName(), forCase),
-            () -> {
+            Optional.of(() -> {
                 Throwable exception = null;
                 try {
                     testCase.run();
@@ -30,7 +32,7 @@ public interface ExceptionBehaviour {
                             throwable.getSimpleName(), exception)
                     );
                 }
-            }
+            })
         );
     }
 }

@@ -8,6 +8,10 @@ import java.util.*;
 public abstract class SpecificationNode {
     private SpecificationNode() {}
 
+    public SpecificationNode skip() {
+        return new Statement(this.description(), Optional.<Test>empty());
+    }
+
     abstract Optional<Test> test();
 
     abstract String description();
@@ -15,8 +19,8 @@ public abstract class SpecificationNode {
     abstract List<SpecificationNode> children();
 
     static class Aggregate extends SpecificationNode {
-        private String unit;
-        private List<SpecificationNode> children;
+        private final String unit;
+        private final List<SpecificationNode> children;
 
         public Aggregate(String unit, List<SpecificationNode> children) {
             this.unit = unit;
@@ -40,17 +44,17 @@ public abstract class SpecificationNode {
     }
 
     static class Statement extends SpecificationNode {
-        private String behaviour;
-        private Test test;
+        private final String behaviour;
+        private final Optional<Test> test;
 
-        public Statement(String behaviour, Test test) {
+        public Statement(String behaviour, Optional<Test> test) {
             this.behaviour = behaviour;
             this.test = test;
         }
 
         @Override
         Optional<Test> test() {
-            return Optional.of(test);
+            return test;
         }
 
         @Override

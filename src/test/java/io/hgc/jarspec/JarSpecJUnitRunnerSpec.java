@@ -1,9 +1,6 @@
 package io.hgc.jarspec;
 
-import io.hgc.jarspec.fixtures.AdditionSpec;
-import io.hgc.jarspec.fixtures.AssumptionFailureSpec;
-import io.hgc.jarspec.fixtures.ErrorInDescribeSpec;
-import io.hgc.jarspec.fixtures.ErrorInRootSpec;
+import io.hgc.jarspec.fixtures.*;
 import org.junit.runner.*;
 import org.junit.runner.notification.Failure;
 
@@ -53,6 +50,11 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                 it("does not report assumption failures as test failures", () -> {
                     Result result = new JUnitCore().run(AssumptionFailureSpec.class);
                     assertEquals(0, result.getFailureCount());
+                }),
+                it("reports skipped tests as ignored", () -> {
+                    Result result = new JUnitCore().run(SkippedTestSpec.class);
+                    assertEquals(0, result.getFailureCount());
+                    assertEquals(3, result.getIgnoreCount());
                 }),
                 describe("error handling", () -> {
                     Result result = new JUnitCore().run(ErrorInDescribeSpec.class);

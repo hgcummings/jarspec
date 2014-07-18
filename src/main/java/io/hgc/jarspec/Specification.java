@@ -3,6 +3,7 @@ package io.hgc.jarspec;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Represents a Specification consisting of statements about behaviour and automated tests
@@ -43,7 +44,15 @@ public interface Specification {
      * @return a specification consisting of single automatically verifiable statement
      */
     default public SpecificationNode it(String statement, Test test) {
-        return new SpecificationNode.Statement(statement, test);
+        return new SpecificationNode.Statement(statement, Optional.of(test));
+    }
+
+    /**
+     * @param statement a statement about the behaviour of a unit
+     * @return a specification consisting of single statement with no automated test
+     */
+    default public SpecificationNode it(String statement) {
+        return new SpecificationNode.Statement(statement, Optional.<Test>empty());
     }
 
     /**

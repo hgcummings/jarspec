@@ -49,14 +49,16 @@ public class JarSpecJUnitRunner<T extends Specification> extends Runner {
         String text = prefix + specificationNode.description();
 
         List<Description> descriptions = new ArrayList<>();
+        Description description = Description.createTestDescription(specClass, text);
 
         if (specificationNode.test().isPresent()) {
-            Description description = Description.createTestDescription(specClass, text);
             descriptions.add(description);
 
             if (notifier.isPresent()) {
                 runTest(specificationNode.test().get(), notifier.get(), description);
             }
+        } else if (specificationNode.children().size() == 0 && notifier.isPresent()) {
+            notifier.get().fireTestIgnored(description);
         }
 
         if (specificationNode.children().size() > 0) {
