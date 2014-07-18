@@ -56,6 +56,19 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                     assertEquals(0, result.getFailureCount());
                     assertEquals(3, result.getIgnoreCount());
                 }),
+                it("runs only selected tests when any tests are selected", () -> {
+                    Result result = new JUnitCore().run(SelectiveTestExecutionSpec.class);
+                    assertEquals(1, result.getFailureCount());
+                    assertEquals(3, result.getIgnoreCount());
+                    assertEquals(2, result.getRunCount());
+                    assertTrue(result.getFailures().get(0).getDescription().getMethodName().contains("selected"));
+                }),
+                it("runs all tests in selected units", () -> {
+                    Result result = new JUnitCore().run(SelectiveDescribeExecutionSpec.class);
+                    assertEquals(1, result.getFailureCount());
+                    assertEquals(2, result.getIgnoreCount());
+                    assertEquals(3, result.getRunCount());
+                }),
                 describe("error handling", () -> {
                     Result result = new JUnitCore().run(ErrorInDescribeSpec.class);
 

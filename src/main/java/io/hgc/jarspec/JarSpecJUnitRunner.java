@@ -7,8 +7,12 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Test runner for executing JarSpec specifications under JUnit
@@ -16,14 +20,17 @@ import java.util.Optional;
  * @param <T> Specification class
  */
 public class JarSpecJUnitRunner<T extends Specification> extends Runner {
-    private Class<T> specClass;
-    private SpecificationNode rootSpecification;
+    private final Class<T> specClass;
+    private final Map<Description, Optional<Test>> allTests;
+    private final Set<Description> soloTests;
+    private final Description topLevelDescription;
 
     public JarSpecJUnitRunner(Class<T> specClass) throws InstantiationException {
         this.specClass = specClass;
         try {
-            T specification = specClass.newInstance();
-            rootSpecification = specification.root();
+            allTests = new LinkedHashMap<>();
+            soloTests = new HashSet<>();
+            topLevelDescription = visitTree(specClass.newInstance().root());
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -31,45 +38,51 @@ public class JarSpecJUnitRunner<T extends Specification> extends Runner {
 
     @Override
     public Description getDescription() {
-        return visitTree(rootSpecification, Optional.empty());
+        return topLevelDescription;
     }
 
     @Override
     public void run(RunNotifier notifier) {
-        visitTree(rootSpecification, Optional.of(notifier));
+        allTests.forEach((description, test) -> {
+            final boolean included = soloTests.isEmpty() || soloTests.contains(description);
+            if (included && test.isPresent()) {
+                runTest(description, test.get(), notifier);
+            } else {
+                notifier.fireTestIgnored(description);
+            }
+        });
     }
 
-    private Description visitTree(SpecificationNode specificationNode, Optional<RunNotifier> notifier) {
-        Description description = Description.createTestDescription(specClass, specificationNode.description());
-        visitTree(rootSpecification, notifier, "").forEach(description::addChild);
+    private Description visitTree(SpecificationNode specificationNode) {
+        final Description description = Description.createTestDescription(specClass, specificationNode.description());
+        visitTree(specificationNode, "", specificationNode.isSolo()).forEach(description::addChild);
         return description;
     }
 
-    private List<Description> visitTree(SpecificationNode specificationNode, Optional<RunNotifier> notifier, String prefix) {
-        String text = prefix + specificationNode.description();
+    private List<Description> visitTree(SpecificationNode specificationNode, String prefix, boolean soloParent) {
+        final List<Description> descriptions = new ArrayList<>();
+        final String text = prefix + specificationNode.description();
+        final Description description = Description.createTestDescription(specClass, text);
+        final boolean isSolo = soloParent || specificationNode.isSolo();
 
-        List<Description> descriptions = new ArrayList<>();
-        Description description = Description.createTestDescription(specClass, text);
-
-        if (specificationNode.test().isPresent()) {
+        if (specificationNode.test().isPresent() || specificationNode.children().isEmpty()) {
             descriptions.add(description);
-
-            if (notifier.isPresent()) {
-                runTest(specificationNode.test().get(), notifier.get(), description);
+            allTests.put(description, specificationNode.test());
+            if (isSolo) {
+                soloTests.add(description);
             }
-        } else if (specificationNode.children().size() == 0 && notifier.isPresent()) {
-            notifier.get().fireTestIgnored(description);
         }
 
-        if (specificationNode.children().size() > 0) {
+        if (!specificationNode.children().isEmpty()) {
             for (SpecificationNode child : specificationNode.children()) {
-                descriptions.addAll(visitTree(child, notifier, text + " "));
+                descriptions.addAll(visitTree(child, text + " ", isSolo));
             }
         }
+
         return descriptions;
     }
 
-    private void runTest(Test test, RunNotifier notifier, Description description) {
+    private void runTest(Description description, Test test, RunNotifier notifier) {
         try {
             notifier.fireTestStarted(description);
             test.run();

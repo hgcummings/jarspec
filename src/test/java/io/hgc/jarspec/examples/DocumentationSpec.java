@@ -12,10 +12,10 @@ public class DocumentationSpec implements Specification {
     @Override
     public SpecificationNode root() {
         return describe("Documentation example", () -> by(
-            it("Should demonstrate Statement nodes", () -> assertTrue(true)),
-            it("Should demonstrate multiple Statement nodes", () -> assertTrue(true)),
+            it("should demonstrate Statement nodes", () -> assertTrue(true)),
+            it("should demonstrate multiple Statement nodes", () -> assertTrue(true)),
             describe("nested unit", () ->
-                it("Should demonstrate single-statement case", () -> assertTrue(true))
+                it("should demonstrate single-statement case", () -> assertTrue(true))
             )
         ));
     }
