@@ -35,7 +35,7 @@ Add the dependency to your pom
         <dependency>
             <groupId>io.hgc</groupId>
             <artifactId>jarspec</artifactId>
-            <version>0.1.0</version>
+            <version>0.2.0</version>
             <scope>test</scope>
         </dependency>
         ....
