@@ -1,6 +1,7 @@
 package io.hgc.jarspec;
 
 import io.hgc.jarspec.fixtures.*;
+import io.hgc.jarspec.mixins.ExceptionBehaviour;
 import org.junit.runner.*;
 import org.junit.runner.notification.Failure;
 

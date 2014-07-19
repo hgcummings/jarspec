@@ -21,7 +21,7 @@ public abstract class SpecificationNode {
      * @return a new node representing a skipped version of the original node
      */
     public SpecificationNode skip() {
-        return statement(this.description(), Optional.<Test>empty());
+        return leaf(this.description(), Optional.<Test>empty());
     }
 
     /**
@@ -40,29 +40,54 @@ public abstract class SpecificationNode {
         return solo;
     }
 
-    static SpecificationNode describe(String unit, List<SpecificationNode> children) {
-        return new Aggregate(unit, immutableCopyOf(children), false);
+    /**
+     * Create a new internal node in the tree representing a specification.
+     * Consumers should generally use the default methods on {@link Specification}
+     * instead, unless creating their own behaviour mixin.
+     * @param description description for this node
+     * @param children list of child nodes
+     * @return the new node
+     */
+    public static SpecificationNode internal(String description, List<SpecificationNode> children) {
+        return new Internal(description, immutableCopyOf(children), false);
     }
 
-    static SpecificationNode statement(String behaviour, Optional<Test> test) {
-        return new Statement(behaviour, test, false);
+    /**
+     * Create a new leaf node in the tree representing a specification.
+     * Consumers should generally use the default methods on {@link Specification}
+     * instead, unless creating their own behaviour mixin.
+     * @param description description for this node
+     * @param test optional automated test for this node
+     * @return the new node
+     */
+    public static SpecificationNode leaf(String description, Optional<Test> test) {
+        return new Leaf(description, test, false);
     }
 
-    static SpecificationNode error(String description, Throwable throwable) {
-        return statement(description, Optional.of(() -> {
+    /**
+     * Create a new error node in the tree representing a specification, indicating
+     * an exception thrown while building the specification tree itself.
+     * Consumers should generally use the default methods on {@link Specification}
+     * instead, unless creating their own behaviour mixin.
+     * @param description description for this node
+     * @param throwable the original error
+     * @return the new node
+     */
+    public static SpecificationNode error(String description, Throwable throwable) {
+        return leaf(description, Optional.of(() -> {
             throw exceptionFrom(throwable);
         }));
     }
 
     /**
-     * Represents a unit of behaviour with children. Objects of this type
-     * are immutable iff the provided list of children is immutable.
+     * Represents the top-level node for a unit of behaviour. Objects of this
+     * type are immutable iff the provided list of children is immutable.
      */
-    private static class Aggregate extends SpecificationNode {
+    private static class Internal extends SpecificationNode {
         private final String unit;
         private final List<SpecificationNode> children;
 
-        private Aggregate(String unit, List<SpecificationNode> children, boolean solo) {
+        private Internal(String unit, List<SpecificationNode> children, boolean solo) {
             super(solo);
             this.unit = unit;
             this.children = children;
@@ -70,7 +95,7 @@ public abstract class SpecificationNode {
 
         @Override
         public SpecificationNode only() {
-            return new Aggregate(unit, children, true);
+            return new Internal(unit, children, true);
         }
 
         @Override
@@ -94,11 +119,11 @@ public abstract class SpecificationNode {
      * Objects of this type are immutable, although the test itself may
      * form a closure over immutable variables (in fact this is likely).
      */
-    private static class Statement extends SpecificationNode {
+    private static class Leaf extends SpecificationNode {
         private final String behaviour;
         private final Optional<Test> test;
 
-        private Statement(String behaviour, Optional<Test> test, boolean solo) {
+        private Leaf(String behaviour, Optional<Test> test, boolean solo) {
             super(solo);
             this.behaviour = behaviour;
             this.test = test;
@@ -106,7 +131,7 @@ public abstract class SpecificationNode {
 
         @Override
         public SpecificationNode only() {
-            return new Statement(behaviour, test, true);
+            return new Leaf(behaviour, test, true);
         }
 
         @Override

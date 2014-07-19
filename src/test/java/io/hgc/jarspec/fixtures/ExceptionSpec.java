@@ -2,7 +2,7 @@ package io.hgc.jarspec.fixtures;
 
 import io.hgc.jarspec.Specification;
 import io.hgc.jarspec.SpecificationNode;
-import io.hgc.jarspec.ExceptionBehaviour;
+import io.hgc.jarspec.mixins.ExceptionBehaviour;
 import io.hgc.jarspec.JarSpecJUnitRunner;
 import org.junit.runner.RunWith;
 

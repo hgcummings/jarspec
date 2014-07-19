@@ -1,6 +1,7 @@
 package io.hgc.jarspec;
 
 import io.hgc.jarspec.fixtures.ExceptionSpec;
+import io.hgc.jarspec.mixins.ExceptionBehaviour;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;

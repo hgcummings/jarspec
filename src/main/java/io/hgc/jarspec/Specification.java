@@ -19,7 +19,7 @@ public interface Specification {
      */
     default public SpecificationNode describe(String unit, BySingle specification) {
         try {
-            return SpecificationNode.describe(unit, by(specification.get()));
+            return SpecificationNode.internal(unit, by(specification.get()));
         } catch (Throwable e) {
             return SpecificationNode.error(unit, e);
         }
@@ -32,7 +32,7 @@ public interface Specification {
      */
     default public SpecificationNode describe(String unit, ByMultiple specifications) {
         try {
-            return SpecificationNode.describe(unit, specifications.get());
+            return SpecificationNode.internal(unit, specifications.get());
         } catch (Throwable e) {
             return SpecificationNode.error(unit, e);
         }
@@ -44,7 +44,7 @@ public interface Specification {
      * @return a specification consisting of single automatically verifiable statement
      */
     default public SpecificationNode it(String statement, Test test) {
-        return SpecificationNode.statement(statement, Optional.of(test));
+        return SpecificationNode.leaf(statement, Optional.of(test));
     }
 
     /**
@@ -52,7 +52,7 @@ public interface Specification {
      * @return a specification consisting of single statement with no automated test
      */
     default public SpecificationNode it(String statement) {
-        return SpecificationNode.statement(statement, Optional.<Test>empty());
+        return SpecificationNode.leaf(statement, Optional.<Test>empty());
     }
 
     /**

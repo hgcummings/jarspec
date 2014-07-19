@@ -1,4 +1,7 @@
-package io.hgc.jarspec;
+package io.hgc.jarspec.mixins;
+
+import io.hgc.jarspec.SpecificationNode;
+import io.hgc.jarspec.Test;
 
 import java.util.Optional;
 
@@ -16,7 +19,7 @@ public interface ExceptionBehaviour {
      * @return a Specification representing the single description
      */
     default public <T extends Throwable> SpecificationNode itThrows(Class<T> throwable, String forCase, Test testCase) {
-        return SpecificationNode.statement(
+        return SpecificationNode.leaf(
             String.format("throws %s %s", throwable.getSimpleName(), forCase),
             Optional.of(() -> {
                 Throwable exception = null;
