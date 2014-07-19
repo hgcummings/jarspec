@@ -1,4 +1,4 @@
-# ![JarSpec](http://hgc.io/jarspec/0.2.0-SNAPSHOT/images/logo.svg)
+# ![JarSpec](http://hgc.io/jarspec/0.3.0-SNAPSHOT/images/logo.svg)
 
 ## What?
 [RSpec](http://rspec.info/) (or [Jasmine](http://jasmine.github.io/2.0/introduction.html)/[Mocha](http://visionmedia.github.io/mocha/)) style tests for native Java 8, a bit like the following:
@@ -68,4 +68,4 @@ Configure SureFire to pick up classes named `*Spec` (although you can stick with
 See [open milestones](https://github.com/hgcummings/jarspec/issues/milestones) for an indication of progress and roadmap.
 
 ---
-###### Developer resources: [Test results](http://hgc.io/jarspec/0.2.0-SNAPSHOT/surefire-report.html) [![Build status](https://travis-ci.org/hgcummings/jarspec.svg?branch=master)](https://travis-ci.org/hgcummings/jarspec) [Coverage report](http://hgc.io/jarspec/0.2.0-SNAPSHOT/jacoco/index.html) [![Coverage Status](https://coveralls.io/repos/hgcummings/jarspec/badge.png?branch=master)](https://coveralls.io/r/hgcummings/jarspec?branch=master) [Task board](https://huboard.com/hgcummings/jarspec)
+###### Developer resources: [Test results](http://hgc.io/jarspec/0.3.0-SNAPSHOT/surefire-report.html) [![Build status](https://travis-ci.org/hgcummings/jarspec.svg?branch=master)](https://travis-ci.org/hgcummings/jarspec) [Coverage report](http://hgc.io/jarspec/0.3.0-SNAPSHOT/jacoco/index.html) [![Coverage Status](https://coveralls.io/repos/hgcummings/jarspec/badge.png?branch=master)](https://coveralls.io/r/hgcummings/jarspec?branch=master) [Task board](https://huboard.com/hgcummings/jarspec)
