@@ -1,9 +1,8 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-io.hgc:jarspec,io.hgc.jarspec,Util,3,11,0,0,1,3,1,1,1,1
-io.hgc:jarspec,io.hgc.jarspec,SpecificationNode.Statement,0,39,0,0,0,12,0,7,0,7
-io.hgc:jarspec,io.hgc.jarspec,SpecificationNode.SpecError,0,51,0,2,0,14,0,8,0,7
+io.hgc:jarspec,io.hgc.jarspec,Util,3,22,0,2,1,6,1,3,1,2
 io.hgc:jarspec,io.hgc.jarspec,JarSpecJUnitRunner,0,175,0,14,0,38,0,13,0,6
-io.hgc:jarspec,io.hgc.jarspec,SpecificationNode.Aggregate,0,40,0,0,0,12,0,7,0,7
-io.hgc:jarspec,io.hgc.jarspec,SpecificationNode,0,10,0,0,0,2,0,2,0,2
-io.hgc:jarspec,io.hgc.jarspec,Specification,0,58,0,0,0,11,0,5,0,5
-io.hgc:jarspec,io.hgc.jarspec,ExceptionBehaviour,0,21,0,0,0,3,0,1,0,1
+io.hgc:jarspec,io.hgc.jarspec,SpecificationNode.Statement,0,28,0,0,0,8,0,5,0,5
+io.hgc:jarspec,io.hgc.jarspec,SpecificationNode,0,37,0,0,0,8,0,6,0,6
+io.hgc:jarspec,io.hgc.jarspec,SpecificationNode.Aggregate,0,28,0,0,0,8,0,5,0,5
+io.hgc:jarspec,io.hgc.jarspec,Specification,0,46,0,0,0,11,0,5,0,5
+io.hgc:jarspec,io.hgc.jarspec,ExceptionBehaviour,0,19,0,0,0,3,0,1,0,1

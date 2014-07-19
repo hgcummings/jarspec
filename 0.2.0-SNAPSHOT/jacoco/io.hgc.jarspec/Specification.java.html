@@ -19,9 +19,9 @@ public interface Specification {
      */
     default public SpecificationNode describe(String unit, BySingle specification) {
         try {
-<span class="fc" id="L22">            return new SpecificationNode.Aggregate(unit, by(specification.get()));</span>
+<span class="fc" id="L22">            return SpecificationNode.describe(unit, by(specification.get()));</span>
 <span class="fc" id="L23">        } catch (Throwable e) {</span>
-<span class="fc" id="L24">            return new SpecificationNode.SpecError(unit, e);</span>
+<span class="fc" id="L24">            return SpecificationNode.error(unit, e);</span>
         }
     }
 
@@ -32,9 +32,9 @@ public interface Specification {
      */
     default public SpecificationNode describe(String unit, ByMultiple specifications) {
         try {
-<span class="fc" id="L35">            return new SpecificationNode.Aggregate(unit, specifications.get());</span>
+<span class="fc" id="L35">            return SpecificationNode.describe(unit, specifications.get());</span>
 <span class="fc" id="L36">        } catch (Throwable e) {</span>
-<span class="fc" id="L37">            return new SpecificationNode.SpecError(unit, e);</span>
+<span class="fc" id="L37">            return SpecificationNode.error(unit, e);</span>
         }
     }
 
@@ -44,7 +44,7 @@ public interface Specification {
      * @return a specification consisting of single automatically verifiable statement
      */
     default public SpecificationNode it(String statement, Test test) {
-<span class="fc" id="L47">        return new SpecificationNode.Statement(statement, Optional.of(test));</span>
+<span class="fc" id="L47">        return SpecificationNode.statement(statement, Optional.of(test));</span>
     }
 
     /**
@@ -52,7 +52,7 @@ public interface Specification {
      * @return a specification consisting of single statement with no automated test
      */
     default public SpecificationNode it(String statement) {
-<span class="fc" id="L55">        return new SpecificationNode.Statement(statement, Optional.&lt;Test&gt;empty());</span>
+<span class="fc" id="L55">        return SpecificationNode.statement(statement, Optional.&lt;Test&gt;empty());</span>
     }
 
     /**

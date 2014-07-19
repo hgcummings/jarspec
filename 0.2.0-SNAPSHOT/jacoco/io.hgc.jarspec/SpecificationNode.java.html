@@ -4,20 +4,24 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static io.hgc.jarspec.Util.immutableCopy;
+import static io.hgc.jarspec.Util.*;
 
 /**
  * Internal implementation of {@link Specification} as a tree structure.
  */
 public abstract class SpecificationNode {
-<span class="fc" id="L13">    private SpecificationNode() {}</span>
+    private final boolean solo;
+
+<span class="fc" id="L15">    private SpecificationNode(boolean solo) {</span>
+<span class="fc" id="L16">        this.solo = solo;</span>
+<span class="fc" id="L17">    }</span>
 
     /**
      * Mark this node to be skipped (along with its children and any other nodes similarly marked)
      * @return a new node representing a skipped version of the original node
      */
     public SpecificationNode skip() {
-<span class="fc" id="L20">        return new Statement(this.description(), Optional.&lt;Test&gt;empty());</span>
+<span class="fc" id="L24">        return statement(this.description(), Optional.&lt;Test&gt;empty());</span>
     }
 
     /**
@@ -26,153 +30,98 @@ public abstract class SpecificationNode {
      */
     public abstract SpecificationNode only();
 
-    abstract Optional&lt;Test&gt; test();
-
     abstract String description();
+
+    abstract Optional&lt;Test&gt; test();
 
     abstract List&lt;SpecificationNode&gt; children();
 
-    abstract boolean isSolo();
+    boolean isSolo() {
+<span class="fc" id="L40">        return solo;</span>
+    }
+
+    static SpecificationNode describe(String unit, List&lt;SpecificationNode&gt; children) {
+<span class="fc" id="L44">        return new Aggregate(unit, immutableCopyOf(children), false);</span>
+    }
+
+    static SpecificationNode statement(String behaviour, Optional&lt;Test&gt; test) {
+<span class="fc" id="L48">        return new Statement(behaviour, test, false);</span>
+    }
+
+    static SpecificationNode error(String description, Throwable throwable) {
+<span class="fc" id="L52">        return statement(description, Optional.of(() -&gt; {</span>
+            throw exceptionFrom(throwable);
+        }));
+    }
 
     /**
-     * Represents a unit of behaviour with children.
-     * Objects of this type are immutable.
+     * Represents a unit of behaviour with children. Objects of this type
+     * are immutable iff the provided list of children is immutable.
      */
-    static class Aggregate extends SpecificationNode {
+    private static class Aggregate extends SpecificationNode {
         private final String unit;
         private final List&lt;SpecificationNode&gt; children;
-        private final boolean solo;
 
-        public Aggregate(String unit, List&lt;SpecificationNode&gt; children) {
-<span class="fc" id="L47">            this(unit, immutableCopy(children), false);</span>
-<span class="fc" id="L48">        }</span>
-
-<span class="fc" id="L50">        private Aggregate(String unit, List&lt;SpecificationNode&gt; children, boolean solo) {</span>
-<span class="fc" id="L51">            this.unit = unit;</span>
-<span class="fc" id="L52">            this.children = children;</span>
-<span class="fc" id="L53">            this.solo = solo;</span>
-<span class="fc" id="L54">        }</span>
+        private Aggregate(String unit, List&lt;SpecificationNode&gt; children, boolean solo) {
+<span class="fc" id="L66">            super(solo);</span>
+<span class="fc" id="L67">            this.unit = unit;</span>
+<span class="fc" id="L68">            this.children = children;</span>
+<span class="fc" id="L69">        }</span>
 
         @Override
         public SpecificationNode only() {
-<span class="fc" id="L58">            return new Aggregate(unit, children, true);</span>
+<span class="fc" id="L73">            return new Aggregate(unit, children, true);</span>
         }
 
         @Override
         Optional&lt;Test&gt; test() {
-<span class="fc" id="L63">            return Optional.empty();</span>
+<span class="fc" id="L78">            return Optional.empty();</span>
         }
 
         @Override
         String description() {
-<span class="fc" id="L68">            return unit;</span>
+<span class="fc" id="L83">            return unit;</span>
         }
 
         @Override
         List&lt;SpecificationNode&gt; children() {
-<span class="fc" id="L73">            return children;</span>
-        }
-
-        @Override
-        boolean isSolo() {
-<span class="fc" id="L78">            return solo;</span>
+<span class="fc" id="L88">            return children;</span>
         }
     }
 
     /**
      * Represents a single statement, optionally with an automated test.
-     * Objects of this type are immutable.
+     * Objects of this type are immutable, although the test itself may
+     * form a closure over immutable variables (in fact this is likely).
      */
-    static class Statement extends SpecificationNode {
+    private static class Statement extends SpecificationNode {
         private final String behaviour;
         private final Optional&lt;Test&gt; test;
-        private final boolean solo;
 
-        public Statement(String behaviour, Optional&lt;Test&gt; test) {
-<span class="fc" id="L92">            this(behaviour, test, false);</span>
-<span class="fc" id="L93">        }</span>
-
-<span class="fc" id="L95">        private Statement(String behaviour, Optional&lt;Test&gt; test, boolean solo) {</span>
-<span class="fc" id="L96">            this.behaviour = behaviour;</span>
-<span class="fc" id="L97">            this.test = test;</span>
-<span class="fc" id="L98">            this.solo = solo;</span>
-<span class="fc" id="L99">        }</span>
+        private Statement(String behaviour, Optional&lt;Test&gt; test, boolean solo) {
+<span class="fc" id="L102">            super(solo);</span>
+<span class="fc" id="L103">            this.behaviour = behaviour;</span>
+<span class="fc" id="L104">            this.test = test;</span>
+<span class="fc" id="L105">        }</span>
 
         @Override
         public SpecificationNode only() {
-<span class="fc" id="L103">            return new Statement(behaviour, test, true);</span>
+<span class="fc" id="L109">            return new Statement(behaviour, test, true);</span>
         }
 
         @Override
         Optional&lt;Test&gt; test() {
-<span class="fc" id="L108">            return test;</span>
+<span class="fc" id="L114">            return test;</span>
         }
 
         @Override
         String description() {
-<span class="fc" id="L113">            return behaviour;</span>
+<span class="fc" id="L119">            return behaviour;</span>
         }
 
         @Override
         List&lt;SpecificationNode&gt; children() {
-<span class="fc" id="L118">            return Collections.emptyList();</span>
-        }
-
-        @Override
-        boolean isSolo() {
-<span class="fc" id="L123">            return solo;</span>
-        }
-    }
-
-    /**
-     * Represents an error thrown during the creation of a specification (i.e.
-     * from a describe block rather than a test).
-     * Objects of this type are not purely immutable since they will contain
-     * an Exception, and Throwables cannot be immutable. However, they will only
-     * expose their Exception by actually throwing it.
-     */
-    static class SpecError extends SpecificationNode {
-        private final String unit;
-        private final Exception exception;
-        private final boolean solo;
-
-        public SpecError(String unit, Throwable throwable) {
-<span class="fc" id="L140">            this(unit, throwable, false);</span>
-<span class="fc" id="L141">        }</span>
-
-<span class="fc" id="L143">        private SpecError(String unit, Throwable throwable, boolean solo) {</span>
-<span class="fc" id="L144">            this.unit = unit;</span>
-<span class="fc bfc" id="L145" title="All 2 branches covered.">            if (throwable instanceof Exception) {</span>
-<span class="fc" id="L146">                this.exception = (Exception) throwable;</span>
-            } else {
-<span class="fc" id="L148">                this.exception = new RuntimeException(throwable);</span>
-            }
-<span class="fc" id="L150">            this.solo = solo;</span>
-<span class="fc" id="L151">        }</span>
-
-        @Override
-        public SpecificationNode only() {
-<span class="fc" id="L155">            return new SpecError(unit, exception, true);</span>
-        }
-
-        @Override
-        Optional&lt;Test&gt; test() {
-<span class="fc" id="L160">            return Optional.of(() -&gt; { throw exception; });</span>
-        }
-
-        @Override
-        String description() {
-<span class="fc" id="L165">            return unit;</span>
-        }
-
-        @Override
-        List&lt;SpecificationNode&gt; children() {
-<span class="fc" id="L170">            return Collections.emptyList();</span>
-        }
-
-        @Override
-        boolean isSolo() {
-<span class="fc" id="L175">            return solo;</span>
+<span class="fc" id="L124">            return Collections.emptyList();</span>
         }
     }
 }

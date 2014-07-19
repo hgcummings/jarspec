@@ -16,7 +16,7 @@ public interface ExceptionBehaviour {
      * @return a Specification representing the single description
      */
     default public &lt;T extends Throwable&gt; SpecificationNode itThrows(Class&lt;T&gt; throwable, String forCase, Test testCase) {
-<span class="fc" id="L19">        return new SpecificationNode.Statement(</span>
+<span class="fc" id="L19">        return SpecificationNode.statement(</span>
 <span class="fc" id="L20">            String.format(&quot;throws %s %s&quot;, throwable.getSimpleName(), forCase),</span>
 <span class="fc" id="L21">            Optional.of(() -&gt; {</span>
                 Throwable exception = null;
