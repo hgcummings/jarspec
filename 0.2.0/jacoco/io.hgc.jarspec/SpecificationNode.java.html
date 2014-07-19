@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>SpecificationNode.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">io.hgc:jarspec</a> &gt; <a href="index.source.html" class="el_package">io.hgc.jarspec</a> &gt; <span class="el_source">SpecificationNode.java</span></div><h1>SpecificationNode.java</h1><pre class="source lang-java linenums">package io.hgc.jarspec;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static io.hgc.jarspec.Util.*;
+
+/**
+ * Internal implementation of {@link Specification} as a tree structure.
+ */
+public abstract class SpecificationNode {
+    private final boolean solo;
+
+<span class="fc" id="L15">    private SpecificationNode(boolean solo) {</span>
+<span class="fc" id="L16">        this.solo = solo;</span>
+<span class="fc" id="L17">    }</span>
+
+    /**
+     * Mark this node to be skipped (along with its children and any other nodes similarly marked)
+     * @return a new node representing a skipped version of the original node
+     */
+    public SpecificationNode skip() {
+<span class="fc" id="L24">        return statement(this.description(), Optional.&lt;Test&gt;empty());</span>
+    }
+
+    /**
+     * Mark this node to be run exclusively (along with its children and any other nodes similarly marked)
+     * @return a new node representing an exclusive version of the original node
+     */
+    public abstract SpecificationNode only();
+
+    abstract String description();
+
+    abstract Optional&lt;Test&gt; test();
+
+    abstract List&lt;SpecificationNode&gt; children();
+
+    boolean isSolo() {
+<span class="fc" id="L40">        return solo;</span>
+    }
+
+    static SpecificationNode describe(String unit, List&lt;SpecificationNode&gt; children) {
+<span class="fc" id="L44">        return new Aggregate(unit, immutableCopyOf(children), false);</span>
+    }
+
+    static SpecificationNode statement(String behaviour, Optional&lt;Test&gt; test) {
+<span class="fc" id="L48">        return new Statement(behaviour, test, false);</span>
+    }
+
+    static SpecificationNode error(String description, Throwable throwable) {
+<span class="fc" id="L52">        return statement(description, Optional.of(() -&gt; {</span>
+            throw exceptionFrom(throwable);
+        }));
+    }
+
+    /**
+     * Represents a unit of behaviour with children. Objects of this type
+     * are immutable iff the provided list of children is immutable.
+     */
+    private static class Aggregate extends SpecificationNode {
+        private final String unit;
+        private final List&lt;SpecificationNode&gt; children;
+
+        private Aggregate(String unit, List&lt;SpecificationNode&gt; children, boolean solo) {
+<span class="fc" id="L66">            super(solo);</span>
+<span class="fc" id="L67">            this.unit = unit;</span>
+<span class="fc" id="L68">            this.children = children;</span>
+<span class="fc" id="L69">        }</span>
+
+        @Override
+        public SpecificationNode only() {
+<span class="fc" id="L73">            return new Aggregate(unit, children, true);</span>
+        }
+
+        @Override
+        Optional&lt;Test&gt; test() {
+<span class="fc" id="L78">            return Optional.empty();</span>
+        }
+
+        @Override
+        String description() {
+<span class="fc" id="L83">            return unit;</span>
+        }
+
+        @Override
+        List&lt;SpecificationNode&gt; children() {
+<span class="fc" id="L88">            return children;</span>
+        }
+    }
+
+    /**
+     * Represents a single statement, optionally with an automated test.
+     * Objects of this type are immutable, although the test itself may
+     * form a closure over immutable variables (in fact this is likely).
+     */
+    private static class Statement extends SpecificationNode {
+        private final String behaviour;
+        private final Optional&lt;Test&gt; test;
+
+        private Statement(String behaviour, Optional&lt;Test&gt; test, boolean solo) {
+<span class="fc" id="L102">            super(solo);</span>
+<span class="fc" id="L103">            this.behaviour = behaviour;</span>
+<span class="fc" id="L104">            this.test = test;</span>
+<span class="fc" id="L105">        }</span>
+
+        @Override
+        public SpecificationNode only() {
+<span class="fc" id="L109">            return new Statement(behaviour, test, true);</span>
+        }
+
+        @Override
+        Optional&lt;Test&gt; test() {
+<span class="fc" id="L114">            return test;</span>
+        }
+
+        @Override
+        String description() {
+<span class="fc" id="L119">            return behaviour;</span>
+        }
+
+        @Override
+        List&lt;SpecificationNode&gt; children() {
+<span class="fc" id="L124">            return Collections.emptyList();</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>
