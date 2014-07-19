@@ -65,7 +65,7 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                 }),
                 it("runs all tests in selected units", () -> {
                     Result result = new JUnitCore().run(SelectiveDescribeExecutionSpec.class);
-                    assertEquals(1, result.getFailureCount());
+                    assertEquals(0, result.getFailureCount());
                     assertEquals(2, result.getIgnoreCount());
                     assertEquals(3, result.getRunCount());
                 }),
@@ -76,7 +76,7 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                         it("reports checked exceptions in multi-child describe nodes as failures", () -> {
                             assertTrue(result.getFailureCount() > 0);
                             for (Failure failure : result.getFailures()) {
-                                if (failure.getDescription().getMethodName().contains("broken multi-child describe")) {
+                                if (failure.getDescription().getMethodName().contains("broken multi-child unit")) {
                                     return;
                                 }
                             }
@@ -85,7 +85,7 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                         it("reports checked exceptions in single-child describe nodes as failures", () -> {
                             assertTrue(result.getFailureCount() > 0);
                             for (Failure failure : result.getFailures()) {
-                                if (failure.getDescription().getMethodName().contains("broken single-child describe")) {
+                                if (failure.getDescription().getMethodName().contains("broken single-child unit")) {
                                     return;
                                 }
                             }
@@ -94,7 +94,7 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                         it("reports unchecked exceptions in multi-child describe nodes as failures", () -> {
                             assertTrue(result.getFailureCount() > 0);
                             for (Failure failure : result.getFailures()) {
-                                if (failure.getDescription().getMethodName().contains("describe with unchecked Error")) {
+                                if (failure.getDescription().getMethodName().contains("unit with unchecked Error")) {
                                     return;
                                 }
                             }

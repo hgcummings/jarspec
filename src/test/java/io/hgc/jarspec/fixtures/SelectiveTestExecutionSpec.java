@@ -12,18 +12,18 @@ import static org.junit.Assert.fail;
 public class SelectiveTestExecutionSpec implements Specification {
     @Override
     public SpecificationNode root() {
-        return describe("test in", () -> by(
-                describe("second-level describe containing a selected test", () -> by(
-                    it("another test in same describe", () -> fail("should not run")),
-                    it("for first selected statement", () -> assertTrue(true)).only()
+        return describe("Selective execution", () -> by(
+                describe("unit containing a selected test", () -> by(
+                    it("does not execute other statement", () -> fail("should not run")),
+                    it("executes selected statement", () -> assertTrue(true)).only()
                 )),
-                describe("other second-level describe", () -> {
+                describe("other second-level unit", () -> {
                     fail("should not run");
-                    return it("should not run", () -> fail("should not run"));
+                    return it("doesn't get this far", () -> fail("should not run"));
                 }),
-                describe("other second-level describe containing a selected test", () -> by(
-                    it("another test in same describe", () -> fail("should not run")),
-                    it("failing selected statement", () -> fail("expected failure")).only()
+                describe("other second-level unit containing a selected test", () -> by(
+                    it("does not execute other statement", () -> fail("should not run")),
+                    it("executes failing selected statement", () -> fail("expected failure")).only()
                 ))
             )
         );

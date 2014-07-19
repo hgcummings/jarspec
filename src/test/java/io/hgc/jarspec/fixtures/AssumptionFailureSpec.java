@@ -11,6 +11,6 @@ import static org.junit.Assume.assumeTrue;
 public class AssumptionFailureSpec implements Specification {
     @Override
     public SpecificationNode root() {
-        return it("should assume the worse", () -> assumeTrue(false));
+        return it("assumes the worse", () -> assumeTrue(false));
     }
 }

@@ -12,14 +12,14 @@ public class JarSpecSpec implements Specification {
     @Override
     public SpecificationNode root() {
         System.out.println("root");
-        return describe("Major unit", () -> {
+        return describe("major unit", () -> {
             System.out.println("Major unit");
             return by(
-                it("Top-level statement", () ->
+                it("has a top-level statement", () ->
                     System.out.println("Top-level statement")),
-                describe("Minor unit", () -> {
+                describe("nested minor unit", () -> {
                     System.out.println("Minor unit");
-                    return it("Nested statement", () ->
+                    return it("has a nested statement", () ->
                         System.out.println("Nested statement"));
                 })
             );

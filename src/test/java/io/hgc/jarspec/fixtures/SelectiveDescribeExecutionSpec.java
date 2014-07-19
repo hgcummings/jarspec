@@ -12,23 +12,17 @@ import static org.junit.Assert.fail;
 public class SelectiveDescribeExecutionSpec implements Specification {
     @Override
     public SpecificationNode root() {
-        return describe("test for", () -> by(
+        return describe("Selective execution", () -> by(
             describe("top-level selection", () -> by(
-                it("first statement", () -> assertTrue(true)),
-                describe("nested unit", () -> it ("nested statement", () -> assertTrue(true)))
+                it("executes statement", () -> assertTrue(true)),
+                describe("nested unit", () -> it ("executes nested statement", () -> assertTrue(true)))
             )).only(),
-            describe("top-level failing selection", () -> {
-                brokenSetupMethod();
-                return it("unreached statement", () -> fail("should not run"));
-            }).only(),
-            describe("other top-level describe", () -> by(
-                it("first statement", () -> fail("should not run")),
-                it("second statement", () -> fail("should not run"))
+            describe("other top-level selection", () ->
+                it("executes statement", () -> assertTrue(true))).only(),
+            describe("other top-level unit", () -> by(
+                it("does not execute first statement", () -> fail("should not run")),
+                it("does not execute second statement", () -> fail("should not run"))
             ))
         ));
-    }
-
-    private void brokenSetupMethod() throws Exception {
-        throw new Exception("Setup failure thrown intentionally for test purposes");
     }
 }
