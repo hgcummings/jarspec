@@ -18,9 +18,22 @@ final class Util {
      * @param <T> the type of the list elements
      * @return an immutable copy of the original list
      */
-    static <T> List<T> immutableCopy(List<T> original) {
+    static <T> List<T> immutableCopyOf(List<T> original) {
         List<T> copy = new ArrayList<>();
         copy.addAll(original);
         return Collections.unmodifiableList(copy);
+    }
+
+    /**
+     * Returns an Exception for any Throwable object, wrapping in a RuntimeException if necessary
+     * @param throwable any Throwable object
+     * @return the original or wrapped Exception
+     */
+    static Exception exceptionFrom(Throwable throwable) {
+        if (throwable instanceof Exception) {
+            return (Exception) throwable;
+        } else {
+            return new RuntimeException(throwable);
+        }
     }
 }

@@ -19,9 +19,9 @@ public interface Specification {
      */
     default public SpecificationNode describe(String unit, BySingle specification) {
         try {
-            return new SpecificationNode.Aggregate(unit, by(specification.get()));
+            return SpecificationNode.describe(unit, by(specification.get()));
         } catch (Throwable e) {
-            return new SpecificationNode.SpecError(unit, e);
+            return SpecificationNode.error(unit, e);
         }
     }
 
@@ -32,9 +32,9 @@ public interface Specification {
      */
     default public SpecificationNode describe(String unit, ByMultiple specifications) {
         try {
-            return new SpecificationNode.Aggregate(unit, specifications.get());
+            return SpecificationNode.describe(unit, specifications.get());
         } catch (Throwable e) {
-            return new SpecificationNode.SpecError(unit, e);
+            return SpecificationNode.error(unit, e);
         }
     }
 
@@ -44,7 +44,7 @@ public interface Specification {
      * @return a specification consisting of single automatically verifiable statement
      */
     default public SpecificationNode it(String statement, Test test) {
-        return new SpecificationNode.Statement(statement, Optional.of(test));
+        return SpecificationNode.statement(statement, Optional.of(test));
     }
 
     /**
@@ -52,7 +52,7 @@ public interface Specification {
      * @return a specification consisting of single statement with no automated test
      */
     default public SpecificationNode it(String statement) {
-        return new SpecificationNode.Statement(statement, Optional.<Test>empty());
+        return SpecificationNode.statement(statement, Optional.<Test>empty());
     }
 
     /**
