@@ -65,7 +65,7 @@ Configure SureFire to pick up classes named `*Spec` (although you can stick with
 
 ## When?
 
-See [open milestones](https://github.com/hgcummings/jarspec/issues/milestones) for an indication of progress and roadmap.
+The current release on Maven Central is stable and suitable for most use cases. See [open milestones](https://github.com/hgcummings/jarspec/issues/milestones) for an indication of further planned features. Previous releases have maintained backwards compatibility and upcoming releases are expected to do so as well.
 
 ---
 ###### Developer resources: [Test results](http://hgc.io/jarspec/0.3.0-SNAPSHOT/surefire-report.html) [![Build status](https://travis-ci.org/hgcummings/jarspec.svg?branch=master)](https://travis-ci.org/hgcummings/jarspec) [Coverage report](http://hgc.io/jarspec/0.3.0-SNAPSHOT/jacoco/index.html) [![Coverage Status](https://coveralls.io/repos/hgcummings/jarspec/badge.png?branch=master)](https://coveralls.io/r/hgcummings/jarspec?branch=master) [Task board](https://huboard.com/hgcummings/jarspec)
