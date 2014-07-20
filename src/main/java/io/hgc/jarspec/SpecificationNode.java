@@ -41,37 +41,37 @@ public abstract class SpecificationNode {
     }
 
     /**
-     * Create a new internal node in the tree representing a specification.
+     * Factory method for internal nodes in the tree representing a specification.
      * Consumers should generally use the default methods on {@link Specification}
      * instead, unless creating their own behaviour mixin.
      * @param description description for this node
      * @param children list of child nodes
-     * @return the new node
+     * @return a newly-created node
      */
     public static SpecificationNode internal(String description, List<SpecificationNode> children) {
         return new Internal(description, immutableCopyOf(children), false);
     }
 
     /**
-     * Create a new leaf node in the tree representing a specification.
+     * Factory method for leaf nodes in the tree representing a specification.
      * Consumers should generally use the default methods on {@link Specification}
      * instead, unless creating their own behaviour mixin.
      * @param description description for this node
      * @param test optional automated test for this node
-     * @return the new node
+     * @return a newly-created node
      */
     public static SpecificationNode leaf(String description, Optional<Test> test) {
         return new Leaf(description, test, false);
     }
 
     /**
-     * Create a new error node in the tree representing a specification, indicating
-     * an exception thrown while building the specification tree itself.
+     * Factory method for error nodes in the tree representing a specification,
+     * indicating an exception thrown while building the specification tree itself.
      * Consumers should generally use the default methods on {@link Specification}
      * instead, unless creating their own behaviour mixin.
      * @param description description for this node
      * @param throwable the original error
-     * @return the new node
+     * @return a newly-created node
      */
     public static SpecificationNode error(String description, Throwable throwable) {
         return leaf(description, Optional.of(() -> {
