@@ -17,7 +17,6 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
     @Override
     public SpecificationNode root() {
         return describe("JUnit runner", () -> {
-            Runner runner = new JarSpecJUnitRunner<>(AdditionSpec.class);
             return by(
                 describe("constructor", () ->
                         itThrows(RuntimeException.class, "for inaccessible test class", () -> {
@@ -25,24 +24,28 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                             fail("This line should not be reached");
                         })
                 ),
-                describe("test count", () ->
-                        it("matches number of tests", () -> assertEquals(2, runner.testCount()))
+                describe("test count", () -> {
+                        Runner runner = new JarSpecJUnitRunner<>(AdditionSpec.class);
+                        return it("matches number of tests", () -> assertEquals(2, runner.testCount()));
+                    }
                 ),
-                describe("description", () -> by(
-                    it("returns correct test class for all tests", () ->
-                        verifyDescriptionTestClass(runner.getDescription(), AdditionSpec.class)),
-                    it("includes parent context in test names", () -> {
-                        Description description = runner.getDescription();
-                        assertEquals("addition", description.getMethodName());
+                describe("description", () -> {
+                    Runner runner = new JarSpecJUnitRunner<>(AdditionSpec.class);
+                    return by(
+                        it("returns correct test class for all tests", () ->
+                            verifyDescriptionTestClass(runner.getDescription(), AdditionSpec.class)),
+                        it("includes parent context in test names", () -> {
+                            Description description = runner.getDescription();
+                            assertEquals("addition", description.getMethodName());
 
-                        assertEquals(2, description.getChildren().size());
-                        assertEquals("addition of 1+1 equals 2", description.getChildren().get(0).getMethodName());
-                        assertEquals("addition of 1+1 equals 3", description.getChildren().get(1).getMethodName());
-                    })
-                )),
+                            assertEquals(2, description.getChildren().size());
+                            assertEquals("addition of 1+1 equals 2", description.getChildren().get(0).getMethodName());
+                            assertEquals("addition of 1+1 equals 3", description.getChildren().get(1).getMethodName());
+                        })
+                    );
+                }),
                 it("reports failures correctly", () -> {
-                    JUnitCore jUnitCore = new JUnitCore();
-                    Result result = jUnitCore.run(runner);
+                    Result result = new JUnitCore().run(AdditionSpec.class);
                     assertEquals(2, result.getRunCount());
                     assertEquals(1, result.getFailureCount());
                     Failure failure = result.getFailures().get(0);
