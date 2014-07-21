@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Uses of Class io.hgc.jarspec.SpecificationNode (io.hgc:jarspec 0.3.0-SNAPSHOT API)</title>
-<meta name="date" content="2014-07-19">
+<meta name="date" content="2014-07-21">
 <link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
 <script type="text/javascript" src="../../../../script.js"></script>
 </head>
@@ -120,8 +120,8 @@
 <td class="colFirst"><code>static <a href="../../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SpecificationNode.</span><code><span class="memberNameLink"><a href="../../../../io/hgc/jarspec/SpecificationNode.html#error-java.lang.String-java.lang.Throwable-">error</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;description,
      <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang">Throwable</a>&nbsp;throwable)</code>
-<div class="block">Create a new error node in the tree representing a specification, indicating
- an exception thrown while building the specification tree itself.</div>
+<div class="block">Factory method for error nodes in the tree representing a specification,
+ indicating an exception thrown while building the specification tree itself.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -132,7 +132,7 @@
 <td class="colFirst"><code>static <a href="../../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SpecificationNode.</span><code><span class="memberNameLink"><a href="../../../../io/hgc/jarspec/SpecificationNode.html#internal-java.lang.String-java.util.List-">internal</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;description,
         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>&gt;&nbsp;children)</code>
-<div class="block">Create a new internal node in the tree representing a specification.</div>
+<div class="block">Factory method for internal nodes in the tree representing a specification.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -148,7 +148,7 @@
 <td class="colFirst"><code>static <a href="../../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SpecificationNode.</span><code><span class="memberNameLink"><a href="../../../../io/hgc/jarspec/SpecificationNode.html#leaf-java.lang.String-java.util.Optional-">leaf</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;description,
     <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="../../../../io/hgc/jarspec/Test.html" title="interface in io.hgc.jarspec">Test</a>&gt;&nbsp;test)</code>
-<div class="block">Create a new leaf node in the tree representing a specification.</div>
+<div class="block">Factory method for leaf nodes in the tree representing a specification.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -214,7 +214,7 @@
 <td class="colFirst"><code>static <a href="../../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SpecificationNode.</span><code><span class="memberNameLink"><a href="../../../../io/hgc/jarspec/SpecificationNode.html#internal-java.lang.String-java.util.List-">internal</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;description,
         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>&gt;&nbsp;children)</code>
-<div class="block">Create a new internal node in the tree representing a specification.</div>
+<div class="block">Factory method for internal nodes in the tree representing a specification.</div>
 </td>
 </tr>
 </tbody>
@@ -232,6 +232,11 @@
 </tr>
 <tbody>
 <tr class="altColor">
+<td class="colFirst"><code>default <a href="../../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></code></td>
+<td class="colLast"><span class="typeNameLabel">DependencyBehaviour.</span><code><span class="memberNameLink"><a href="../../../../io/hgc/jarspec/mixins/DependencyBehaviour.html#it-java.lang.String-io.hgc.jarspec.mixins.DependentTest-">it</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;statement,
+  <a href="../../../../io/hgc/jarspec/mixins/DependentTest.html" title="interface in io.hgc.jarspec.mixins">DependentTest</a>&lt;<a href="../../../../io/hgc/jarspec/mixins/DependencyBehaviour.html" title="type parameter in DependencyBehaviour">TDependency</a>&gt;&nbsp;test)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>default &lt;T extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang">Throwable</a>&gt;<br><a href="../../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></code></td>
 <td class="colLast"><span class="typeNameLabel">ExceptionBehaviour.</span><code><span class="memberNameLink"><a href="../../../../io/hgc/jarspec/mixins/ExceptionBehaviour.html#itThrows-java.lang.Class-java.lang.String-io.hgc.jarspec.Test-">itThrows</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;throwable,
         <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;forCase,

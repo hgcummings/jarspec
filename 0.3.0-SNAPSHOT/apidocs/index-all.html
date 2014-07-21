@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Index (io.hgc:jarspec 0.3.0-SNAPSHOT API)</title>
-<meta name="date" content="2014-07-19">
+<meta name="date" content="2014-07-21">
 <link rel="stylesheet" type="text/css" href="stylesheet.css" title="Style">
 <script type="text/javascript" src="script.js"></script>
 </head>
@@ -92,6 +92,10 @@
 </a>
 <h2 class="title">D</h2>
 <dl>
+<dt><a href="io/hgc/jarspec/mixins/DependencyBehaviour.html" title="interface in io.hgc.jarspec.mixins"><span class="typeNameLink">DependencyBehaviour</span></a>&lt;<a href="io/hgc/jarspec/mixins/DependencyBehaviour.html" title="type parameter in DependencyBehaviour">TDependency</a>&gt; - Interface in <a href="io/hgc/jarspec/mixins/package-summary.html">io.hgc.jarspec.mixins</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/hgc/jarspec/mixins/DependentTest.html" title="interface in io.hgc.jarspec.mixins"><span class="typeNameLink">DependentTest</span></a>&lt;<a href="io/hgc/jarspec/mixins/DependentTest.html" title="type parameter in DependentTest">TDependency</a>&gt; - Interface in <a href="io/hgc/jarspec/mixins/package-summary.html">io.hgc.jarspec.mixins</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/hgc/jarspec/Specification.html#describe-java.lang.String-io.hgc.jarspec.BySingle-">describe(String, BySingle)</a></span> - Method in interface io.hgc.jarspec.<a href="io/hgc/jarspec/Specification.html" title="interface in io.hgc.jarspec">Specification</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/hgc/jarspec/Specification.html#describe-java.lang.String-io.hgc.jarspec.ByMultiple-">describe(String, ByMultiple)</a></span> - Method in interface io.hgc.jarspec.<a href="io/hgc/jarspec/Specification.html" title="interface in io.hgc.jarspec">Specification</a></dt>
@@ -104,8 +108,8 @@
 <dl>
 <dt><span class="memberNameLink"><a href="io/hgc/jarspec/SpecificationNode.html#error-java.lang.String-java.lang.Throwable-">error(String, Throwable)</a></span> - Static method in class io.hgc.jarspec.<a href="io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></dt>
 <dd>
-<div class="block">Create a new error node in the tree representing a specification, indicating
- an exception thrown while building the specification tree itself.</div>
+<div class="block">Factory method for error nodes in the tree representing a specification,
+ indicating an exception thrown while building the specification tree itself.</div>
 </dd>
 <dt><a href="io/hgc/jarspec/mixins/ExceptionBehaviour.html" title="interface in io.hgc.jarspec.mixins"><span class="typeNameLink">ExceptionBehaviour</span></a> - Interface in <a href="io/hgc/jarspec/mixins/package-summary.html">io.hgc.jarspec.mixins</a></dt>
 <dd>
@@ -131,11 +135,13 @@
 <dl>
 <dt><span class="memberNameLink"><a href="io/hgc/jarspec/SpecificationNode.html#internal-java.lang.String-java.util.List-">internal(String, List&lt;SpecificationNode&gt;)</a></span> - Static method in class io.hgc.jarspec.<a href="io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></dt>
 <dd>
-<div class="block">Create a new internal node in the tree representing a specification.</div>
+<div class="block">Factory method for internal nodes in the tree representing a specification.</div>
 </dd>
 <dt><a href="io/hgc/jarspec/package-summary.html">io.hgc.jarspec</a> - package io.hgc.jarspec</dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/hgc/jarspec/mixins/package-summary.html">io.hgc.jarspec.mixins</a> - package io.hgc.jarspec.mixins</dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/hgc/jarspec/mixins/DependencyBehaviour.html#it-java.lang.String-io.hgc.jarspec.mixins.DependentTest-">it(String, DependentTest&lt;TDependency&gt;)</a></span> - Method in interface io.hgc.jarspec.mixins.<a href="io/hgc/jarspec/mixins/DependencyBehaviour.html" title="interface in io.hgc.jarspec.mixins">DependencyBehaviour</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/hgc/jarspec/Specification.html#it-java.lang.String-io.hgc.jarspec.Test-">it(String, Test)</a></span> - Method in interface io.hgc.jarspec.<a href="io/hgc/jarspec/Specification.html" title="interface in io.hgc.jarspec">Specification</a></dt>
 <dd>&nbsp;</dd>
@@ -165,7 +171,7 @@
 <dl>
 <dt><span class="memberNameLink"><a href="io/hgc/jarspec/SpecificationNode.html#leaf-java.lang.String-java.util.Optional-">leaf(String, Optional&lt;Test&gt;)</a></span> - Static method in class io.hgc.jarspec.<a href="io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></dt>
 <dd>
-<div class="block">Create a new leaf node in the tree representing a specification.</div>
+<div class="block">Factory method for leaf nodes in the tree representing a specification.</div>
 </dd>
 </dl>
 <a name="I:O">
@@ -187,6 +193,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/hgc/jarspec/JarSpecJUnitRunner.html#run-org.junit.runner.notification.RunNotifier-">run(RunNotifier)</a></span> - Method in class io.hgc.jarspec.<a href="io/hgc/jarspec/JarSpecJUnitRunner.html" title="class in io.hgc.jarspec">JarSpecJUnitRunner</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/hgc/jarspec/mixins/DependentTest.html#run-TDependency-">run(TDependency)</a></span> - Method in interface io.hgc.jarspec.mixins.<a href="io/hgc/jarspec/mixins/DependentTest.html" title="interface in io.hgc.jarspec.mixins">DependentTest</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/hgc/jarspec/Test.html#run--">run()</a></span> - Method in interface io.hgc.jarspec.<a href="io/hgc/jarspec/Test.html" title="interface in io.hgc.jarspec">Test</a></dt>
 <dd>
 <div class="block">Implementation of a test for a single statement in a specification.</div>
@@ -197,6 +205,8 @@
 </a>
 <h2 class="title">S</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="io/hgc/jarspec/mixins/DependencyBehaviour.html#setupDependency--">setupDependency()</a></span> - Method in interface io.hgc.jarspec.mixins.<a href="io/hgc/jarspec/mixins/DependencyBehaviour.html" title="interface in io.hgc.jarspec.mixins">DependencyBehaviour</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/hgc/jarspec/SpecificationNode.html#skip--">skip()</a></span> - Method in class io.hgc.jarspec.<a href="io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></dt>
 <dd>
 <div class="block">Mark this node to be skipped (along with its children and any other nodes similarly marked)</div>
@@ -216,6 +226,8 @@
 </a>
 <h2 class="title">T</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="io/hgc/jarspec/mixins/DependencyBehaviour.html#teardownDependency-TDependency-">teardownDependency(TDependency)</a></span> - Method in interface io.hgc.jarspec.mixins.<a href="io/hgc/jarspec/mixins/DependencyBehaviour.html" title="interface in io.hgc.jarspec.mixins">DependencyBehaviour</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/hgc/jarspec/Test.html" title="interface in io.hgc.jarspec"><span class="typeNameLink">Test</span></a> - Interface in <a href="io/hgc/jarspec/package-summary.html">io.hgc.jarspec</a></dt>
 <dd>
 <div class="block">Represents a test for a statement in a specification.</div>

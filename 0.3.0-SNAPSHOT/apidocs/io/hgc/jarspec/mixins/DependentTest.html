@@ -3,16 +3,16 @@
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>ByMultiple (io.hgc:jarspec 0.3.0-SNAPSHOT API)</title>
+<title>DependentTest (io.hgc:jarspec 0.3.0-SNAPSHOT API)</title>
 <meta name="date" content="2014-07-21">
-<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
-<script type="text/javascript" src="../../../script.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+<script type="text/javascript" src="../../../../script.js"></script>
 </head>
 <body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
-            parent.document.title="ByMultiple (io.hgc:jarspec 0.3.0-SNAPSHOT API)";
+            parent.document.title="DependentTest (io.hgc:jarspec 0.3.0-SNAPSHOT API)";
         }
     }
     catch(err) {
@@ -37,27 +37,27 @@ var activeTableTab = "activeTableTab";
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../overview-summary.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/ByMultiple.html">Use</a></li>
+<li><a href="class-use/DependentTest.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
-<li><a href="../../../deprecated-list.html">Deprecated</a></li>
-<li><a href="../../../index-all.html">Index</a></li>
-<li><a href="../../../help-doc.html">Help</a></li>
+<li><a href="../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../index-all.html">Index</a></li>
+<li><a href="../../../../help-doc.html">Help</a></li>
 </ul>
 </div>
 <div class="subNav">
 <ul class="navList">
-<li>Prev&nbsp;Class</li>
-<li><a href="../../../io/hgc/jarspec/BySingle.html" title="interface in io.hgc.jarspec"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../io/hgc/jarspec/mixins/DependencyBehaviour.html" title="interface in io.hgc.jarspec.mixins"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../io/hgc/jarspec/mixins/ExceptionBehaviour.html" title="interface in io.hgc.jarspec.mixins"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
-<li><a href="../../../index.html?io/hgc/jarspec/ByMultiple.html" target="_top">Frames</a></li>
-<li><a href="ByMultiple.html" target="_top">No&nbsp;Frames</a></li>
+<li><a href="../../../../index.html?io/hgc/jarspec/mixins/DependentTest.html" target="_top">Frames</a></li>
+<li><a href="DependentTest.html" target="_top">No&nbsp;Frames</a></li>
 </ul>
 <ul class="navList" id="allclasses_navbar_top">
-<li><a href="../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
 </ul>
 <div>
 <script type="text/javascript"><!--
@@ -92,8 +92,8 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">io.hgc.jarspec</div>
-<h2 title="Interface ByMultiple" class="title">Interface ByMultiple</h2>
+<div class="subTitle">io.hgc.jarspec.mixins</div>
+<h2 title="Interface DependentTest" class="title">Interface DependentTest&lt;TDependency&gt;</h2>
 </div>
 <div class="contentContainer">
 <div class="description">
@@ -106,8 +106,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/FunctionalInterface.html?is-external=true" title="class or interface in java.lang">@FunctionalInterface</a>
-public interface <span class="typeNameLabel">ByMultiple</span></pre>
-<div class="block">Returns multiple <a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec"><code>SpecificationNode</code></a> that represent the direct children of another</div>
+public interface <span class="typeNameLabel">DependentTest&lt;TDependency&gt;</span></pre>
 </li>
 </ul>
 </div>
@@ -127,8 +126,8 @@ public interface <span class="typeNameLabel">ByMultiple</span></pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../io/hgc/jarspec/ByMultiple.html#get--">get</a></span>()</code>&nbsp;</td>
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/hgc/jarspec/mixins/DependentTest.html#run-TDependency-">run</a></span>(<a href="../../../../io/hgc/jarspec/mixins/DependentTest.html" title="type parameter in DependentTest">TDependency</a>&nbsp;dependency)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -145,19 +144,19 @@ public interface <span class="typeNameLabel">ByMultiple</span></pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="get--">
+<a name="run-java.lang.Object-">
+<!--   -->
+</a><a name="run-TDependency-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>get</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>&gt;&nbsp;get()
-                     throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang">Exception</a></pre>
+<h4>run</h4>
+<pre>void&nbsp;run(<a href="../../../../io/hgc/jarspec/mixins/DependentTest.html" title="type parameter in DependentTest">TDependency</a>&nbsp;dependency)
+  throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang">Exception</a></pre>
 <dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>multiple <a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec"><code>SpecificationNode</code></a> children</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang">Exception</a></code> - indicates a test failure</dd>
+<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang">Exception</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -177,27 +176,27 @@ public interface <span class="typeNameLabel">ByMultiple</span></pre>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../overview-summary.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/ByMultiple.html">Use</a></li>
+<li><a href="class-use/DependentTest.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
-<li><a href="../../../deprecated-list.html">Deprecated</a></li>
-<li><a href="../../../index-all.html">Index</a></li>
-<li><a href="../../../help-doc.html">Help</a></li>
+<li><a href="../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../index-all.html">Index</a></li>
+<li><a href="../../../../help-doc.html">Help</a></li>
 </ul>
 </div>
 <div class="subNav">
 <ul class="navList">
-<li>Prev&nbsp;Class</li>
-<li><a href="../../../io/hgc/jarspec/BySingle.html" title="interface in io.hgc.jarspec"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../io/hgc/jarspec/mixins/DependencyBehaviour.html" title="interface in io.hgc.jarspec.mixins"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../io/hgc/jarspec/mixins/ExceptionBehaviour.html" title="interface in io.hgc.jarspec.mixins"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
-<li><a href="../../../index.html?io/hgc/jarspec/ByMultiple.html" target="_top">Frames</a></li>
-<li><a href="ByMultiple.html" target="_top">No&nbsp;Frames</a></li>
+<li><a href="../../../../index.html?io/hgc/jarspec/mixins/DependentTest.html" target="_top">Frames</a></li>
+<li><a href="DependentTest.html" target="_top">No&nbsp;Frames</a></li>
 </ul>
 <ul class="navList" id="allclasses_navbar_bottom">
-<li><a href="../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
 </ul>
 <div>
 <script type="text/javascript"><!--
