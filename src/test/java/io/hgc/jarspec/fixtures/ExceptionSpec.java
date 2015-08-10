@@ -11,13 +11,13 @@ public class ExceptionSpec implements Specification, ExceptionBehaviour {
     @Override
     public SpecificationNode root() {
         return describe("unstable code", by(
-            itThrows(ExpectedException.class, "on matching invocation", () -> {
+            itThrows(ExpectedException.class, "matching exception", () -> {
                 throw new ExpectedException();
             }),
-            itThrows(ExpectedException.class, "on non-matching invocation", () -> {
+            itThrows(ExpectedException.class, "non-matching exception", () -> {
                 throw new OtherException();
             }),
-            itThrows(ExpectedException.class, "on non-exception invocation", () -> {
+            itThrows(ExpectedException.class, "no exception", () -> {
                 // Don't throw
             })
         ));
