@@ -14,7 +14,7 @@ public class ExceptionBehaviourSpec implements Specification, ExceptionBehaviour
     @Override
     public SpecificationNode root() {
         Result result = new JUnitCore().run(ExceptionSpec.class);
-        return describe("'itThrows' behaviour", () -> by(
+        return describe("'itThrows' behaviour", by(
             it("does not fail tests that throw an expected exception", () ->
                 assertTrue(result.getFailureCount() < result.getRunCount())),
             it("fails tests that throw an unexpected exception", () -> {

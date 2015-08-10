@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 public class ExceptionSpec implements Specification, ExceptionBehaviour {
     @Override
     public SpecificationNode root() {
-        return describe("unstable code", () -> by(
+        return describe("unstable code", by(
             itThrows(ExpectedException.class, "on matching invocation", () -> {
                 throw new ExpectedException();
             }),

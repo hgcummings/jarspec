@@ -14,14 +14,14 @@ public class JarSpecSpec implements Specification {
         System.out.println("root");
         return describe("major unit", () -> {
             System.out.println("Major unit");
-            return by(
-                it("has a top-level statement", () ->
-                    System.out.println("Top-level statement")),
-                describe("nested minor unit", () -> {
-                    System.out.println("Minor unit");
-                    return it("has a nested statement", () ->
-                        System.out.println("Nested statement"));
-                })
+            return byAllOf(
+                    it("has a top-level statement", () ->
+                            System.out.println("Top-level statement")),
+                    describe("nested minor unit", () -> {
+                        System.out.println("Minor unit");
+                        return it("has a nested statement", () ->
+                                System.out.println("Nested statement"));
+                    })
             );
         });
     }

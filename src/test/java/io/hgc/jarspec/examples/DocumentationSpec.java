@@ -11,12 +11,12 @@ import static org.junit.Assert.assertTrue;
 public class DocumentationSpec implements Specification {
     @Override
     public SpecificationNode root() {
-        return describe("Documentation example", () -> by(
+        return describe("Documentation example", by(
             it("demonstrates Statement nodes", () -> assertTrue(true)),
             it("demonstrates multiple Statement nodes", () -> assertTrue(true)),
-            describe("nested unit", () ->
+            describe("nested unit", by(
                 it("demonstrates single-statement case", () -> assertTrue(true))
-            )
+            ))
         ));
     }
 }

@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 public class AsyncSpec implements Specification, AsynchronousBehaviour {
     @Override
     public SpecificationNode root() {
-        return describe("asynchronous behaviour", () -> by (
+        return describe("asynchronous behaviour", by (
             it("should complete within the timeout", () -> {
                 AsyncResult result = new AsyncResult();
                 asyncProcess(result);

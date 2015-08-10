@@ -13,16 +13,16 @@ public class ErrorInDescribeSpec implements Specification {
 
     @Override
     public SpecificationNode root() {
-        return describe("Partially broken spec", () -> by(
+        return describe("Partially broken spec", by(
             describe("broken single-child unit", () -> {
                 brokenSetupMethod();
                 return it("doesn't get this far", () -> fail("should not run"));
             }),
             describe("broken multi-child unit", () -> {
                 brokenSetupMethod();
-                return by(
-                    it("doesn't get this far", () -> fail("should not run")),
-                    it("doesn't get this far", () -> fail("should not run")));
+                return byAllOf(
+                        it("doesn't get this far", () -> fail("should not run")),
+                        it("doesn't get this far", () -> fail("should not run")));
             }),
             describe("unit with unchecked Error", () -> {
                 uncheckedErrorMethod();

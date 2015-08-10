@@ -19,7 +19,7 @@ public interface Specification {
      */
     default public SpecificationNode describe(String unit, BySingle specification) {
         try {
-            return SpecificationNode.internal(unit, by(specification.get()));
+            return SpecificationNode.internal(unit, byAllOf(specification.get()));
         } catch (Throwable e) {
             return SpecificationNode.error(unit, e);
         }
@@ -60,7 +60,20 @@ public interface Specification {
      * @param specificationNodes specifications to be combined
      * @return a List containing all of the specifications in the order provided
      */
-    default public List<SpecificationNode> by(SpecificationNode... specificationNodes) {
+    default public ByMultiple by(SpecificationNode... specificationNodes) {
+        return () -> byAllOf(specificationNodes);
+    }
+
+    default public ByMultiple by(ByMultiple inner) {
+        return inner;
+    }
+
+    /**
+     * Convenience method providing a concise syntax for combining specifications into a list
+     * @param specificationNodes specifications to be combined
+     * @return a List containing all of the specifications in the order provided
+     */
+    default public List<SpecificationNode> byAllOf(SpecificationNode... specificationNodes) {
         List<SpecificationNode> list = new ArrayList<>();
         Collections.addAll(list, specificationNodes);
         return list;

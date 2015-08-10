@@ -8,9 +8,9 @@
 public class MinimalSpec implements Specification {
     @Override
     public SpecificationNode root() {
-        return describe("This specification", () ->
+        return describe("This specification", by(
             it("contains a statement with a test", () -> assertTrue(true))
-        );
+        ));
     }
 }
 ```
