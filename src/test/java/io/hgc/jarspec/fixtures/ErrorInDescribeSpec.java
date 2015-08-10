@@ -16,17 +16,17 @@ public class ErrorInDescribeSpec implements Specification {
         return describe("Partially broken spec", by(
             describe("broken single-child unit", () -> {
                 brokenSetupMethod();
-                return it("doesn't get this far", () -> fail("should not run"));
+                return it("doesn't get this far", () -> {});
             }),
             describe("broken multi-child unit", () -> {
                 brokenSetupMethod();
                 return byAllOf(
-                        it("doesn't get this far", () -> fail("should not run")),
-                        it("doesn't get this far", () -> fail("should not run")));
+                        it("doesn't get this far", () -> {}),
+                        it("doesn't get this far", () -> {}));
             }),
             describe("unit with unchecked Error", () -> {
                 uncheckedErrorMethod();
-                return it("doesn't get this far", () -> fail("should not run"));
+                return it("doesn't get this far", () -> {});
             }),
             describe("successful unit", () ->
                 it("passes", () -> assertTrue(true)))

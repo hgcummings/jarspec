@@ -2,6 +2,7 @@ package io.hgc.jarspec;
 
 import io.hgc.jarspec.fixtures.*;
 import io.hgc.jarspec.mixins.ExceptionBehaviour;
+import io.hgc.jarspec.mixins.TestRunnerBehaviour;
 import org.junit.runner.*;
 import org.junit.runner.notification.Failure;
 
@@ -13,7 +14,7 @@ import static org.junit.Assert.*;
  * Uses {@link io.hgc.jarspec.fixtures} to test the main runner class
  */
 @RunWith(JarSpecJUnitRunner.class)
-public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour {
+public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour, TestRunnerBehaviour {
     @Override
     public SpecificationNode root() {
         return describe("JUnit runner", () -> {
@@ -70,50 +71,21 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                         assertEquals(2, result.getIgnoreCount());
                         assertEquals(3, result.getRunCount());
                     }),
-                    describe("error handling", () -> {
-                        Result result = new JUnitCore().run(ErrorInDescribeSpec.class);
-
-                        return byAllOf(
-                                it("reports checked exceptions in multi-child describe nodes as failures", () -> {
-                                    assertTrue(result.getFailureCount() > 0);
-                                    for (Failure failure : result.getFailures()) {
-                                        if (failure.getDescription().getMethodName().contains("broken multi-child unit")) {
-                                            return;
-                                        }
-                                    }
-                                    fail();
-                                }),
-                                it("reports checked exceptions in single-child describe nodes as failures", () -> {
-                                    assertTrue(result.getFailureCount() > 0);
-                                    for (Failure failure : result.getFailures()) {
-                                        if (failure.getDescription().getMethodName().contains("broken single-child unit")) {
-                                            return;
-                                        }
-                                    }
-                                    fail();
-                                }),
-                                it("reports unchecked exceptions in multi-child describe nodes as failures", () -> {
-                                    assertTrue(result.getFailureCount() > 0);
-                                    for (Failure failure : result.getFailures()) {
-                                        if (failure.getDescription().getMethodName().contains("unit with unchecked Error")) {
-                                            return;
-                                        }
-                                    }
-                                    fail();
-                                }),
-                                it("allows other statements in the same spec to proceed", () ->
-                                        assertTrue(result.getFailureCount() < result.getRunCount()))
-                        );
-                    }),
+                    describe("error handling", by(ErrorInDescribeSpec.class,
+                        fails("broken multi-child unit"),
+                        fails("broken single-child unit"),
+                        fails("unit with unchecked Error"),
+                        passes("successful unit"))
+                    ),
                     describe("root error", by(
-                                    it("causes a single init failure for spec class", () -> {
-                                        Result result = new JUnitCore().run(ErrorInRootSpec.class);
-                                        assertEquals(1, result.getFailureCount());
-                                        Failure failure = result.getFailures().get(0);
-                                        String displayName = failure.getDescription().getDisplayName();
-                                        assertTrue(displayName.contains("initializationError"));
-                                        assertTrue(displayName.contains(ErrorInRootSpec.class.getName()));
-                                    }))
+                            it("causes a single init failure for spec class", () -> {
+                                Result result = new JUnitCore().run(ErrorInRootSpec.class);
+                                assertEquals(1, result.getFailureCount());
+                                Failure failure = result.getFailures().get(0);
+                                String displayName = failure.getDescription().getDisplayName();
+                                assertTrue(displayName.contains("initializationError"));
+                                assertTrue(displayName.contains(ErrorInRootSpec.class.getName()));
+                            }))
                     ));
         });
     }
