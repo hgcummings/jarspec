@@ -1,10 +1,10 @@
 package io.hgc.jarspec;
 
-import io.hgc.jarspec.fixtures.AsyncSpec;
+import io.hgc.jarspec.fixtures.async.AsyncSpec;
+import io.hgc.jarspec.fixtures.async.AsyncTimeoutSpec;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
-import org.junit.runner.Runner;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,6 +15,11 @@ public class AsynchronousBehaviourSpec implements Specification {
         return describe("asynchronous behaviour", by(
                 it("should measure success after async process completes", () -> {
                     Result result = new JUnitCore().run(AsyncSpec.class);
+                    assertEquals(2, result.getRunCount());
+                    assertEquals(1, result.getFailureCount());
+                }),
+                it("should report failure for work that times out", () -> {
+                    Result result = new JUnitCore().run(AsyncTimeoutSpec.class);
                     assertEquals(2, result.getRunCount());
                     assertEquals(1, result.getFailureCount());
                 })

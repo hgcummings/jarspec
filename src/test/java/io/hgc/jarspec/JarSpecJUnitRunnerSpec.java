@@ -10,7 +10,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Using {@link io.hgc.jarspec.fixtures} to test the main runner class
+ * Uses {@link io.hgc.jarspec.fixtures} to test the main runner class
  */
 @RunWith(JarSpecJUnitRunner.class)
 public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour {
