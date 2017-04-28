@@ -3,9 +3,9 @@
 import io.hgc.jarspec.Test;
 
 public interface AsynchronousBehaviour {
-    static final int INITIAL_BACKOFF = 20;
+    int INITIAL_BACKOFF = 20;
 
-    public default void waitFor(Test test) throws Exception {
+    default void waitFor(Test test) throws Exception {
 <span class="fc" id="L9">        long startTime = System.currentTimeMillis();</span>
 <span class="fc" id="L10">        int timeout = getTimeoutMillis();</span>
 <span class="fc" id="L11">        int backoff = INITIAL_BACKOFF;</span>
@@ -22,7 +22,7 @@ public interface AsynchronousBehaviour {
         }
     }
 
-    public default int getTimeoutMillis() {
+    default int getTimeoutMillis() {
 <span class="nc" id="L26">        return 5000;</span>
     }
 }

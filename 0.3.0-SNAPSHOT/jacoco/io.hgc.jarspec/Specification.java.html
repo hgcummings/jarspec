@@ -10,18 +10,22 @@ import java.util.Optional;
  * for those statements. Primary interface for all specs written with JarSpec.
  */
 public interface Specification {
-    public SpecificationNode root();
+    SpecificationNode root();
+
+    default SpecificationNode describe(String unit, SpecificationNode... specificationNodes) {
+<span class="fc" id="L16">        return SpecificationNode.internal(unit, byAllOf(specificationNodes));</span>
+    }
 
     /**
      * @param unit description of a unit of behaviour
      * @param specification nested specification for the behaviour of the unit
      * @return the overall specification
      */
-    default public SpecificationNode describe(String unit, BySingle specification) {
+    default SpecificationNode describe(String unit, BySingle specification) {
         try {
-<span class="fc" id="L22">            return SpecificationNode.internal(unit, by(specification.get()));</span>
-<span class="fc" id="L23">        } catch (Throwable e) {</span>
-<span class="fc" id="L24">            return SpecificationNode.error(unit, e);</span>
+<span class="fc" id="L26">            return SpecificationNode.internal(unit, byAllOf(specification.get()));</span>
+<span class="fc" id="L27">        } catch (Throwable e) {</span>
+<span class="fc" id="L28">            return SpecificationNode.error(unit, e);</span>
         }
     }
 
@@ -30,11 +34,11 @@ public interface Specification {
      * @param specifications nested specifications for the behaviour of the unit
      * @return the overall specification
      */
-    default public SpecificationNode describe(String unit, ByMultiple specifications) {
+    default SpecificationNode describe(String unit, ByMultiple specifications) {
         try {
-<span class="fc" id="L35">            return SpecificationNode.internal(unit, specifications.get());</span>
-<span class="fc" id="L36">        } catch (Throwable e) {</span>
-<span class="fc" id="L37">            return SpecificationNode.error(unit, e);</span>
+<span class="fc" id="L39">            return SpecificationNode.internal(unit, specifications.get());</span>
+<span class="fc" id="L40">        } catch (Throwable e) {</span>
+<span class="fc" id="L41">            return SpecificationNode.error(unit, e);</span>
         }
     }
 
@@ -43,16 +47,16 @@ public interface Specification {
      * @param test an automated test for the statement
      * @return a specification consisting of single automatically verifiable statement
      */
-    default public SpecificationNode it(String statement, Test test) {
-<span class="fc" id="L47">        return SpecificationNode.leaf(statement, Optional.of(test));</span>
+    default SpecificationNode it(String statement, Test test) {
+<span class="fc" id="L51">        return SpecificationNode.leaf(statement, Optional.of(test));</span>
     }
 
     /**
      * @param statement a statement about the behaviour of a unit
      * @return a specification consisting of single statement with no automated test
      */
-    default public SpecificationNode it(String statement) {
-<span class="fc" id="L55">        return SpecificationNode.leaf(statement, Optional.&lt;Test&gt;empty());</span>
+    default SpecificationNode it(String statement) {
+<span class="fc" id="L59">        return SpecificationNode.leaf(statement, Optional.empty());</span>
     }
 
     /**
@@ -60,10 +64,10 @@ public interface Specification {
      * @param specificationNodes specifications to be combined
      * @return a List containing all of the specifications in the order provided
      */
-    default public List&lt;SpecificationNode&gt; by(SpecificationNode... specificationNodes) {
-<span class="fc" id="L64">        List&lt;SpecificationNode&gt; list = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L65">        Collections.addAll(list, specificationNodes);</span>
-<span class="fc" id="L66">        return list;</span>
+    default List&lt;SpecificationNode&gt; byAllOf(SpecificationNode... specificationNodes) {
+<span class="fc" id="L68">        List&lt;SpecificationNode&gt; list = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L69">        Collections.addAll(list, specificationNodes);</span>
+<span class="fc" id="L70">        return list;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>
