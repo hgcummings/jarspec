@@ -18,7 +18,7 @@ public interface ExceptionBehaviour {
      * @param <T>       the expected exception type
      * @return a Specification representing the single description
      */
-    default public <T extends Throwable> SpecificationNode itThrows(Class<T> throwable, String forCase, Test testCase) {
+    default <T extends Throwable> SpecificationNode itThrows(Class<T> throwable, String forCase, Test testCase) {
         return SpecificationNode.leaf(
             String.format("throws %s %s", throwable.getSimpleName(), forCase),
             Optional.of(() -> {

@@ -16,7 +16,7 @@ import static org.junit.Assert.fail;
 
 public interface TestRunnerBehaviour extends Specification {
 
-    default public ByMultiple by(Class<? extends Specification> clazz, TestResult... expectedResults) {
+    default ByMultiple by(Class<? extends Specification> clazz, TestResult... expectedResults) {
         return () -> {
             Result result = new JUnitCore().run(clazz);
             List<SpecificationNode> specificationNodes = new ArrayList<>();
@@ -29,15 +29,15 @@ public interface TestRunnerBehaviour extends Specification {
         };
     }
 
-    default public TestResult passes(String testName) {
+    default TestResult passes(String testName) {
         return new PassingTestResult(testName);
     }
 
-    default public TestResult fails(String testName) {
+    default TestResult fails(String testName) {
         return new FailingTestResult(testName);
     }
 
-    static interface TestResult {
+    interface TestResult {
         String statement();
         Test test(Result result);
     }

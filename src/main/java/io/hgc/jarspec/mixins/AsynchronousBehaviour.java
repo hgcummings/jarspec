@@ -3,9 +3,9 @@ package io.hgc.jarspec.mixins;
 import io.hgc.jarspec.Test;
 
 public interface AsynchronousBehaviour {
-    static final int INITIAL_BACKOFF = 20;
+    int INITIAL_BACKOFF = 20;
 
-    public default void waitFor(Test test) throws Exception {
+    default void waitFor(Test test) throws Exception {
         long startTime = System.currentTimeMillis();
         int timeout = getTimeoutMillis();
         int backoff = INITIAL_BACKOFF;
@@ -22,7 +22,7 @@ public interface AsynchronousBehaviour {
         }
     }
 
-    public default int getTimeoutMillis() {
+    default int getTimeoutMillis() {
         return 5000;
     }
 }

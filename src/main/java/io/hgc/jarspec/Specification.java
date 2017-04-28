@@ -10,9 +10,9 @@ import java.util.Optional;
  * for those statements. Primary interface for all specs written with JarSpec.
  */
 public interface Specification {
-    public SpecificationNode root();
+    SpecificationNode root();
 
-    default public SpecificationNode describe(String unit, SpecificationNode... specificationNodes) {
+    default SpecificationNode describe(String unit, SpecificationNode... specificationNodes) {
         return SpecificationNode.internal(unit, byAllOf(specificationNodes));
     }
 
@@ -21,7 +21,7 @@ public interface Specification {
      * @param specification nested specification for the behaviour of the unit
      * @return the overall specification
      */
-    default public SpecificationNode describe(String unit, BySingle specification) {
+    default SpecificationNode describe(String unit, BySingle specification) {
         try {
             return SpecificationNode.internal(unit, byAllOf(specification.get()));
         } catch (Throwable e) {
@@ -34,7 +34,7 @@ public interface Specification {
      * @param specifications nested specifications for the behaviour of the unit
      * @return the overall specification
      */
-    default public SpecificationNode describe(String unit, ByMultiple specifications) {
+    default SpecificationNode describe(String unit, ByMultiple specifications) {
         try {
             return SpecificationNode.internal(unit, specifications.get());
         } catch (Throwable e) {
@@ -47,7 +47,7 @@ public interface Specification {
      * @param test an automated test for the statement
      * @return a specification consisting of single automatically verifiable statement
      */
-    default public SpecificationNode it(String statement, Test test) {
+    default SpecificationNode it(String statement, Test test) {
         return SpecificationNode.leaf(statement, Optional.of(test));
     }
 
@@ -55,8 +55,8 @@ public interface Specification {
      * @param statement a statement about the behaviour of a unit
      * @return a specification consisting of single statement with no automated test
      */
-    default public SpecificationNode it(String statement) {
-        return SpecificationNode.leaf(statement, Optional.<Test>empty());
+    default SpecificationNode it(String statement) {
+        return SpecificationNode.leaf(statement, Optional.empty());
     }
 
     /**
@@ -64,7 +64,7 @@ public interface Specification {
      * @param specificationNodes specifications to be combined
      * @return a List containing all of the specifications in the order provided
      */
-    default public List<SpecificationNode> byAllOf(SpecificationNode... specificationNodes) {
+    default List<SpecificationNode> byAllOf(SpecificationNode... specificationNodes) {
         List<SpecificationNode> list = new ArrayList<>();
         Collections.addAll(list, specificationNodes);
         return list;

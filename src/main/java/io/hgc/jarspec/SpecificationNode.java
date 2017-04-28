@@ -21,7 +21,7 @@ public abstract class SpecificationNode {
      * @return a new node representing a skipped version of the original node
      */
     public SpecificationNode skip() {
-        return leaf(this.description(), Optional.<Test>empty());
+        return leaf(this.description(), Optional.empty());
     }
 
     /**
