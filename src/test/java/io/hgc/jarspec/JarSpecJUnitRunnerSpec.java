@@ -20,16 +20,16 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
         return describe("JUnit runner", () -> {
             Runner runner = new JarSpecJUnitRunner<>(AdditionSpec.class);
             return byAllOf(
-                    describe("constructor", by(
+                    describe("constructor",
                             itThrows(RuntimeException.class, "for inaccessible test class", () -> {
                                 new JarSpecJUnitRunner<>(InaccessibleTestClass.class);
                                 fail("This line should not be reached");
                             })
-                    )),
-                    describe("test count", by(
+                    ),
+                    describe("test count",
                             it("matches number of tests", () -> assertEquals(2, runner.testCount()))
-                    )),
-                    describe("description", by(
+                    ),
+                    describe("description",
                             it("returns correct test class for all tests", () ->
                                     verifyDescriptionTestClass(runner.getDescription(), AdditionSpec.class)),
                             it("includes parent context in test names", () -> {
@@ -40,7 +40,7 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                                 assertEquals("addition of 1+1 equals 2", description.getChildren().get(0).getMethodName());
                                 assertEquals("addition of 1+1 equals 3", description.getChildren().get(1).getMethodName());
                             })
-                    )),
+                    ),
                     it("reports failures correctly", () -> {
                         JUnitCore jUnitCore = new JUnitCore();
                         Result result = jUnitCore.run(runner);
@@ -77,16 +77,16 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                         fails("unit with unchecked Error"),
                         passes("successful unit"))
                     ),
-                    describe("root error", by(
-                            it("causes a single init failure for spec class", () -> {
-                                Result result = new JUnitCore().run(ErrorInRootSpec.class);
-                                assertEquals(1, result.getFailureCount());
-                                Failure failure = result.getFailures().get(0);
-                                String displayName = failure.getDescription().getDisplayName();
-                                assertTrue(displayName.contains("initializationError"));
-                                assertTrue(displayName.contains(ErrorInRootSpec.class.getName()));
-                            }))
-                    ));
+                    describe("root error",
+                        it("causes a single init failure for spec class", () -> {
+                            Result result = new JUnitCore().run(ErrorInRootSpec.class);
+                            assertEquals(1, result.getFailureCount());
+                            Failure failure = result.getFailures().get(0);
+                            String displayName = failure.getDescription().getDisplayName();
+                            assertTrue(displayName.contains("initializationError"));
+                            assertTrue(displayName.contains(ErrorInRootSpec.class.getName()));
+                        }))
+                    );
         });
     }
 

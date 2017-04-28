@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class AsynchronousBehaviourSpec implements Specification {
     @Override
     public SpecificationNode root() {
-        return describe("asynchronous behaviour", by(
+        return describe("asynchronous behaviour",
                 it("should measure success after async process completes", () -> {
                     Result result = new JUnitCore().run(AsyncSpec.class);
                     assertEquals(2, result.getRunCount());
@@ -23,7 +23,6 @@ public class AsynchronousBehaviourSpec implements Specification {
                     assertEquals(2, result.getRunCount());
                     assertEquals(1, result.getFailureCount());
                 })
-            )
-        );
+            );
     }
 }

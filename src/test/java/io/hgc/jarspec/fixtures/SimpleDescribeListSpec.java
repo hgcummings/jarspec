@@ -11,9 +11,9 @@ import static org.junit.Assert.assertEquals;
 public class SimpleDescribeListSpec implements Specification {
     @Override
     public SpecificationNode root() {
-        return describe("Integer arithmetic", by(
+        return describe("Integer arithmetic",
             it("supports addition", () -> assertEquals(2, 1+1)),
             it("supports subtraction", () -> assertEquals(3, 8-5)),
-            it("supports multiplication", () -> assertEquals(6, 2*3))));
+            it("supports multiplication", () -> assertEquals(6, 2*3)));
     }
 }

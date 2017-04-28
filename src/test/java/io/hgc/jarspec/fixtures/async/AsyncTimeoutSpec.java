@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 public class AsyncTimeoutSpec implements Specification, AsynchronousBehaviour {
     @Override
     public SpecificationNode root() {
-        return describe("asynchronous behaviour", by (
+        return describe("asynchronous behaviour",
                 it("should complete fast work within the timeout", () -> {
                     AsyncWork work = new AsyncWork();
                     work.process(10);
@@ -24,7 +24,7 @@ public class AsyncTimeoutSpec implements Specification, AsynchronousBehaviour {
                     work.process(100);
                     waitFor(() -> assertEquals(1, work.getResult()));
                 })
-        ));
+        );
     }
 
     @Override

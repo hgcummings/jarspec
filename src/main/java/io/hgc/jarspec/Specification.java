@@ -12,6 +12,10 @@ import java.util.Optional;
 public interface Specification {
     public SpecificationNode root();
 
+    default public SpecificationNode describe(String unit, SpecificationNode... specificationNodes) {
+        return SpecificationNode.internal(unit, byAllOf(specificationNodes));
+    }
+
     /**
      * @param unit description of a unit of behaviour
      * @param specification nested specification for the behaviour of the unit
@@ -53,19 +57,6 @@ public interface Specification {
      */
     default public SpecificationNode it(String statement) {
         return SpecificationNode.leaf(statement, Optional.<Test>empty());
-    }
-
-    /**
-     * Convenience method providing a concise syntax for combining specifications into a list
-     * @param specificationNodes specifications to be combined
-     * @return a List containing all of the specifications in the order provided
-     */
-    default public ByMultiple by(SpecificationNode... specificationNodes) {
-        return () -> byAllOf(specificationNodes);
-    }
-
-    default public ByMultiple by(ByMultiple inner) {
-        return inner;
     }
 
     /**

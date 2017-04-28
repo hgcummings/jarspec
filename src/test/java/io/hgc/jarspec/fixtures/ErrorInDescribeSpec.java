@@ -13,7 +13,7 @@ public class ErrorInDescribeSpec implements Specification {
 
     @Override
     public SpecificationNode root() {
-        return describe("Partially broken spec", by(
+        return describe("Partially broken spec",
             describe("broken single-child unit", () -> {
                 brokenSetupMethod();
                 return it("doesn't get this far", () -> {});
@@ -30,7 +30,7 @@ public class ErrorInDescribeSpec implements Specification {
             }),
             describe("successful unit", () ->
                 it("passes", () -> assertTrue(true)))
-        ));
+        );
     }
 
     private void brokenSetupMethod() throws Exception {

@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class AdditionSpec implements Specification {
     @Override
     public SpecificationNode root() {
-        return describe("addition", by(
+        return describe("addition",
             describe("of 1+1", () -> {
                 int result = 1 + 1;
 
@@ -20,6 +20,6 @@ public class AdditionSpec implements Specification {
                         it("equals 3", () -> assertEquals(3, result))
                 );
             })
-        ));
+        );
     }
 }
