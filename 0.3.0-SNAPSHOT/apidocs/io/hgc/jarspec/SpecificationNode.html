@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>SpecificationNode (io.hgc:jarspec 1.0.0-SNAPSHOT API)</title>
-<meta name="date" content="2017-04-28">
+<meta name="date" content="2017-04-30">
 <link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
 <script type="text/javascript" src="../../../script.js"></script>
 </head>
@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":6,"i4":10};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":6,"i5":10,"i6":6};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -50,7 +50,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../io/hgc/jarspec/Specification.html" title="interface in io.hgc.jarspec"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../io/hgc/jarspec/Test.html" title="interface in io.hgc.jarspec"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../io/hgc/jarspec/SpecificationNode.ResetSharedState.html" title="interface in io.hgc.jarspec"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../index.html?io/hgc/jarspec/SpecificationNode.html" target="_top">Frames</a></li>
@@ -74,7 +74,7 @@ var activeTableTab = "activeTableTab";
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
@@ -118,6 +118,25 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="nested.class.summary">
+<!--   -->
+</a>
+<h3>Nested Class Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Nested Class Summary table, listing nested classes, and an explanation">
+<caption><span>Nested Classes</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static interface&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../io/hgc/jarspec/SpecificationNode.ResetSharedState.html" title="interface in io.hgc.jarspec">SpecificationNode.ResetSharedState</a></span></code>&nbsp;</td>
+</tr>
+</table>
+</li>
+</ul>
 <!-- ========== METHOD SUMMARY =========== -->
 <ul class="blockList">
 <li class="blockList"><a name="method.summary">
@@ -140,28 +159,40 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../io/hgc/jarspec/SpecificationNode.html#internal-java.lang.String-java.util.List-">internal</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;description,
-        <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>&gt;&nbsp;children)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../io/hgc/jarspec/SpecificationNode.html#internal-java.lang.String-java.util.stream.Stream-">internal</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;description,
+        <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>&gt;&nbsp;children)</code>
 <div class="block">Factory method for internal nodes in the tree representing a specification.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../io/hgc/jarspec/SpecificationNode.html#leaf-java.lang.String-java.util.Optional-">leaf</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;description,
-    <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="../../../io/hgc/jarspec/Test.html" title="interface in io.hgc.jarspec">Test</a>&gt;&nbsp;test)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../io/hgc/jarspec/SpecificationNode.html#leaf-java.lang.String-">leaf</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;description)</code>
 <div class="block">Factory method for leaf nodes in the tree representing a specification.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
+<td class="colFirst"><code>static <a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../io/hgc/jarspec/SpecificationNode.html#leaf-java.lang.String-io.hgc.jarspec.Test-">leaf</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;description,
+    <a href="../../../io/hgc/jarspec/Test.html" title="interface in io.hgc.jarspec">Test</a>&nbsp;test)</code>
+<div class="block">Factory method for leaf nodes in the tree representing a specification.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>abstract <a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../io/hgc/jarspec/SpecificationNode.html#only--">only</a></span>()</code>
 <div class="block">Mark this node to be run exclusively (along with its children and any other nodes similarly marked)</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../io/hgc/jarspec/SpecificationNode.html#skip--">skip</a></span>()</code>
 <div class="block">Mark this node to be skipped (along with its children and any other nodes similarly marked)</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>abstract <a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../io/hgc/jarspec/SpecificationNode.html#withReset-io.hgc.jarspec.SpecificationNode.ResetSharedState-">withReset</a></span>(<a href="../../../io/hgc/jarspec/SpecificationNode.ResetSharedState.html" title="interface in io.hgc.jarspec">SpecificationNode.ResetSharedState</a>&nbsp;reset)</code>
+<div class="block">Define a reset operation to clean up shared state between tests</div>
 </td>
 </tr>
 </table>
@@ -214,34 +245,68 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </dl>
 </li>
 </ul>
-<a name="internal-java.lang.String-java.util.List-">
+<a name="withReset-io.hgc.jarspec.SpecificationNode.ResetSharedState-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withReset</h4>
+<pre>public abstract&nbsp;<a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>&nbsp;withReset(<a href="../../../io/hgc/jarspec/SpecificationNode.ResetSharedState.html" title="interface in io.hgc.jarspec">SpecificationNode.ResetSharedState</a>&nbsp;reset)</pre>
+<div class="block">Define a reset operation to clean up shared state between tests</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>reset</code> - the reset operation</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a new version of this node that will reset state before each test</dd>
+</dl>
+</li>
+</ul>
+<a name="internal-java.lang.String-java.util.stream.Stream-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>internal</h4>
 <pre>public static&nbsp;<a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>&nbsp;internal(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;description,
-                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>&gt;&nbsp;children)</pre>
+                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>&gt;&nbsp;children)</pre>
 <div class="block">Factory method for internal nodes in the tree representing a specification.
  Consumers should generally use the default methods on <a href="../../../io/hgc/jarspec/Specification.html" title="interface in io.hgc.jarspec"><code>Specification</code></a>
  instead, unless creating their own behaviour mixin.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>description</code> - description for this node</dd>
-<dd><code>children</code> - list of child nodes</dd>
+<dd><code>children</code> - stream of child nodes</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a newly-created node</dd>
 </dl>
 </li>
 </ul>
-<a name="leaf-java.lang.String-java.util.Optional-">
+<a name="leaf-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>leaf</h4>
+<pre>public static&nbsp;<a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>&nbsp;leaf(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;description)</pre>
+<div class="block">Factory method for leaf nodes in the tree representing a specification.
+ Consumers should generally use the default methods on <a href="../../../io/hgc/jarspec/Specification.html" title="interface in io.hgc.jarspec"><code>Specification</code></a>
+ instead, unless creating their own behaviour mixin.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>description</code> - description for this node</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a newly-created node</dd>
+</dl>
+</li>
+</ul>
+<a name="leaf-java.lang.String-io.hgc.jarspec.Test-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>leaf</h4>
 <pre>public static&nbsp;<a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>&nbsp;leaf(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;description,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="../../../io/hgc/jarspec/Test.html" title="interface in io.hgc.jarspec">Test</a>&gt;&nbsp;test)</pre>
+                                     <a href="../../../io/hgc/jarspec/Test.html" title="interface in io.hgc.jarspec">Test</a>&nbsp;test)</pre>
 <div class="block">Factory method for leaf nodes in the tree representing a specification.
  Consumers should generally use the default methods on <a href="../../../io/hgc/jarspec/Specification.html" title="interface in io.hgc.jarspec"><code>Specification</code></a>
  instead, unless creating their own behaviour mixin.</div>
@@ -304,7 +369,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../io/hgc/jarspec/Specification.html" title="interface in io.hgc.jarspec"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../io/hgc/jarspec/Test.html" title="interface in io.hgc.jarspec"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../io/hgc/jarspec/SpecificationNode.ResetSharedState.html" title="interface in io.hgc.jarspec"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../index.html?io/hgc/jarspec/SpecificationNode.html" target="_top">Frames</a></li>
@@ -328,7 +393,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>

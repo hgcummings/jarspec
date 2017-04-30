@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>SpecificationNode.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">io.hgc:jarspec</a> &gt; <a href="index.source.html" class="el_package">io.hgc.jarspec</a> &gt; <span class="el_source">SpecificationNode.java</span></div><h1>SpecificationNode.java</h1><pre class="source lang-java linenums">package io.hgc.jarspec;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static io.hgc.jarspec.Util.*;
 
@@ -12,16 +11,16 @@ import static io.hgc.jarspec.Util.*;
 public abstract class SpecificationNode {
     private final boolean solo;
 
-<span class="fc" id="L15">    private SpecificationNode(boolean solo) {</span>
-<span class="fc" id="L16">        this.solo = solo;</span>
-<span class="fc" id="L17">    }</span>
+<span class="fc" id="L14">    private SpecificationNode(boolean solo) {</span>
+<span class="fc" id="L15">        this.solo = solo;</span>
+<span class="fc" id="L16">    }</span>
 
     /**
      * Mark this node to be skipped (along with its children and any other nodes similarly marked)
      * @return a new node representing a skipped version of the original node
      */
     public SpecificationNode skip() {
-<span class="fc" id="L24">        return leaf(this.description(), Optional.empty());</span>
+<span class="fc" id="L23">        return leaf(this.description());</span>
     }
 
     /**
@@ -30,14 +29,24 @@ public abstract class SpecificationNode {
      */
     public abstract SpecificationNode only();
 
+    /**
+     * Define a reset operation to clean up shared state between tests
+     * @param reset the reset operation
+     * @return a new version of this node that will reset state before each test
+     */
+    public abstract SpecificationNode withReset(ResetSharedState reset);
+
     abstract String description();
 
     abstract Optional&lt;Test&gt; test();
 
-    abstract List&lt;SpecificationNode&gt; children();
+    /**
+     * @return Child nodes of this node
+     */
+    abstract Stream&lt;SpecificationNode&gt; children();
 
     boolean isSolo() {
-<span class="fc" id="L40">        return solo;</span>
+<span class="fc" id="L49">        return solo;</span>
     }
 
     /**
@@ -45,11 +54,22 @@ public abstract class SpecificationNode {
      * Consumers should generally use the default methods on {@link Specification}
      * instead, unless creating their own behaviour mixin.
      * @param description description for this node
-     * @param children list of child nodes
+     * @param children stream of child nodes
      * @return a newly-created node
      */
-    public static SpecificationNode internal(String description, List&lt;SpecificationNode&gt; children) {
-<span class="fc" id="L52">        return new Internal(description, immutableCopyOf(children), false);</span>
+    public static SpecificationNode internal(String description, Stream&lt;SpecificationNode&gt; children) {
+<span class="fc" id="L61">        return new Internal(description, children, false);</span>
+    }
+
+    /**
+     * Factory method for leaf nodes in the tree representing a specification.
+     * Consumers should generally use the default methods on {@link Specification}
+     * instead, unless creating their own behaviour mixin.
+     * @param description description for this node
+     * @return a newly-created node
+     */
+    public static SpecificationNode leaf(String description) {
+<span class="fc" id="L72">        return new Leaf(description, null, false);</span>
     }
 
     /**
@@ -60,8 +80,8 @@ public abstract class SpecificationNode {
      * @param test optional automated test for this node
      * @return a newly-created node
      */
-    public static SpecificationNode leaf(String description, Optional&lt;Test&gt; test) {
-<span class="fc" id="L64">        return new Leaf(description, test, false);</span>
+    public static SpecificationNode leaf(String description, Test test) {
+<span class="fc" id="L84">        return new Leaf(description, test, false);</span>
     }
 
     /**
@@ -74,43 +94,51 @@ public abstract class SpecificationNode {
      * @return a newly-created node
      */
     public static SpecificationNode error(String description, Throwable throwable) {
-<span class="fc" id="L77">        return leaf(description, Optional.of(() -&gt; {</span>
+<span class="fc" id="L97">        return leaf(description, () -&gt; {</span>
             throw exceptionFrom(throwable);
-        }));
+        });
     }
 
     /**
      * Represents the top-level node for a unit of behaviour. Objects of this
-     * type are immutable iff the provided list of children is immutable.
+     * type are immutable iff the provided children are immutable.
      */
     private static class Internal extends SpecificationNode {
         private final String unit;
-        private final List&lt;SpecificationNode&gt; children;
+        private final Stream&lt;SpecificationNode&gt; children;
 
-        private Internal(String unit, List&lt;SpecificationNode&gt; children, boolean solo) {
-<span class="fc" id="L91">            super(solo);</span>
-<span class="fc" id="L92">            this.unit = unit;</span>
-<span class="fc" id="L93">            this.children = children;</span>
-<span class="fc" id="L94">        }</span>
+        private Internal(String unit, Stream&lt;SpecificationNode&gt; children, boolean solo) {
+<span class="fc" id="L111">            super(solo);</span>
+<span class="fc" id="L112">            this.unit = unit;</span>
+<span class="fc" id="L113">            this.children = children;</span>
+<span class="fc" id="L114">        }</span>
 
         @Override
         public SpecificationNode only() {
-<span class="fc" id="L98">            return new Internal(unit, children, true);</span>
+<span class="fc" id="L118">            return new Internal(unit, children, true);</span>
+        }
+
+        @Override
+        public SpecificationNode withReset(ResetSharedState reset) {
+<span class="fc" id="L123">            return new SpecificationNode.Internal(</span>
+                    this.unit,
+<span class="fc" id="L125">                    this.children.map(child -&gt; child.withReset(reset)),</span>
+<span class="fc" id="L126">                    this.isSolo());</span>
         }
 
         @Override
         Optional&lt;Test&gt; test() {
-<span class="fc" id="L103">            return Optional.empty();</span>
+<span class="fc" id="L131">            return Optional.empty();</span>
         }
 
         @Override
         String description() {
-<span class="fc" id="L108">            return unit;</span>
+<span class="fc" id="L136">            return unit;</span>
         }
 
         @Override
-        List&lt;SpecificationNode&gt; children() {
-<span class="fc" id="L113">            return children;</span>
+        Stream&lt;SpecificationNode&gt; children() {
+<span class="fc" id="L141">            return children;</span>
         }
     }
 
@@ -121,33 +149,50 @@ public abstract class SpecificationNode {
      */
     private static class Leaf extends SpecificationNode {
         private final String behaviour;
-        private final Optional&lt;Test&gt; test;
+        private final Test test;
 
-        private Leaf(String behaviour, Optional&lt;Test&gt; test, boolean solo) {
-<span class="fc" id="L127">            super(solo);</span>
-<span class="fc" id="L128">            this.behaviour = behaviour;</span>
-<span class="fc" id="L129">            this.test = test;</span>
-<span class="fc" id="L130">        }</span>
+        private Leaf(String behaviour, Test test, boolean solo) {
+<span class="fc" id="L155">            super(solo);</span>
+<span class="fc" id="L156">            this.behaviour = behaviour;</span>
+<span class="fc" id="L157">            this.test = test;</span>
+<span class="fc" id="L158">        }</span>
 
         @Override
         public SpecificationNode only() {
-<span class="fc" id="L134">            return new Leaf(behaviour, test, true);</span>
+<span class="fc" id="L162">            return new Leaf(behaviour, test, true);</span>
+        }
+
+        @Override
+        public SpecificationNode withReset(ResetSharedState reset) {
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">            if (this.test == null) {</span>
+<span class="nc" id="L168">                return this;</span>
+            } else {
+<span class="fc" id="L170">                return new Leaf(this.behaviour, () -&gt; {</span>
+                    reset.reset();
+                    test.run();
+<span class="fc" id="L173">                }, this.isSolo());</span>
+            }
         }
 
         @Override
         Optional&lt;Test&gt; test() {
-<span class="fc" id="L139">            return test;</span>
+<span class="fc" id="L179">            return Optional.ofNullable(test);</span>
         }
 
         @Override
         String description() {
-<span class="fc" id="L144">            return behaviour;</span>
+<span class="fc" id="L184">            return behaviour;</span>
         }
 
         @Override
-        List&lt;SpecificationNode&gt; children() {
-<span class="fc" id="L149">            return Collections.emptyList();</span>
+        Stream&lt;SpecificationNode&gt; children() {
+<span class="fc" id="L189">            return Stream.empty();</span>
         }
+    }
+
+    @FunctionalInterface
+    public interface ResetSharedState {
+        void reset();
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

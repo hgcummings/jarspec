@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Specification.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">io.hgc:jarspec</a> &gt; <a href="index.source.html" class="el_package">io.hgc.jarspec</a> &gt; <span class="el_source">Specification.java</span></div><h1>Specification.java</h1><pre class="source lang-java linenums">package io.hgc.jarspec;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Represents a Specification consisting of statements about behaviour and automated tests
@@ -13,7 +11,7 @@ public interface Specification {
     SpecificationNode root();
 
     default SpecificationNode describe(String unit, SpecificationNode... specificationNodes) {
-<span class="fc" id="L16">        return SpecificationNode.internal(unit, byAllOf(specificationNodes));</span>
+<span class="fc" id="L14">        return SpecificationNode.internal(unit, Stream.of(specificationNodes));</span>
     }
 
     /**
@@ -23,9 +21,9 @@ public interface Specification {
      */
     default SpecificationNode describe(String unit, BySingle specification) {
         try {
-<span class="fc" id="L26">            return SpecificationNode.internal(unit, byAllOf(specification.get()));</span>
-<span class="fc" id="L27">        } catch (Throwable e) {</span>
-<span class="fc" id="L28">            return SpecificationNode.error(unit, e);</span>
+<span class="fc" id="L24">            return SpecificationNode.internal(unit, Stream.of(specification.get()));</span>
+<span class="fc" id="L25">        } catch (Throwable e) {</span>
+<span class="fc" id="L26">            return SpecificationNode.error(unit, e);</span>
         }
     }
 
@@ -36,9 +34,9 @@ public interface Specification {
      */
     default SpecificationNode describe(String unit, ByMultiple specifications) {
         try {
-<span class="fc" id="L39">            return SpecificationNode.internal(unit, specifications.get());</span>
-<span class="fc" id="L40">        } catch (Throwable e) {</span>
-<span class="fc" id="L41">            return SpecificationNode.error(unit, e);</span>
+<span class="fc" id="L37">            return SpecificationNode.internal(unit, specifications.get());</span>
+<span class="fc" id="L38">        } catch (Throwable e) {</span>
+<span class="fc" id="L39">            return SpecificationNode.error(unit, e);</span>
         }
     }
 
@@ -48,7 +46,7 @@ public interface Specification {
      * @return a specification consisting of single automatically verifiable statement
      */
     default SpecificationNode it(String statement, Test test) {
-<span class="fc" id="L51">        return SpecificationNode.leaf(statement, Optional.of(test));</span>
+<span class="fc" id="L49">        return SpecificationNode.leaf(statement, test);</span>
     }
 
     /**
@@ -56,7 +54,7 @@ public interface Specification {
      * @return a specification consisting of single statement with no automated test
      */
     default SpecificationNode it(String statement) {
-<span class="fc" id="L59">        return SpecificationNode.leaf(statement, Optional.empty());</span>
+<span class="fc" id="L57">        return SpecificationNode.leaf(statement);</span>
     }
 
     /**
@@ -64,10 +62,8 @@ public interface Specification {
      * @param specificationNodes specifications to be combined
      * @return a List containing all of the specifications in the order provided
      */
-    default List&lt;SpecificationNode&gt; byAllOf(SpecificationNode... specificationNodes) {
-<span class="fc" id="L68">        List&lt;SpecificationNode&gt; list = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L69">        Collections.addAll(list, specificationNodes);</span>
-<span class="fc" id="L70">        return list;</span>
+    default Stream&lt;SpecificationNode&gt; byAllOf(SpecificationNode... specificationNodes) {
+<span class="fc" id="L66">        return Stream.of(specificationNodes);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>
