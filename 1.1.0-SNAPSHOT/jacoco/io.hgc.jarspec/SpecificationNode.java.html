@@ -164,29 +164,32 @@ public abstract class SpecificationNode {
 
         @Override
         public SpecificationNode withReset(ResetSharedState reset) {
-<span class="pc bpc" id="L167" title="1 of 2 branches missed.">            if (this.test == null) {</span>
-<span class="nc" id="L168">                return this;</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">            if (this.test == null) {</span>
+<span class="fc" id="L168">                return this;</span>
             } else {
-<span class="fc" id="L170">                return new Leaf(this.behaviour, () -&gt; {</span>
-                    reset.reset();
-                    test.run();
-<span class="fc" id="L173">                }, this.isSolo());</span>
+<span class="fc" id="L170">                return new Leaf(</span>
+                        this.behaviour,
+                        () -&gt; {
+                            reset.reset();
+                            test.run();
+                        },
+<span class="fc" id="L176">                        this.isSolo());</span>
             }
         }
 
         @Override
         Optional&lt;Test&gt; test() {
-<span class="fc" id="L179">            return Optional.ofNullable(test);</span>
+<span class="fc" id="L182">            return Optional.ofNullable(test);</span>
         }
 
         @Override
         String description() {
-<span class="fc" id="L184">            return behaviour;</span>
+<span class="fc" id="L187">            return behaviour;</span>
         }
 
         @Override
         Stream&lt;SpecificationNode&gt; children() {
-<span class="fc" id="L189">            return Stream.empty();</span>
+<span class="fc" id="L192">            return Stream.empty();</span>
         }
     }
 
