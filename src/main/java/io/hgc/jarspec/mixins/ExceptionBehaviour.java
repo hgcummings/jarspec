@@ -21,7 +21,7 @@ public interface ExceptionBehaviour {
     default <T extends Throwable> SpecificationNode itThrows(Class<T> throwable, String forCase, Test testCase) {
         return SpecificationNode.leaf(
             String.format("throws %s %s", throwable.getSimpleName(), forCase),
-            Optional.of(() -> {
+            () -> {
                 Throwable exception = null;
                 try {
                     testCase.run();
@@ -35,7 +35,7 @@ public interface ExceptionBehaviour {
                             throwable.getSimpleName(), exception)
                     );
                 }
-            })
+            }
         );
     }
 }

@@ -1,6 +1,6 @@
 package io.hgc.jarspec;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Returns multiple {@link SpecificationNode} that represent the direct children of another
@@ -11,5 +11,5 @@ public interface ByMultiple {
      * @return multiple {@link SpecificationNode} children
      * @throws Exception indicates a test failure
      */
-    List<SpecificationNode> get() throws Exception;
+    Stream<SpecificationNode> get() throws Exception;
 }

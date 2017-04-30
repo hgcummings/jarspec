@@ -1,9 +1,7 @@
 package io.hgc.jarspec;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static io.hgc.jarspec.Util.*;
 
@@ -22,7 +20,7 @@ public abstract class SpecificationNode {
      * @return a new node representing a skipped version of the original node
      */
     public SpecificationNode skip() {
-        return leaf(this.description(), Optional.empty());
+        return leaf(this.description());
     }
 
     /**
@@ -43,10 +41,9 @@ public abstract class SpecificationNode {
     abstract Optional<Test> test();
 
     /**
-     * TODO: Make this a more general type (e.g. Iterator or Stream)
      * @return Child nodes of this node
      */
-    abstract List<SpecificationNode> children();
+    abstract Stream<SpecificationNode> children();
 
     boolean isSolo() {
         return solo;
@@ -57,11 +54,22 @@ public abstract class SpecificationNode {
      * Consumers should generally use the default methods on {@link Specification}
      * instead, unless creating their own behaviour mixin.
      * @param description description for this node
-     * @param children list of child nodes
+     * @param children stream of child nodes
      * @return a newly-created node
      */
-    public static SpecificationNode internal(String description, List<SpecificationNode> children) {
-        return new Internal(description, immutableCopyOf(children), false);
+    public static SpecificationNode internal(String description, Stream<SpecificationNode> children) {
+        return new Internal(description, children, false);
+    }
+
+    /**
+     * Factory method for leaf nodes in the tree representing a specification.
+     * Consumers should generally use the default methods on {@link Specification}
+     * instead, unless creating their own behaviour mixin.
+     * @param description description for this node
+     * @return a newly-created node
+     */
+    public static SpecificationNode leaf(String description) {
+        return new Leaf(description, null, false);
     }
 
     /**
@@ -72,7 +80,7 @@ public abstract class SpecificationNode {
      * @param test optional automated test for this node
      * @return a newly-created node
      */
-    public static SpecificationNode leaf(String description, Optional<Test> test) {
+    public static SpecificationNode leaf(String description, Test test) {
         return new Leaf(description, test, false);
     }
 
@@ -86,20 +94,20 @@ public abstract class SpecificationNode {
      * @return a newly-created node
      */
     public static SpecificationNode error(String description, Throwable throwable) {
-        return leaf(description, Optional.of(() -> {
+        return leaf(description, () -> {
             throw exceptionFrom(throwable);
-        }));
+        });
     }
 
     /**
      * Represents the top-level node for a unit of behaviour. Objects of this
-     * type are immutable iff the provided list of children is immutable.
+     * type are immutable iff the provided children are immutable.
      */
     private static class Internal extends SpecificationNode {
         private final String unit;
-        private final List<SpecificationNode> children;
+        private final Stream<SpecificationNode> children;
 
-        private Internal(String unit, List<SpecificationNode> children, boolean solo) {
+        private Internal(String unit, Stream<SpecificationNode> children, boolean solo) {
             super(solo);
             this.unit = unit;
             this.children = children;
@@ -114,8 +122,8 @@ public abstract class SpecificationNode {
         public SpecificationNode withReset(ResetSharedState reset) {
             return new SpecificationNode.Internal(
                     this.unit,
-                    this.children.stream().map(child -> child.withReset(reset))
-            .collect(Collectors.toList()), this.isSolo());
+                    this.children.map(child -> child.withReset(reset)),
+                    this.isSolo());
         }
 
         @Override
@@ -129,7 +137,7 @@ public abstract class SpecificationNode {
         }
 
         @Override
-        List<SpecificationNode> children() {
+        Stream<SpecificationNode> children() {
             return children;
         }
     }
@@ -141,9 +149,9 @@ public abstract class SpecificationNode {
      */
     private static class Leaf extends SpecificationNode {
         private final String behaviour;
-        private final Optional<Test> test;
+        private final Test test;
 
-        private Leaf(String behaviour, Optional<Test> test, boolean solo) {
+        private Leaf(String behaviour, Test test, boolean solo) {
             super(solo);
             this.behaviour = behaviour;
             this.test = test;
@@ -156,19 +164,19 @@ public abstract class SpecificationNode {
 
         @Override
         public SpecificationNode withReset(ResetSharedState reset) {
-            if (this.test.isPresent()) {
-                return new Leaf(this.behaviour, Optional.of(() -> {
-                    reset.reset();
-                    test.get().run();
-                }), this.isSolo());
-            } else {
+            if (this.test == null) {
                 return this;
+            } else {
+                return new Leaf(this.behaviour, () -> {
+                    reset.reset();
+                    test.run();
+                }, this.isSolo());
             }
         }
 
         @Override
         Optional<Test> test() {
-            return test;
+            return Optional.ofNullable(test);
         }
 
         @Override
@@ -177,8 +185,8 @@ public abstract class SpecificationNode {
         }
 
         @Override
-        List<SpecificationNode> children() {
-            return Collections.emptyList();
+        Stream<SpecificationNode> children() {
+            return Stream.empty();
         }
     }
 

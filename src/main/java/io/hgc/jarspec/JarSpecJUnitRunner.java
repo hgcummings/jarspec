@@ -65,7 +65,7 @@ public class JarSpecJUnitRunner<T extends Specification> extends Runner {
         final Description description = Description.createTestDescription(specClass, text);
         final boolean isSolo = soloParent || specificationNode.isSolo();
 
-        if (specificationNode.test().isPresent() || specificationNode.children().isEmpty()) {
+        if (specificationNode.test().isPresent()) {
             descriptions.add(description);
             allTests.put(description, specificationNode.test());
             if (isSolo) {
@@ -73,8 +73,13 @@ public class JarSpecJUnitRunner<T extends Specification> extends Runner {
             }
         }
 
-        for (SpecificationNode child : specificationNode.children()) {
-            descriptions.addAll(visitTree(child, text + " ", isSolo));
+        specificationNode.children().forEach(child ->
+            descriptions.addAll(visitTree(child, text + " ", isSolo))
+        );
+
+        if (descriptions.isEmpty()) { // Neither has a test nor has children, but still want to include it as skipped
+            descriptions.add(description);
+            allTests.put(description, specificationNode.test());
         }
 
         return descriptions;
