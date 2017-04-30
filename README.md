@@ -17,17 +17,17 @@ public class MinimalSpec implements Specification {
 
 ## Why?
 
-Allows for more expressive test names without very_long_underscore_ridden_test_method_names, and for more flexible test structure. Java 8 features such as lambda expressions make this kind of syntax possible without an insane amount of boilerplate. See [wiki/Motivation](https://github.com/hgcummings/jarspec/wiki/Motivation) for more.
+Allows for more expressive test names without very_long_underscore_ridden_test_method_names, and for more flexible test structure. Java 8 features such as lambda expressions make this possible with less boilerplate. See [wiki/Motivation](https://github.com/hgcummings/jarspec/wiki/Motivation) for more.
 
 ## How?
 
-Add JarSpec to your project dependencies. See instructions below for Maven and [the dependency info page](http://hgc.io/jarspec/1.0.0/dependency-info.html) for other build tools.
+1. Add JarSpec to your project dependencies. See below for Maven and [the dependency info page](http://hgc.io/jarspec/1.0.0/dependency-info.html) for other build tools.
 
-Then you can start writing specs. See [wiki/Implementing Specifications](https://github.com/hgcummings/jarspec/wiki/Implementing-Specifications) for more details, or the [project's own tests](https://github.com/hgcummings/jarspec/tree/master/src/test/java/io/hgc/jarspec) for examples.
+2. Start writing specs! See [wiki/Implementing Specifications](https://github.com/hgcummings/jarspec/wiki/Implementing-Specifications) for more details, or the [project's own tests](https://github.com/hgcummings/jarspec/tree/master/src/test/java/io/hgc/jarspec) for examples.
 
 ### Using Maven [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.hgc/jarspec/badge.svg)](http://search.maven.org/#search|gav|1|g:"io.hgc"%20AND%20a:"jarspec")
 
-Add the dependency to your pom
+Add the dependency to your pom:
 
 ```xml
     <dependencies>
@@ -42,7 +42,7 @@ Add the dependency to your pom
     </dependencies>
 ```
 
-Configure SureFire to pick up classes named `*Spec` (although you can stick with the default `*Test` convention if you prefer)
+Configure SureFire to pick up classes named `*Spec` (although you can stick with the default `*Test` convention if you prefer):
 
 ```xml
     <build>
@@ -65,7 +65,7 @@ Configure SureFire to pick up classes named `*Spec` (although you can stick with
 
 ## When?
 
-The current release on Maven Central is stable and already supports most use cases. See [open milestones](https://github.com/hgcummings/jarspec/issues/milestones) for an indication of further planned features. Previous releases have maintained backwards compatibility and upcoming releases are expected to do so as well.
+The current release on Maven Central is stable and already supports most use cases. See [open milestones](https://github.com/hgcummings/jarspec/issues/milestones) for further planned features. Previous releases have maintained backwards compatibility and upcoming releases are expected to do so as well.
 
 ---
 ###### Developer resources: [Test results](http://hgc.io/jarspec/1.1.0-SNAPSHOT/surefire-report.html) [![Build status](https://travis-ci.org/hgcummings/jarspec.svg?branch=master)](https://travis-ci.org/hgcummings/jarspec) [Coverage report](http://hgc.io/jarspec/1.1.0-SNAPSHOT/jacoco/index.html) [![Coverage Status](https://coveralls.io/repos/hgcummings/jarspec/badge.png?branch=master)](https://coveralls.io/r/hgcummings/jarspec?branch=master) [Task board](https://huboard.com/hgcummings/jarspec)
