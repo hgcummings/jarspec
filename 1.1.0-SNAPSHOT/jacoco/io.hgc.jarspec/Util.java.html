@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Util.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">io.hgc:jarspec</a> &gt; <a href="index.source.html" class="el_package">io.hgc.jarspec</a> &gt; <span class="el_source">Util.java</span></div><h1>Util.java</h1><pre class="source lang-java linenums">package io.hgc.jarspec;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 final class Util {
-<span class="nc" id="L8">    private Util() {} // Utility classes should not be instantiable</span>
+<span class="nc" id="L4">    private Util() {} // Utility classes should not be instantiable</span>
     /**
      * Returns an Exception for any Throwable object, wrapping in a RuntimeException if necessary
      * @param throwable any Throwable object
      * @return the original or wrapped Exception
      */
     static Exception exceptionFrom(Throwable throwable) {
-<span class="fc bfc" id="L15" title="All 2 branches covered.">        if (throwable instanceof Exception) {</span>
-<span class="fc" id="L16">            return (Exception) throwable;</span>
+<span class="fc bfc" id="L11" title="All 2 branches covered.">        if (throwable instanceof Exception) {</span>
+<span class="fc" id="L12">            return (Exception) throwable;</span>
         } else {
-<span class="fc" id="L18">            return new RuntimeException(throwable);</span>
+<span class="fc" id="L14">            return new RuntimeException(throwable);</span>
         }
     }
 }

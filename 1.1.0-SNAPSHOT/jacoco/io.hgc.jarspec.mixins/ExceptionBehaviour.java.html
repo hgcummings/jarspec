@@ -3,8 +3,6 @@
 import io.hgc.jarspec.SpecificationNode;
 import io.hgc.jarspec.Test;
 
-import java.util.Optional;
-
 /**
  * Mixin providing convenience method for Specifications making statements about exception behaviour
  */
@@ -19,8 +17,8 @@ public interface ExceptionBehaviour {
      * @return a Specification representing the single description
      */
     default &lt;T extends Throwable&gt; SpecificationNode itThrows(Class&lt;T&gt; throwable, String forCase, Test testCase) {
-<span class="fc" id="L22">        return SpecificationNode.leaf(</span>
-<span class="fc" id="L23">            String.format(&quot;throws %s %s&quot;, throwable.getSimpleName(), forCase),</span>
+<span class="fc" id="L20">        return SpecificationNode.leaf(</span>
+<span class="fc" id="L21">            String.format(&quot;throws %s %s&quot;, throwable.getSimpleName(), forCase),</span>
             () -&gt; {
                 Throwable exception = null;
                 try {
