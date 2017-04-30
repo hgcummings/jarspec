@@ -6,7 +6,6 @@ import io.hgc.jarspec.SpecificationNode;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @RunWith(JarSpecJUnitRunner.class)
 public class ErrorInDescribeSpec implements Specification {

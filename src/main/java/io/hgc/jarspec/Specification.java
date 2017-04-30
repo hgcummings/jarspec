@@ -1,6 +1,5 @@
 package io.hgc.jarspec;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
 /**

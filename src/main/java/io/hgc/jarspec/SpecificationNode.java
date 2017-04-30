@@ -3,7 +3,7 @@ package io.hgc.jarspec;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static io.hgc.jarspec.Util.*;
+import static io.hgc.jarspec.Util.exceptionFrom;
 
 /**
  * Internal implementation of {@link Specification} as a tree structure.

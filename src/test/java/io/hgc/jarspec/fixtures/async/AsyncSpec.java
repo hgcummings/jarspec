@@ -1,14 +1,10 @@
 package io.hgc.jarspec.fixtures.async;
 
-
 import io.hgc.jarspec.JarSpecJUnitRunner;
 import io.hgc.jarspec.Specification;
 import io.hgc.jarspec.SpecificationNode;
 import io.hgc.jarspec.mixins.AsynchronousBehaviour;
 import org.junit.runner.RunWith;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static org.junit.Assert.assertEquals;
 

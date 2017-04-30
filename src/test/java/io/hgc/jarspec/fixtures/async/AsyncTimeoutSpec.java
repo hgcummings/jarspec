@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
 
-
 @RunWith(JarSpecJUnitRunner.class)
 public class AsyncTimeoutSpec implements Specification, AsynchronousBehaviour {
     @Override

@@ -1,9 +1,5 @@
 package io.hgc.jarspec;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 final class Util {
     private Util() {} // Utility classes should not be instantiable
     /**

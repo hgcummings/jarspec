@@ -3,8 +3,6 @@ package io.hgc.jarspec.mixins;
 import io.hgc.jarspec.SpecificationNode;
 import io.hgc.jarspec.Test;
 
-import java.util.Optional;
-
 /**
  * Mixin providing convenience method for Specifications making statements about exception behaviour
  */
