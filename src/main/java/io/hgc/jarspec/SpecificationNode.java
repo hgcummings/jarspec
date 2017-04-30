@@ -167,10 +167,13 @@ public abstract class SpecificationNode {
             if (this.test == null) {
                 return this;
             } else {
-                return new Leaf(this.behaviour, () -> {
-                    reset.reset();
-                    test.run();
-                }, this.isSolo());
+                return new Leaf(
+                        this.behaviour,
+                        () -> {
+                            reset.reset();
+                            test.run();
+                        },
+                        this.isSolo());
             }
         }
 

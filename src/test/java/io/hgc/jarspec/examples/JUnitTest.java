@@ -9,9 +9,9 @@ public class JUnitTest {
 
     @Before public void before() { System.out.println("  before"); }
 
-    @Test public void test1() { System.out.println("    test1"); }
+    @Test public void test1() { System.out.println("    test1 execution"); }
 
-    @Test public void test2() { System.out.println("    test2"); }
+    @Test public void test2() { System.out.println("    test2 execution"); }
 
     @After public void after() { System.out.println("  after"); }
 

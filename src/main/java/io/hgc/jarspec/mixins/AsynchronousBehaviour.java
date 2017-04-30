@@ -2,6 +2,9 @@ package io.hgc.jarspec.mixins;
 
 import io.hgc.jarspec.Test;
 
+/**
+ * Mixin providing convenience method for Specifications making statements about asynchronous behaviour
+ */
 public interface AsynchronousBehaviour {
     int INITIAL_BACKOFF = 20;
 

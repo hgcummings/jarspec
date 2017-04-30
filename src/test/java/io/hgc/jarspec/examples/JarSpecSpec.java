@@ -11,18 +11,22 @@ public class JarSpecSpec implements Specification {
 
     @Override
     public SpecificationNode root() {
-        System.out.println("root");
+        System.out.println("root initialisation");
         return describe("major unit", () -> {
-            System.out.println("Major unit");
+            System.out.println("Major unit initialisation");
             return byAllOf(
-                    it("has a top-level statement", () ->
-                            System.out.println("Top-level statement")),
-                    describe("nested minor unit", () -> {
-                        System.out.println("Minor unit");
-                        return it("has a nested statement", () ->
-                                System.out.println("Nested statement"));
-                    })
+                it("has a top-level statement", () ->
+                    System.out.println("  Top-level statement execution")),
+                describe("nested minor unit", () -> {
+                    System.out.println("  Minor unit initialisation");
+                    return byAllOf(
+                        it("has a nested statement", () ->
+                            System.out.println("    First nested statement execution")),
+                        it("has another nested statement", () ->
+                            System.out.println("    Second nested statement execution"))
+                    );
+                }).withReset(() -> System.out.println("  Nested reset"))
             );
-        });
+        }).withReset(() -> System.out.println("Top-level reset"));
     }
 }
