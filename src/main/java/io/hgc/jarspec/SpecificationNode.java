@@ -3,6 +3,7 @@ package io.hgc.jarspec;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static io.hgc.jarspec.Util.*;
 
@@ -30,10 +31,21 @@ public abstract class SpecificationNode {
      */
     public abstract SpecificationNode only();
 
+    /**
+     * Define a reset operation to clean up shared state between tests
+     * @param reset the reset operation
+     * @return a new version of this node that will reset state before each test
+     */
+    public abstract SpecificationNode withReset(ResetSharedState reset);
+
     abstract String description();
 
     abstract Optional<Test> test();
 
+    /**
+     * TODO: Make this a more general type (e.g. Iterator or Stream)
+     * @return Child nodes of this node
+     */
     abstract List<SpecificationNode> children();
 
     boolean isSolo() {
@@ -99,6 +111,14 @@ public abstract class SpecificationNode {
         }
 
         @Override
+        public SpecificationNode withReset(ResetSharedState reset) {
+            return new SpecificationNode.Internal(
+                    this.unit,
+                    this.children.stream().map(child -> child.withReset(reset))
+            .collect(Collectors.toList()), this.isSolo());
+        }
+
+        @Override
         Optional<Test> test() {
             return Optional.empty();
         }
@@ -135,6 +155,18 @@ public abstract class SpecificationNode {
         }
 
         @Override
+        public SpecificationNode withReset(ResetSharedState reset) {
+            if (this.test.isPresent()) {
+                return new Leaf(this.behaviour, Optional.of(() -> {
+                    reset.reset();
+                    test.get().run();
+                }), this.isSolo());
+            } else {
+                return this;
+            }
+        }
+
+        @Override
         Optional<Test> test() {
             return test;
         }
@@ -148,5 +180,10 @@ public abstract class SpecificationNode {
         List<SpecificationNode> children() {
             return Collections.emptyList();
         }
+    }
+
+    @FunctionalInterface
+    public interface ResetSharedState {
+        void reset();
     }
 }

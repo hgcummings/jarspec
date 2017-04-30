@@ -73,10 +73,8 @@ public class JarSpecJUnitRunner<T extends Specification> extends Runner {
             }
         }
 
-        if (!specificationNode.children().isEmpty()) {
-            for (SpecificationNode child : specificationNode.children()) {
-                descriptions.addAll(visitTree(child, text + " ", isSolo));
-            }
+        for (SpecificationNode child : specificationNode.children()) {
+            descriptions.addAll(visitTree(child, text + " ", isSolo));
         }
 
         return descriptions;
