@@ -10,15 +10,20 @@ public class SharedStateSpec implements Specification {
     @Override
     public SpecificationNode root() {
         final Counter counter = new Counter();
-        return describe("Shared state",
-                it("can mutate shared state", () -> {
+        return describe("Reset",
+                it("given modified shared state object", () -> {
                     assertNotNull(counter);
                     counter.increment();
                 }),
-                it("persists and resets shared state object", () -> {
+                it("resets shared state object", () -> {
                     counter.increment();
                     assertEquals(2, counter.persistentCount);
                     assertEquals(1, counter.count);
+                    assertEquals(2, counter.resetCount);
+                }),
+                it("given a statement with no test"),
+                it("only resets before statements with tests", () -> {
+                    assertEquals(3, counter.resetCount);
                 })
         ).withReset(counter::reset);
     }
@@ -26,6 +31,7 @@ public class SharedStateSpec implements Specification {
     public static class Counter {
         int count;
         int persistentCount;
+        int resetCount;
 
         public void increment() {
             count++;
@@ -34,6 +40,7 @@ public class SharedStateSpec implements Specification {
 
         public void reset() {
             count = 0;
+            resetCount++;
         }
     }
 }
