@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ExecutableNode.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">io.hgc:jarspec</a> &gt; <a href="index.source.html" class="el_package">io.hgc.jarspec</a> &gt; <span class="el_source">ExecutableNode.java</span></div><h1>ExecutableNode.java</h1><pre class="source lang-java linenums">package io.hgc.jarspec;
+
+import org.junit.internal.AssumptionViolatedException;
+import org.junit.rules.RuleChain;
+import org.junit.runner.Description;
+import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunNotifier;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Internal class. Adapts a {@link SpecificationNode} into a form that can be executed by junit.
+ */
+class ExecutableNode {
+    private SpecificationNode specificationNode;
+    private Description description;
+    private int priority;
+    private int maxDescendantPriority;
+    private List&lt;ExecutableNode&gt; children;
+
+<span class="fc" id="L23">    ExecutableNode(SpecificationNode specificationNode) {</span>
+<span class="fc" id="L24">        this.specificationNode = specificationNode;</span>
+<span class="fc" id="L25">        children = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        if (specificationNode.isSolo()) {</span>
+<span class="fc" id="L27">            setPriority(1);</span>
+        }
+<span class="fc" id="L29">    }</span>
+
+    Description buildDescription() {
+<span class="fc" id="L32">        description = Description.createSuiteDescription(specificationNode.description());</span>
+<span class="fc" id="L33">        specificationNode.children().forEach(child -&gt; {</span>
+            ExecutableNode childExecutionNode = new ExecutableNode(child);
+            addChild(childExecutionNode);
+        });
+<span class="fc" id="L37">        return description;</span>
+    }
+
+    void execute(RunNotifier notifier) {
+<span class="fc" id="L41">        execute(notifier, this.maxDescendantPriority, RuleChain.emptyRuleChain());</span>
+<span class="fc" id="L42">    }</span>
+
+    private void setPriority(int newPriority) {
+<span class="fc" id="L45">        priority = newPriority;</span>
+<span class="fc" id="L46">        maxDescendantPriority = Math.max(priority, maxDescendantPriority);</span>
+<span class="fc" id="L47">    }</span>
+
+    private void addChild(ExecutableNode child) {
+<span class="fc" id="L50">        child.setPriority(Math.max(child.priority, priority));</span>
+<span class="fc" id="L51">        description.addChild(child.buildDescription());</span>
+<span class="fc" id="L52">        children.add(child);</span>
+<span class="fc" id="L53">        maxDescendantPriority = Math.max(maxDescendantPriority, child.maxDescendantPriority);</span>
+<span class="fc" id="L54">    }</span>
+
+    private RuleChain withOwnRules(RuleChain ruleChain) {
+<span class="fc" id="L57">        return this.specificationNode.rules().reduce(</span>
+                ruleChain,
+                RuleChain::around,
+                (acc1, acc2) -&gt; { throw new RuntimeException(&quot;Rules must be defined in sequence!&quot;);});
+    }
+
+    private void execute(RunNotifier notifier, int minPriority, RuleChain ruleChain) {
+<span class="fc" id="L64">        ruleChain = withOwnRules(ruleChain);</span>
+<span class="fc" id="L65">        Optional&lt;Test&gt; test = specificationNode.test();</span>
+<span class="fc bfc" id="L66" title="All 6 branches covered.">        if ((test.isPresent() &amp;&amp; priority &gt;= minPriority) || !children.isEmpty()) {</span>
+<span class="fc" id="L67">            notifier.fireTestStarted(description);</span>
+        } else {
+<span class="fc" id="L69">            notifier.fireTestIgnored(description);</span>
+<span class="fc" id="L70">            return;</span>
+        }
+        try {
+<span class="pc bpc" id="L73" title="1 of 4 branches missed.">            if (test.isPresent() &amp;&amp; priority &gt;= minPriority) {</span>
+<span class="fc" id="L74">                ruleChain.apply(test.get().asStatement(), description).evaluate();</span>
+            }
+<span class="fc" id="L76">        } catch(AssumptionViolatedException e) {</span>
+<span class="fc" id="L77">            notifier.fireTestAssumptionFailed(new Failure(description, e));</span>
+<span class="fc" id="L78">        } catch (Throwable e) {</span>
+<span class="fc" id="L79">            notifier.fireTestFailure(new Failure(description, e));</span>
+<span class="fc" id="L80">        }</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        for(ExecutableNode child : children) {</span>
+<span class="fc" id="L82">            child.execute(notifier, minPriority, ruleChain);</span>
+<span class="fc" id="L83">        }</span>
+<span class="fc" id="L84">        notifier.fireTestFinished(description);</span>
+<span class="fc" id="L85">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>
