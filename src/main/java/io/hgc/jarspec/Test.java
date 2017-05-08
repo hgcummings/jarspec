@@ -1,5 +1,7 @@
 package io.hgc.jarspec;
 
+import org.junit.runners.model.Statement;
+
 /**
  * Represents a test for a statement in a specification.
  */
@@ -10,4 +12,13 @@ public interface Test {
      * @throws Exception indicating a test failure
      */
     void run() throws Exception;
+
+    default Statement asStatement() {
+        return new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+                run();
+            }
+        };
+    }
 }

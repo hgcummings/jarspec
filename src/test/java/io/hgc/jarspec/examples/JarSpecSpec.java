@@ -3,6 +3,7 @@ package io.hgc.jarspec.examples;
 import io.hgc.jarspec.JarSpecJUnitRunner;
 import io.hgc.jarspec.Specification;
 import io.hgc.jarspec.SpecificationNode;
+import org.junit.rules.ExternalResource;
 import org.junit.runner.RunWith;
 
 @RunWith(JarSpecJUnitRunner.class)
@@ -25,8 +26,28 @@ public class JarSpecSpec implements Specification {
                         it("has another nested statement", () ->
                             System.out.println("    Second nested statement execution"))
                     );
-                }).withReset(() -> System.out.println("  Nested reset"))
+                }).withRule(new ExternalResource() {
+                    @Override
+                    protected void before() throws Throwable {
+                        System.out.println("  inner ExternalResource setup");
+                    }
+
+                    @Override
+                    protected void after() {
+                        System.out.println("  inner ExternalResource teardown");
+                    }
+                })
             );
-        }).withReset(() -> System.out.println("Top-level reset"));
+        }).withRule(new ExternalResource() {
+            @Override
+            protected void before() throws Throwable {
+                System.out.println("  outer ExternalResource setup");
+            }
+
+            @Override
+            protected void after() {
+                System.out.println("  outer ExternalResource teardown");
+            }
+        });
     }
 }

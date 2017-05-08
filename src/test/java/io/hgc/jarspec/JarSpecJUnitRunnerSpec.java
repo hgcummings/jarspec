@@ -30,24 +30,27 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                             it("matches number of tests", () -> assertEquals(2, runner.testCount()))
                     ),
                     describe("description",
-                            it("returns correct test class for all tests", () ->
-                                    verifyDescriptionTestClass(runner.getDescription(), AdditionSpec.class)),
-                            it("includes parent context in test names", () -> {
-                                Description description = runner.getDescription();
-                                assertEquals("addition", description.getMethodName());
+                        it("has class description as the root node", () -> {
+                            Description description = runner.getDescription();
+                            assertEquals(AdditionSpec.class.getName(), description.getClassName());
+                        }),
+                        it("reflects the structure of the spec", () -> {
+                            Description classDescription = runner.getDescription();
+                            assertEquals(1, classDescription.getChildren().size());
 
-                                assertEquals(2, description.getChildren().size());
-                                assertEquals("addition of 1+1 equals 2", description.getChildren().get(0).getMethodName());
-                                assertEquals("addition of 1+1 equals 3", description.getChildren().get(1).getMethodName());
-                            })
+                            Description additionDescription = classDescription.getChildren().get(0);
+                            assertEquals(1, additionDescription.getChildren().size());
+
+                            Description ofOnePlusOneDescription = additionDescription.getChildren().get(0);
+                            assertEquals(2, ofOnePlusOneDescription.getChildren().size());
+                        })
                     ),
                     it("reports failures correctly", () -> {
                         JUnitCore jUnitCore = new JUnitCore();
                         Result result = jUnitCore.run(runner);
-                        assertEquals(2, result.getRunCount());
                         assertEquals(1, result.getFailureCount());
                         Failure failure = result.getFailures().get(0);
-                        assertEquals("addition of 1+1 equals 3", failure.getDescription().getMethodName());
+                        assertEquals("equals 3", failure.getDescription().getDisplayName());
                     }),
                     it("does not report assumption failures as test failures", () -> {
                         Result result = new JUnitCore().run(AssumptionFailureSpec.class);
@@ -62,14 +65,12 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                         Result result = new JUnitCore().run(SelectiveTestExecutionSpec.class);
                         assertEquals(1, result.getFailureCount());
                         assertEquals(3, result.getIgnoreCount());
-                        assertEquals(2, result.getRunCount());
-                        assertTrue(result.getFailures().get(0).getDescription().getMethodName().contains("selected"));
+                        assertTrue(result.getFailures().get(0).getDescription().getDisplayName().contains("selected"));
                     }),
                     it("runs all tests in selected units", () -> {
                         Result result = new JUnitCore().run(SelectiveDescribeExecutionSpec.class);
                         assertEquals(0, result.getFailureCount());
                         assertEquals(2, result.getIgnoreCount());
-                        assertEquals(3, result.getRunCount());
                     }),
                     describe("error handling", by(ErrorInDescribeSpec.class,
                         fails("broken multi-child unit"),

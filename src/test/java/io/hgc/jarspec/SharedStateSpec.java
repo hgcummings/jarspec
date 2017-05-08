@@ -1,5 +1,6 @@
 package io.hgc.jarspec;
 
+import org.junit.rules.ExternalResource;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
@@ -25,7 +26,12 @@ public class SharedStateSpec implements Specification {
                 it("only resets before statements with tests", () -> {
                     assertEquals(3, counter.resetCount);
                 })
-        ).withReset(counter::reset);
+        ).withRule(new ExternalResource() {
+            @Override
+            protected void before() throws Throwable {
+                counter.reset();
+            }
+        });
     }
 
     public static class Counter {

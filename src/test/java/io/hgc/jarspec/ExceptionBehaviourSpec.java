@@ -6,7 +6,7 @@ import io.hgc.jarspec.mixins.TestRunnerBehaviour;
 import org.junit.runner.RunWith;
 
 @RunWith(JarSpecJUnitRunner.class)
-public class ExceptionBehaviourSpec implements Specification, ExceptionBehaviour, TestRunnerBehaviour {
+public class ExceptionBehaviourSpec implements Specification, TestRunnerBehaviour {
     @Override
     public SpecificationNode root() {
         return describe("'itThrows' behaviour", by(ExceptionSpec.class,

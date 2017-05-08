@@ -1,5 +1,7 @@
 package io.hgc.jarspec;
 
+import org.junit.rules.TestRule;
+
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -10,9 +12,11 @@ import static io.hgc.jarspec.Util.exceptionFrom;
  */
 public abstract class SpecificationNode {
     private final boolean solo;
+    private final Stream<TestRule> rules;
 
-    private SpecificationNode(boolean solo) {
+    private SpecificationNode(boolean solo, Stream<TestRule> rules) {
         this.solo = solo;
+        this.rules = rules;
     }
 
     /**
@@ -29,12 +33,7 @@ public abstract class SpecificationNode {
      */
     public abstract SpecificationNode only();
 
-    /**
-     * Define a reset operation to clean up shared state between tests
-     * @param reset the reset operation
-     * @return a new version of this node that will reset state before each test
-     */
-    public abstract SpecificationNode withReset(ResetSharedState reset);
+    public abstract SpecificationNode withRule(TestRule rule);
 
     abstract String description();
 
@@ -44,6 +43,8 @@ public abstract class SpecificationNode {
      * @return Child nodes of this node
      */
     abstract Stream<SpecificationNode> children();
+
+    Stream<TestRule> rules() { return rules; }
 
     boolean isSolo() {
         return solo;
@@ -58,7 +59,7 @@ public abstract class SpecificationNode {
      * @return a newly-created node
      */
     public static SpecificationNode internal(String description, Stream<SpecificationNode> children) {
-        return new Internal(description, children, false);
+        return new Internal(description, children, false, Stream.empty());
     }
 
     /**
@@ -69,7 +70,7 @@ public abstract class SpecificationNode {
      * @return a newly-created node
      */
     public static SpecificationNode leaf(String description) {
-        return new Leaf(description, null, false);
+        return new Leaf(description, null, false, Stream.empty());
     }
 
     /**
@@ -81,7 +82,7 @@ public abstract class SpecificationNode {
      * @return a newly-created node
      */
     public static SpecificationNode leaf(String description, Test test) {
-        return new Leaf(description, test, false);
+        return new Leaf(description, test, false, Stream.empty());
     }
 
     /**
@@ -107,23 +108,25 @@ public abstract class SpecificationNode {
         private final String unit;
         private final Stream<SpecificationNode> children;
 
-        private Internal(String unit, Stream<SpecificationNode> children, boolean solo) {
-            super(solo);
+        private Internal(String unit, Stream<SpecificationNode> children, boolean solo, Stream<TestRule> rules) {
+            super(solo, rules);
             this.unit = unit;
             this.children = children;
         }
 
         @Override
         public SpecificationNode only() {
-            return new Internal(unit, children, true);
+            return new Internal(unit, children, true, rules());
         }
 
         @Override
-        public SpecificationNode withReset(ResetSharedState reset) {
-            return new SpecificationNode.Internal(
-                    this.unit,
-                    this.children.map(child -> child.withReset(reset)),
-                    this.isSolo());
+        public SpecificationNode withRule(TestRule rule) {
+            return new Internal(
+                    unit,
+                    children,
+                    isSolo(),
+                    Stream.concat(rules(), Stream.of(rule))
+            );
         }
 
         @Override
@@ -151,30 +154,25 @@ public abstract class SpecificationNode {
         private final String behaviour;
         private final Test test;
 
-        private Leaf(String behaviour, Test test, boolean solo) {
-            super(solo);
+        private Leaf(String behaviour, Test test, boolean solo, Stream<TestRule> rules) {
+            super(solo, rules);
             this.behaviour = behaviour;
             this.test = test;
         }
 
         @Override
         public SpecificationNode only() {
-            return new Leaf(behaviour, test, true);
+            return new Leaf(behaviour, test, true, rules());
         }
 
         @Override
-        public SpecificationNode withReset(ResetSharedState reset) {
-            if (this.test == null) {
-                return this;
-            } else {
-                return new Leaf(
-                        this.behaviour,
-                        () -> {
-                            reset.reset();
-                            test.run();
-                        },
-                        this.isSolo());
-            }
+        public SpecificationNode withRule(TestRule rule) {
+            return new Leaf(
+                    behaviour,
+                    test,
+                    isSolo(),
+                    Stream.concat(rules(), Stream.of(rule))
+            );
         }
 
         @Override
@@ -191,10 +189,5 @@ public abstract class SpecificationNode {
         Stream<SpecificationNode> children() {
             return Stream.empty();
         }
-    }
-
-    @FunctionalInterface
-    public interface ResetSharedState {
-        void reset();
     }
 }
