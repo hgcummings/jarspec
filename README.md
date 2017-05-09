@@ -51,7 +51,7 @@ Configure SureFire to pick up classes named `*Spec` (although you can stick with
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.17</version>
+                <version>2.20</version>
                 <configuration>
                     <includes>
                         <include>**/*Spec.java</include>

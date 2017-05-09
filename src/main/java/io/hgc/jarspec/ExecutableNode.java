@@ -2,16 +2,18 @@ package io.hgc.jarspec;
 
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.RuleChain;
+import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
+import org.junit.runners.model.Statement;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
- * Internal class. Adapts a {@link SpecificationNode} into a form that can be executed by junit.
+ * Internal class. Adapts a {@link SpecificationNode} into a form that can be executed by JUnit.
  */
 class ExecutableNode {
     private SpecificationNode specificationNode;
@@ -53,25 +55,32 @@ class ExecutableNode {
         maxDescendantPriority = Math.max(maxDescendantPriority, child.maxDescendantPriority);
     }
 
-    private RuleChain withOwnRules(RuleChain ruleChain) {
-        return this.specificationNode.rules().reduce(
-                ruleChain,
-                RuleChain::around,
-                (acc1, acc2) -> { throw new RuntimeException("Rules must be defined in sequence!");});
-    }
-
     private void execute(RunNotifier notifier, int minPriority, RuleChain ruleChain) {
-        ruleChain = withOwnRules(ruleChain);
-        Optional<Test> test = specificationNode.test();
-        if ((test.isPresent() && priority >= minPriority) || !children.isEmpty()) {
+        if (hasOwnTest(minPriority)) {
             notifier.fireTestStarted(description);
-        } else {
+        } else if (children.isEmpty()) {
             notifier.fireTestIgnored(description);
             return;
         }
         try {
-            if (test.isPresent() && priority >= minPriority) {
-                ruleChain.apply(test.get().asStatement(), description).evaluate();
+            withRules(RuleChain.emptyRuleChain(), this.specificationNode.blockRules()).apply(new Statement() {
+                @Override
+                public void evaluate() {
+                    run(notifier, minPriority, withRules(ruleChain, specificationNode.rules()));
+                }
+            }, this.description).evaluate();
+        } catch (Throwable e) {
+            notifier.fireTestFailure(new Failure(description, e));
+        }
+        if (hasOwnTest(minPriority)) {
+            notifier.fireTestFinished(description);
+        }
+    }
+
+    private void run(RunNotifier notifier, int minPriority, RuleChain ruleChain) {
+        try {
+            if (hasOwnTest(minPriority)) {
+                ruleChain.apply(specificationNode.test().get().asStatement(), description).evaluate();
             }
         } catch(AssumptionViolatedException e) {
             notifier.fireTestAssumptionFailed(new Failure(description, e));
@@ -81,6 +90,16 @@ class ExecutableNode {
         for(ExecutableNode child : children) {
             child.execute(notifier, minPriority, ruleChain);
         }
-        notifier.fireTestFinished(description);
+    }
+
+    private boolean hasOwnTest(int minPriority) {
+        return specificationNode.test().isPresent() && priority >= minPriority;
+    }
+
+    private RuleChain withRules(RuleChain ruleChain, Stream<TestRule> rules) {
+        return rules.reduce(
+                ruleChain,
+                RuleChain::around,
+                (acc1, acc2) -> { throw new RuntimeException("Rules must be defined in a sequential stream");});
     }
 }

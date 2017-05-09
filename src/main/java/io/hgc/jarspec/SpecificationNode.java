@@ -13,10 +13,12 @@ import static io.hgc.jarspec.Util.exceptionFrom;
 public abstract class SpecificationNode {
     private final boolean solo;
     private final Stream<TestRule> rules;
+    private final Stream<TestRule> blockRules;
 
-    private SpecificationNode(boolean solo, Stream<TestRule> rules) {
+    private SpecificationNode(boolean solo, Stream<TestRule> rules, Stream<TestRule> blockRules) {
         this.solo = solo;
         this.rules = rules;
+        this.blockRules = blockRules;
     }
 
     /**
@@ -35,6 +37,8 @@ public abstract class SpecificationNode {
 
     public abstract SpecificationNode withRule(TestRule rule);
 
+    public abstract SpecificationNode withBlockRule(TestRule rule);
+
     abstract String description();
 
     abstract Optional<Test> test();
@@ -45,6 +49,8 @@ public abstract class SpecificationNode {
     abstract Stream<SpecificationNode> children();
 
     Stream<TestRule> rules() { return rules; }
+
+    Stream<TestRule> blockRules() { return blockRules; }
 
     boolean isSolo() {
         return solo;
@@ -59,7 +65,7 @@ public abstract class SpecificationNode {
      * @return a newly-created node
      */
     public static SpecificationNode internal(String description, Stream<SpecificationNode> children) {
-        return new Internal(description, children, false, Stream.empty());
+        return new Internal(description, children, false, Stream.empty(), Stream.empty());
     }
 
     /**
@@ -70,7 +76,7 @@ public abstract class SpecificationNode {
      * @return a newly-created node
      */
     public static SpecificationNode leaf(String description) {
-        return new Leaf(description, null, false, Stream.empty());
+        return new Leaf(description, null, false, Stream.empty(), Stream.empty());
     }
 
     /**
@@ -82,7 +88,7 @@ public abstract class SpecificationNode {
      * @return a newly-created node
      */
     public static SpecificationNode leaf(String description, Test test) {
-        return new Leaf(description, test, false, Stream.empty());
+        return new Leaf(description, test, false, Stream.empty(), Stream.empty());
     }
 
     /**
@@ -108,15 +114,20 @@ public abstract class SpecificationNode {
         private final String unit;
         private final Stream<SpecificationNode> children;
 
-        private Internal(String unit, Stream<SpecificationNode> children, boolean solo, Stream<TestRule> rules) {
-            super(solo, rules);
+        private Internal(
+                String unit,
+                Stream<SpecificationNode> children,
+                boolean solo,
+                Stream<TestRule> rules,
+                Stream<TestRule> blockRules) {
+            super(solo, rules, blockRules);
             this.unit = unit;
             this.children = children;
         }
 
         @Override
         public SpecificationNode only() {
-            return new Internal(unit, children, true, rules());
+            return new Internal(unit, children, true, rules(), blockRules());
         }
 
         @Override
@@ -125,7 +136,19 @@ public abstract class SpecificationNode {
                     unit,
                     children,
                     isSolo(),
-                    Stream.concat(rules(), Stream.of(rule))
+                    Stream.concat(rules(), Stream.of(rule)),
+                    blockRules()
+            );
+        }
+
+        @Override
+        public SpecificationNode withBlockRule(TestRule rule) {
+            return new Internal(
+                    unit,
+                    children,
+                    isSolo(),
+                    rules(),
+                    Stream.concat(blockRules(), Stream.of(rule))
             );
         }
 
@@ -154,15 +177,15 @@ public abstract class SpecificationNode {
         private final String behaviour;
         private final Test test;
 
-        private Leaf(String behaviour, Test test, boolean solo, Stream<TestRule> rules) {
-            super(solo, rules);
+        private Leaf(String behaviour, Test test, boolean solo, Stream<TestRule> rules, Stream<TestRule> blockRules) {
+            super(solo, rules, blockRules);
             this.behaviour = behaviour;
             this.test = test;
         }
 
         @Override
         public SpecificationNode only() {
-            return new Leaf(behaviour, test, true, rules());
+            return new Leaf(behaviour, test, true, rules(), blockRules());
         }
 
         @Override
@@ -171,7 +194,19 @@ public abstract class SpecificationNode {
                     behaviour,
                     test,
                     isSolo(),
-                    Stream.concat(rules(), Stream.of(rule))
+                    Stream.concat(rules(), Stream.of(rule)),
+                    blockRules()
+            );
+        }
+
+        @Override
+        public SpecificationNode withBlockRule(TestRule rule) {
+            return new Leaf(
+                    behaviour,
+                    test,
+                    isSolo(),
+                    rules(),
+                    Stream.concat(blockRules(), Stream.of(rule))
             );
         }
 

@@ -6,8 +6,6 @@ import io.hgc.jarspec.mixins.TestRunnerBehaviour;
 import org.junit.runner.*;
 import org.junit.runner.notification.Failure;
 
-import java.util.List;
-
 import static org.junit.Assert.*;
 
 /**
@@ -92,16 +90,6 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                         }))
                     );
         });
-    }
-
-    protected static void verifyDescriptionTestClass(Description description, Class testClass) {
-        assertEquals(testClass, description.getTestClass());
-        List<Description> children = description.getChildren();
-        if (children.size() > 0) {
-            for (Description child : children) {
-                verifyDescriptionTestClass(child, testClass);
-            }
-        }
     }
 
     public static class InaccessibleTestClass implements Specification {
