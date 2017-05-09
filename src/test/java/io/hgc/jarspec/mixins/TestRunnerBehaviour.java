@@ -50,7 +50,7 @@ public interface TestRunnerBehaviour extends Specification {
             return () -> {
                 assertTrue(result.getFailureCount() < result.getRunCount());
                 for (Failure failure : result.getFailures()) {
-                    if (failure.getDescription().getMethodName().endsWith(" " + testName)) {
+                    if (failure.getDescription().getDisplayName().equals(testName)) {
                         fail();
                     }
                 }
@@ -73,7 +73,7 @@ public interface TestRunnerBehaviour extends Specification {
             return () -> {
                 assertTrue(result.getFailureCount() > 0);
                 for (Failure failure : result.getFailures()) {
-                    if (failure.getDescription().getMethodName().endsWith(" " + testName)) {
+                    if (failure.getDescription().getDisplayName().endsWith(testName)) {
                         return;
                     }
                 }
