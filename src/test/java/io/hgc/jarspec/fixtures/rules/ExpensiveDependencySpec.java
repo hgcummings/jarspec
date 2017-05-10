@@ -1,4 +1,4 @@
-package io.hgc.jarspec.rules;
+package io.hgc.jarspec.fixtures.rules;
 
 import io.hgc.jarspec.JarSpecJUnitRunner;
 import io.hgc.jarspec.Specification;
