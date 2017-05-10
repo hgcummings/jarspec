@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JarSpecJUnitRunner.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">io.hgc:jarspec</a> &gt; <a href="index.source.html" class="el_package">io.hgc.jarspec</a> &gt; <span class="el_source">JarSpecJUnitRunner.java</span></div><h1>JarSpecJUnitRunner.java</h1><pre class="source lang-java linenums">package io.hgc.jarspec;
+
+import org.junit.runner.Description;
+import org.junit.runner.Runner;
+import org.junit.runner.notification.RunNotifier;
+
+/**
+ * Test runner for executing JarSpec specifications under JUnit.
+ *
+ * @param &lt;T&gt; Specification class
+ */
+public class JarSpecJUnitRunner&lt;T extends Specification&gt; extends Runner {
+    private final ExecutableNode rootExecutableNode;
+    private final Description classDescription;
+
+<span class="fc" id="L16">    public JarSpecJUnitRunner(Class&lt;T&gt; specClass) throws InstantiationException {</span>
+        try {
+<span class="fc" id="L18">            classDescription = Description.createSuiteDescription(specClass);</span>
+<span class="fc" id="L19">            rootExecutableNode = new ExecutableNode(specClass.newInstance().root());</span>
+<span class="fc" id="L20">            classDescription.addChild(rootExecutableNode.buildDescription());</span>
+<span class="fc" id="L21">        } catch (IllegalAccessException e) {</span>
+<span class="fc" id="L22">            throw new RuntimeException(e);</span>
+<span class="fc" id="L23">        }</span>
+<span class="fc" id="L24">    }</span>
+
+    @Override
+    public Description getDescription() {
+<span class="fc" id="L28">        return classDescription;</span>
+    }
+
+    @Override
+    public void run(RunNotifier notifier) {
+<span class="fc" id="L33">        rootExecutableNode.execute(notifier);</span>
+<span class="fc" id="L34">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
