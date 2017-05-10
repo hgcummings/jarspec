@@ -5,8 +5,6 @@ import org.junit.rules.TestRule;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static io.hgc.jarspec.Util.exceptionFrom;
-
 /**
  * Internal implementation of {@link Specification} as a tree structure.
  */
@@ -102,7 +100,11 @@ public abstract class SpecificationNode {
      */
     public static SpecificationNode error(String description, Throwable throwable) {
         return leaf(description, () -> {
-            throw exceptionFrom(throwable);
+            if (throwable instanceof Exception) {
+                throw (Exception) throwable;
+            } else {
+                throw new RuntimeException(throwable);
+            }
         });
     }
 

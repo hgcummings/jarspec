@@ -2,6 +2,7 @@ package io.hgc.jarspec.mixins;
 
 import io.hgc.jarspec.SpecificationNode;
 import io.hgc.jarspec.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Mixin providing convenience method for Specifications making statements about exception behaviour
@@ -17,23 +18,10 @@ public interface ExceptionBehaviour {
      * @return a Specification representing the single description
      */
     default <T extends Throwable> SpecificationNode itThrows(Class<T> throwable, String forCase, Test testCase) {
+        ExpectedException expectedException = ExpectedException.none();
+        expectedException.expect(throwable);
         return SpecificationNode.leaf(
             String.format("throws %s %s", throwable.getSimpleName(), forCase),
-            () -> {
-                Throwable exception = null;
-                try {
-                    testCase.run();
-                } catch (Throwable e) {
-                    exception = e;
-                }
-                if (!throwable.isInstance(exception)) {
-                    throw new AssertionError(
-                        String.format(
-                            "Expected exception of type %s but was %s",
-                            throwable.getSimpleName(), exception)
-                    );
-                }
-            }
-        );
+            testCase).withRule(expectedException);
     }
 }

@@ -10,6 +10,7 @@ import org.junit.runners.model.Statement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 /**
@@ -32,10 +33,7 @@ class ExecutableNode {
 
     Description buildDescription() {
         description = Description.createSuiteDescription(specificationNode.description());
-        specificationNode.children().forEach(child -> {
-            ExecutableNode childExecutionNode = new ExecutableNode(child);
-            addChild(childExecutionNode);
-        });
+        specificationNode.children().forEachOrdered(child -> addChild(new ExecutableNode(child)));
         return description;
     }
 
@@ -62,44 +60,55 @@ class ExecutableNode {
             notifier.fireTestIgnored(description);
             return;
         }
-        try {
-            withRules(RuleChain.emptyRuleChain(), this.specificationNode.blockRules()).apply(new Statement() {
-                @Override
-                public void evaluate() {
-                    run(notifier, minPriority, withRules(ruleChain, specificationNode.rules()));
-                }
-            }, this.description).evaluate();
-        } catch (Throwable e) {
-            notifier.fireTestFailure(new Failure(description, e));
-        }
+        evaluateStatementAndNotifyFailures(
+                withRules(RuleChain.emptyRuleChain(), this.specificationNode.blockRules()),
+                executionStatement(notifier, minPriority, ruleChain),
+                notifier);
         if (hasOwnTest(minPriority)) {
             notifier.fireTestFinished(description);
         }
     }
 
-    private void run(RunNotifier notifier, int minPriority, RuleChain ruleChain) {
-        try {
-            if (hasOwnTest(minPriority)) {
-                ruleChain.apply(specificationNode.test().get().asStatement(), description).evaluate();
+    private Statement executionStatement(final RunNotifier notifier, final int minPriority, final RuleChain ruleChain) {
+        return new Statement() {
+            @Override
+            public void evaluate() {
+                RuleChain ongoingRuleChain = withRules(ruleChain, specificationNode.rules());
+                if (hasOwnTest(minPriority)) {
+                    evaluateStatementAndNotifyFailures(
+                        ongoingRuleChain,
+                        specificationNode.test().get().asStatement(),
+                        notifier);
+                }
+                for(ExecutableNode child : children) {
+                    child.execute(notifier, minPriority, ongoingRuleChain);
+                }
             }
-        } catch(AssumptionViolatedException e) {
-            notifier.fireTestAssumptionFailed(new Failure(description, e));
-        } catch (Throwable e) {
-            notifier.fireTestFailure(new Failure(description, e));
-        }
-        for(ExecutableNode child : children) {
-            child.execute(notifier, minPriority, ruleChain);
-        }
+        };
     }
 
     private boolean hasOwnTest(int minPriority) {
         return specificationNode.test().isPresent() && priority >= minPriority;
     }
 
+    private void evaluateStatementAndNotifyFailures(RuleChain ruleChain, Statement statement, RunNotifier notifier) {
+        try {
+            ruleChain.apply(statement, description).evaluate();
+        } catch(AssumptionViolatedException e) {
+            notifier.fireTestAssumptionFailed(new Failure(description, e));
+        } catch (Throwable e) {
+            notifier.fireTestFailure(new Failure(description, e));
+        }
+    }
+
     private RuleChain withRules(RuleChain ruleChain, Stream<TestRule> rules) {
-        return rules.reduce(
-                ruleChain,
-                RuleChain::around,
-                (acc1, acc2) -> { throw new RuntimeException("Rules must be defined in a sequential stream");});
+        // We really just want foldLeft here, but the closest equivalent in the Java 8 Streams API is reduce, which
+        // doesn't allow us to assume the stream is sequential, so we implement foldLeft using forEachOrdered.
+        // See http://stackoverflow.com/questions/29210176/can-a-collectors-combiner-function-ever-be-used-on-sequential-streams
+        final AtomicReference<RuleChain> accumulator = new AtomicReference<>(ruleChain);
+        rules.forEachOrdered(rule ->
+                accumulator.getAndUpdate(acc -> acc.around(rule))
+        );
+        return accumulator.get();
     }
 }
