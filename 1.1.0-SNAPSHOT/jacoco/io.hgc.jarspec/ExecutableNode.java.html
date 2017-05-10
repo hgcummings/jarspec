@@ -1,17 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ExecutableNode.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">io.hgc:jarspec</a> &gt; <a href="index.source.html" class="el_package">io.hgc.jarspec</a> &gt; <span class="el_source">ExecutableNode.java</span></div><h1>ExecutableNode.java</h1><pre class="source lang-java linenums">package io.hgc.jarspec;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExecutableNode.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">io.hgc:jarspec</a> &gt; <a href="index.source.html" class="el_package">io.hgc.jarspec</a> &gt; <span class="el_source">ExecutableNode.java</span></div><h1>ExecutableNode.java</h1><pre class="source lang-java linenums">package io.hgc.jarspec;
 
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.RuleChain;
+import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
+import org.junit.runners.model.Statement;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Stream;
 
 /**
- * Internal class. Adapts a {@link SpecificationNode} into a form that can be executed by junit.
+ * Internal class. Adapts a {@link SpecificationNode} into a form that can be executed by JUnit.
  */
 class ExecutableNode {
     private SpecificationNode specificationNode;
@@ -20,20 +23,17 @@ class ExecutableNode {
     private int maxDescendantPriority;
     private List&lt;ExecutableNode&gt; children;
 
-<span class="fc" id="L23">    ExecutableNode(SpecificationNode specificationNode) {</span>
-<span class="fc" id="L24">        this.specificationNode = specificationNode;</span>
-<span class="fc" id="L25">        children = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L26" title="All 2 branches covered.">        if (specificationNode.isSolo()) {</span>
-<span class="fc" id="L27">            setPriority(1);</span>
+<span class="fc" id="L26">    ExecutableNode(SpecificationNode specificationNode) {</span>
+<span class="fc" id="L27">        this.specificationNode = specificationNode;</span>
+<span class="fc" id="L28">        children = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        if (specificationNode.isSolo()) {</span>
+<span class="fc" id="L30">            setPriority(1);</span>
         }
-<span class="fc" id="L29">    }</span>
+<span class="fc" id="L32">    }</span>
 
     Description buildDescription() {
-<span class="fc" id="L32">        description = Description.createSuiteDescription(specificationNode.description());</span>
-<span class="fc" id="L33">        specificationNode.children().forEach(child -&gt; {</span>
-            ExecutableNode childExecutionNode = new ExecutableNode(child);
-            addChild(childExecutionNode);
-        });
+<span class="fc" id="L35">        description = Description.createSuiteDescription(specificationNode.description());</span>
+<span class="fc" id="L36">        specificationNode.children().forEachOrdered(child -&gt; addChild(new ExecutableNode(child)));</span>
 <span class="fc" id="L37">        return description;</span>
     }
 
@@ -53,35 +53,63 @@ class ExecutableNode {
 <span class="fc" id="L53">        maxDescendantPriority = Math.max(maxDescendantPriority, child.maxDescendantPriority);</span>
 <span class="fc" id="L54">    }</span>
 
-    private RuleChain withOwnRules(RuleChain ruleChain) {
-<span class="fc" id="L57">        return this.specificationNode.rules().reduce(</span>
-                ruleChain,
-                RuleChain::around,
-                (acc1, acc2) -&gt; { throw new RuntimeException(&quot;Rules must be defined in sequence!&quot;);});
+    private void execute(RunNotifier notifier, int minPriority, RuleChain ruleChain) {
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (hasOwnTest(minPriority)) {</span>
+<span class="fc" id="L58">            notifier.fireTestStarted(description);</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        } else if (children.isEmpty()) {</span>
+<span class="fc" id="L60">            notifier.fireTestIgnored(description);</span>
+<span class="fc" id="L61">            return;</span>
+        }
+<span class="fc" id="L63">        evaluateStatementAndNotifyFailures(</span>
+<span class="fc" id="L64">                withRules(RuleChain.emptyRuleChain(), this.specificationNode.blockRules()),</span>
+<span class="fc" id="L65">                executionStatement(notifier, minPriority, ruleChain),</span>
+                notifier);
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (hasOwnTest(minPriority)) {</span>
+<span class="fc" id="L68">            notifier.fireTestFinished(description);</span>
+        }
+<span class="fc" id="L70">    }</span>
+
+    private Statement executionStatement(final RunNotifier notifier, final int minPriority, final RuleChain ruleChain) {
+<span class="fc" id="L73">        return new Statement() {</span>
+            @Override
+            public void evaluate() {
+<span class="fc" id="L76">                RuleChain ongoingRuleChain = withRules(ruleChain, specificationNode.rules());</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">                if (hasOwnTest(minPriority)) {</span>
+<span class="fc" id="L78">                    evaluateStatementAndNotifyFailures(</span>
+                        ongoingRuleChain,
+<span class="fc" id="L80">                        specificationNode.test().get().asStatement(),</span>
+                        notifier);
+                }
+<span class="fc bfc" id="L83" title="All 2 branches covered.">                for(ExecutableNode child : children) {</span>
+<span class="fc" id="L84">                    child.execute(notifier, minPriority, ongoingRuleChain);</span>
+<span class="fc" id="L85">                }</span>
+<span class="fc" id="L86">            }</span>
+        };
     }
 
-    private void execute(RunNotifier notifier, int minPriority, RuleChain ruleChain) {
-<span class="fc" id="L64">        ruleChain = withOwnRules(ruleChain);</span>
-<span class="fc" id="L65">        Optional&lt;Test&gt; test = specificationNode.test();</span>
-<span class="fc bfc" id="L66" title="All 6 branches covered.">        if ((test.isPresent() &amp;&amp; priority &gt;= minPriority) || !children.isEmpty()) {</span>
-<span class="fc" id="L67">            notifier.fireTestStarted(description);</span>
-        } else {
-<span class="fc" id="L69">            notifier.fireTestIgnored(description);</span>
-<span class="fc" id="L70">            return;</span>
-        }
+    private boolean hasOwnTest(int minPriority) {
+<span class="fc bfc" id="L91" title="All 4 branches covered.">        return specificationNode.test().isPresent() &amp;&amp; priority &gt;= minPriority;</span>
+    }
+
+    private void evaluateStatementAndNotifyFailures(RuleChain ruleChain, Statement statement, RunNotifier notifier) {
         try {
-<span class="pc bpc" id="L73" title="1 of 4 branches missed.">            if (test.isPresent() &amp;&amp; priority &gt;= minPriority) {</span>
-<span class="fc" id="L74">                ruleChain.apply(test.get().asStatement(), description).evaluate();</span>
-            }
-<span class="fc" id="L76">        } catch(AssumptionViolatedException e) {</span>
-<span class="fc" id="L77">            notifier.fireTestAssumptionFailed(new Failure(description, e));</span>
-<span class="fc" id="L78">        } catch (Throwable e) {</span>
-<span class="fc" id="L79">            notifier.fireTestFailure(new Failure(description, e));</span>
-<span class="fc" id="L80">        }</span>
-<span class="fc bfc" id="L81" title="All 2 branches covered.">        for(ExecutableNode child : children) {</span>
-<span class="fc" id="L82">            child.execute(notifier, minPriority, ruleChain);</span>
-<span class="fc" id="L83">        }</span>
-<span class="fc" id="L84">        notifier.fireTestFinished(description);</span>
-<span class="fc" id="L85">    }</span>
+<span class="fc" id="L96">            ruleChain.apply(statement, description).evaluate();</span>
+<span class="fc" id="L97">        } catch(AssumptionViolatedException e) {</span>
+<span class="fc" id="L98">            notifier.fireTestAssumptionFailed(new Failure(description, e));</span>
+<span class="fc" id="L99">        } catch (Throwable e) {</span>
+<span class="fc" id="L100">            notifier.fireTestFailure(new Failure(description, e));</span>
+<span class="fc" id="L101">        }</span>
+<span class="fc" id="L102">    }</span>
+
+    private RuleChain withRules(RuleChain ruleChain, Stream&lt;TestRule&gt; rules) {
+        // We really just want foldLeft here, but the closest equivalent in the Java 8 Streams API is reduce, which
+        // doesn't allow us to assume the stream is sequential, so we implement foldLeft using forEachOrdered.
+        // See http://stackoverflow.com/questions/29210176/can-a-collectors-combiner-function-ever-be-used-on-sequential-streams
+<span class="fc" id="L108">        final AtomicReference&lt;RuleChain&gt; accumulator = new AtomicReference&lt;&gt;(ruleChain);</span>
+<span class="fc" id="L109">        rules.forEachOrdered(rule -&gt;</span>
+<span class="fc" id="L110">                accumulator.getAndUpdate(acc -&gt; acc.around(rule))</span>
+        );
+<span class="fc" id="L112">        return accumulator.get();</span>
+    }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
