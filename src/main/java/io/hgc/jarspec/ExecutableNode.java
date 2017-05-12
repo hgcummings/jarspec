@@ -10,6 +10,9 @@ import org.junit.runners.model.Statement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
@@ -38,7 +41,13 @@ class ExecutableNode {
     }
 
     void execute(RunNotifier notifier) {
-        execute(notifier, this.maxDescendantPriority, RuleChain.emptyRuleChain());
+        ExecutorService threadPool = Executors.newCachedThreadPool();
+        execute(threadPool, notifier, this.maxDescendantPriority, RuleChain.emptyRuleChain());
+        try {
+            threadPool.awaitTermination(1, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void setPriority(int newPriority) {
@@ -53,7 +62,7 @@ class ExecutableNode {
         maxDescendantPriority = Math.max(maxDescendantPriority, child.maxDescendantPriority);
     }
 
-    private void execute(RunNotifier notifier, int minPriority, RuleChain ruleChain) {
+    private void execute(ExecutorService threadPool, RunNotifier notifier, int minPriority, RuleChain ruleChain) {
         if (hasOwnTest(minPriority)) {
             notifier.fireTestStarted(description);
         } else if (children.isEmpty()) {
@@ -62,14 +71,14 @@ class ExecutableNode {
         }
         evaluateStatementAndNotifyFailures(
                 withRules(RuleChain.emptyRuleChain(), this.specificationNode.blockRules()),
-                executionStatement(notifier, minPriority, ruleChain),
+                executionStatement(threadPool, notifier, minPriority, ruleChain),
                 notifier);
         if (hasOwnTest(minPriority)) {
             notifier.fireTestFinished(description);
         }
     }
 
-    private Statement executionStatement(final RunNotifier notifier, final int minPriority, final RuleChain ruleChain) {
+    private Statement executionStatement(ExecutorService threadPool, final RunNotifier notifier, final int minPriority, final RuleChain ruleChain) {
         return new Statement() {
             @Override
             public void evaluate() {
@@ -81,7 +90,8 @@ class ExecutableNode {
                         notifier);
                 }
                 for(ExecutableNode child : children) {
-                    child.execute(notifier, minPriority, ongoingRuleChain);
+//                    threadPool.submit(() -> child.execute(threadPool, notifier, minPriority, ongoingRuleChain));
+                    child.execute(threadPool, notifier, minPriority, ongoingRuleChain);
                 }
             }
         };
