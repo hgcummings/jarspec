@@ -33,8 +33,20 @@ public abstract class SpecificationNode {
      */
     public abstract SpecificationNode only();
 
+    /**
+     * Add a rule to be applied to all descendant tests of this node.
+     *
+     * @param rule a JUnit TestRule to apply to tests under this node.
+     * @return a new node representing the original node with the rule applied to all of its tests
+     */
     public abstract SpecificationNode withRule(TestRule rule);
 
+    /**
+     * Add a rule to be applied to this node itself (not its descendant tests)
+     *
+     * @param rule a JUnit TestRule to apply to this node
+     * @return a new node representing the original node with the rule applied to it
+     */
     public abstract SpecificationNode withBlockRule(TestRule rule);
 
     abstract String description();

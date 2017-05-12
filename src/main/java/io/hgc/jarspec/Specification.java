@@ -9,8 +9,13 @@ import java.util.stream.Stream;
 public interface Specification {
     SpecificationNode root();
 
-    default SpecificationNode describe(String unit, SpecificationNode... specificationNodes) {
-        return SpecificationNode.internal(unit, Stream.of(specificationNodes));
+    /**
+     * @param unit description of a unit of behaviour
+     * @param specifications nested specifications for the behaviour of the unit
+     * @return the overall specification
+     */
+    default SpecificationNode describe(String unit, SpecificationNode... specifications) {
+        return SpecificationNode.internal(unit, Stream.of(specifications));
     }
 
     /**
