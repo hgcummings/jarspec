@@ -1,4 +1,4 @@
-# ![JarSpec](http://hgc.io/jarspec/2.0.0-SNAPSHOT/images/logo.svg)
+# ![JarSpec](http://hgc.io/jarspec/2.0.0/images/logo.svg)
 
 ## What?
 [RSpec](http://rspec.info/) (or [Jasmine](http://jasmine.github.io/2.0/introduction.html)/[Mocha](http://visionmedia.github.io/mocha/)) style tests for native Java 8, a bit like the following:
@@ -21,7 +21,7 @@ Allows for more expressive test names without very_long_underscore_ridden_test_m
 
 ## How?
 
-1. Add JarSpec to your project dependencies. See below for Maven and [the dependency info page](http://hgc.io/jarspec/2.0.0-SNAPSHOT/dependency-info.html) for other build tools.
+1. Add JarSpec to your project dependencies. See below for Maven and [the dependency info page](http://hgc.io/jarspec/2.0.0/dependency-info.html) for other build tools.
 
 2. Start writing specs! See [wiki/Implementing Specifications](https://github.com/hgcummings/jarspec/wiki/Implementing-Specifications) for more details, or the [project's own tests](https://github.com/hgcummings/jarspec/tree/master/src/test/java/io/hgc/jarspec) for examples.
 
@@ -68,4 +68,4 @@ Configure SureFire to pick up classes named `*Spec` (although you can stick with
 The current release on Maven Central is stable. See [open milestones](https://github.com/hgcummings/jarspec/milestones) for further planned features. Releases numbers follow the [Semantic Versioning](http://semver.org/) specification for backwards compatibility.
 
 ---
-###### Developer resources: [Test results](http://hgc.io/jarspec/2.0.0-SNAPSHOT/surefire-report.html) [![Build status](https://travis-ci.org/hgcummings/jarspec.svg?branch=master)](https://travis-ci.org/hgcummings/jarspec) [Coverage report](http://hgc.io/jarspec/2.0.0-SNAPSHOT/jacoco/index.html) [![Coverage Status](https://coveralls.io/repos/hgcummings/jarspec/badge.png?branch=master)](https://coveralls.io/r/hgcummings/jarspec?branch=master) [Task board](https://huboard.com/hgcummings/jarspec)
+###### Developer resources: [Test results](http://hgc.io/jarspec/2.0.0/surefire-report.html) [![Build status](https://travis-ci.org/hgcummings/jarspec.svg?branch=master)](https://travis-ci.org/hgcummings/jarspec) [Coverage report](http://hgc.io/jarspec/2.0.0/jacoco/index.html) [![Coverage Status](https://coveralls.io/repos/hgcummings/jarspec/badge.png?branch=master)](https://coveralls.io/r/hgcummings/jarspec?branch=master) [Task board](https://huboard.com/hgcummings/jarspec)
