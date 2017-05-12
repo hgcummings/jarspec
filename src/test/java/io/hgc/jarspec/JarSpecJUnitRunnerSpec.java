@@ -6,7 +6,7 @@ import io.hgc.jarspec.mixins.TestRunnerBehaviour;
 import org.junit.runner.*;
 import org.junit.runner.notification.Failure;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * Uses {@link io.hgc.jarspec.fixtures} to test the main runner class
@@ -25,53 +25,53 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                             })
                     ),
                     describe("test count",
-                            it("matches number of tests", () -> assertEquals(2, runner.testCount()))
+                            it("matches number of tests", () -> assertThat(runner.testCount()).isEqualTo(2))
                     ),
                     describe("description",
                         it("has class description as the root node", () -> {
                             Description description = runner.getDescription();
-                            assertEquals(AdditionSpec.class.getName(), description.getClassName());
+                            assertThat(description.getClassName()).isEqualTo(AdditionSpec.class.getName());
                         }),
                         it("reflects the structure of the spec", () -> {
                             Description classDescription = runner.getDescription();
-                            assertEquals(1, classDescription.getChildren().size());
+                            assertThat(classDescription.getChildren()).hasSize(1);
 
                             Description additionDescription = classDescription.getChildren().get(0);
-                            assertEquals(1, additionDescription.getChildren().size());
+                            assertThat(additionDescription.getChildren()).hasSize(1);
 
                             Description ofOnePlusOneDescription = additionDescription.getChildren().get(0);
-                            assertEquals(2, ofOnePlusOneDescription.getChildren().size());
+                            assertThat(ofOnePlusOneDescription.getChildren()).hasSize(2);
                         })
                     ),
                     it("reports failures correctly", () -> {
                         JUnitCore jUnitCore = new JUnitCore();
                         Result result = jUnitCore.run(runner);
-                        assertEquals(2, result.getRunCount());
-                        assertEquals(1, result.getFailureCount());
+                        assertThat(result.getRunCount()).isEqualTo(2);
+                        assertThat(result.getFailureCount()).isEqualTo(1);
                         Failure failure = result.getFailures().get(0);
-                        assertEquals("equals 3", failure.getDescription().getDisplayName());
+                        assertThat(failure.getDescription().getDisplayName()).isEqualTo("equals 3");
                     }),
                     it("does not report assumption failures as test failures", () -> {
                         Result result = new JUnitCore().run(AssumptionFailureSpec.class);
-                        assertEquals(0, result.getFailureCount());
+                        assertThat(result.getFailureCount()).isEqualTo(0);
                     }),
                     it("reports skipped tests as ignored", () -> {
                         Result result = new JUnitCore().run(SkippedTestSpec.class);
-                        assertEquals(0, result.getFailureCount());
-                        assertEquals(3, result.getIgnoreCount());
+                        assertThat(result.getFailureCount()).isEqualTo(0);
+                        assertThat(result.getIgnoreCount()).isEqualTo(3);
                     }),
                     it("runs only selected tests when any tests are selected", () -> {
                         Result result = new JUnitCore().run(SelectiveTestExecutionSpec.class);
-                        assertEquals(1, result.getFailureCount());
-                        assertEquals(3, result.getIgnoreCount());
-                        assertEquals(2, result.getRunCount());
-                        assertTrue(result.getFailures().get(0).getDescription().getDisplayName().contains("selected"));
+                        assertThat(result.getFailureCount()).isEqualTo(1);
+                        assertThat(result.getIgnoreCount()).isEqualTo(3);
+                        assertThat(result.getRunCount()).isEqualTo(2);
+                        assertThat(result.getFailures().get(0).getDescription().getDisplayName().contains("selected")).isTrue();
                     }),
                     it("runs all tests in selected units", () -> {
                         Result result = new JUnitCore().run(SelectiveDescribeExecutionSpec.class);
-                        assertEquals(0, result.getFailureCount());
-                        assertEquals(2, result.getIgnoreCount());
-                        assertEquals(3, result.getRunCount());
+                        assertThat(result.getFailureCount()).isEqualTo(0);
+                        assertThat(result.getIgnoreCount()).isEqualTo(2);
+                        assertThat(result.getRunCount()).isEqualTo(3);
                     }),
                     describe("error handling", by(ErrorInDescribeSpec.class,
                         fails("broken multi-child unit"),
@@ -82,11 +82,11 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
                     describe("root error",
                         it("causes a single init failure for spec class", () -> {
                             Result result = new JUnitCore().run(ErrorInRootSpec.class);
-                            assertEquals(1, result.getFailureCount());
+                            assertThat(result.getFailureCount()).isEqualTo(1);
                             Failure failure = result.getFailures().get(0);
                             String displayName = failure.getDescription().getDisplayName();
-                            assertTrue(displayName.contains("initializationError"));
-                            assertTrue(displayName.contains(ErrorInRootSpec.class.getName()));
+                            assertThat(displayName.contains("initializationError")).isTrue();
+                            assertThat(displayName.contains(ErrorInRootSpec.class.getName())).isTrue();
                         }))
                     );
         });
@@ -98,7 +98,7 @@ public class JarSpecJUnitRunnerSpec implements Specification, ExceptionBehaviour
 
         @Override
         public SpecificationNode root() {
-            return it("should be true", () -> assertTrue(true));
+            return it("should be true", () -> assertThat(true).isTrue());
         }
     }
 }

@@ -7,7 +7,7 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(JarSpecJUnitRunner.class)
 public class RulesSpec implements Specification {
@@ -16,18 +16,18 @@ public class RulesSpec implements Specification {
         return describe("TestRule behaviour",
                 it("should apply rules correctly", () -> {
                     Result result = new JUnitCore().run(SharedStateSpec.class);
-                    assertEquals(3, result.getRunCount());
-                    assertEquals(0, result.getFailureCount());
+                    assertThat(result.getRunCount()).isEqualTo(3);
+                    assertThat(result.getFailureCount()).isEqualTo(0);
                 }),
                 it("should apply block-level rules correctly", () -> {
                     Result result = new JUnitCore().run(ExpensiveDependencySpec.class);
-                    assertEquals(3, result.getRunCount());
-                    assertEquals(0, result.getFailureCount());
+                    assertThat(result.getRunCount()).isEqualTo(3);
+                    assertThat(result.getFailureCount()).isEqualTo(0);
                 }),
                 it("should report failures in block-level rules as test errors", () -> {
                     Result result = new JUnitCore().run(ErrorInRuleSpec.class);
-                    assertEquals(1, result.getRunCount());
-                    assertEquals(1, result.getFailureCount());
+                    assertThat(result.getRunCount()).isEqualTo(1);
+                    assertThat(result.getFailureCount()).isEqualTo(1);
                 })
         );
     }
