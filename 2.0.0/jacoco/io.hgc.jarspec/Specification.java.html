@@ -9,8 +9,13 @@ import java.util.stream.Stream;
 public interface Specification {
     SpecificationNode root();
 
-    default SpecificationNode describe(String unit, SpecificationNode... specificationNodes) {
-<span class="fc" id="L13">        return SpecificationNode.internal(unit, Stream.of(specificationNodes));</span>
+    /**
+     * @param unit description of a unit of behaviour
+     * @param specifications nested specifications for the behaviour of the unit
+     * @return the overall specification
+     */
+    default SpecificationNode describe(String unit, SpecificationNode... specifications) {
+<span class="fc" id="L18">        return SpecificationNode.internal(unit, Stream.of(specifications));</span>
     }
 
     /**
@@ -20,9 +25,9 @@ public interface Specification {
      */
     default SpecificationNode describe(String unit, BySingle specification) {
         try {
-<span class="fc" id="L23">            return SpecificationNode.internal(unit, Stream.of(specification.get()));</span>
-<span class="fc" id="L24">        } catch (Throwable e) {</span>
-<span class="fc" id="L25">            return SpecificationNode.error(unit, e);</span>
+<span class="fc" id="L28">            return SpecificationNode.internal(unit, Stream.of(specification.get()));</span>
+<span class="fc" id="L29">        } catch (Throwable e) {</span>
+<span class="fc" id="L30">            return SpecificationNode.error(unit, e);</span>
         }
     }
 
@@ -33,9 +38,9 @@ public interface Specification {
      */
     default SpecificationNode describe(String unit, ByMultiple specifications) {
         try {
-<span class="fc" id="L36">            return SpecificationNode.internal(unit, specifications.get());</span>
-<span class="fc" id="L37">        } catch (Throwable e) {</span>
-<span class="fc" id="L38">            return SpecificationNode.error(unit, e);</span>
+<span class="fc" id="L41">            return SpecificationNode.internal(unit, specifications.get());</span>
+<span class="fc" id="L42">        } catch (Throwable e) {</span>
+<span class="fc" id="L43">            return SpecificationNode.error(unit, e);</span>
         }
     }
 
@@ -45,7 +50,7 @@ public interface Specification {
      * @return a specification consisting of single automatically verifiable statement
      */
     default SpecificationNode it(String statement, Test test) {
-<span class="fc" id="L48">        return SpecificationNode.leaf(statement, test);</span>
+<span class="fc" id="L53">        return SpecificationNode.leaf(statement, test);</span>
     }
 
     /**
@@ -53,7 +58,7 @@ public interface Specification {
      * @return a specification consisting of single statement with no automated test
      */
     default SpecificationNode it(String statement) {
-<span class="fc" id="L56">        return SpecificationNode.leaf(statement);</span>
+<span class="fc" id="L61">        return SpecificationNode.leaf(statement);</span>
     }
 
     /**
@@ -62,7 +67,7 @@ public interface Specification {
      * @return a List containing all of the specifications in the order provided
      */
     default Stream&lt;SpecificationNode&gt; byAllOf(SpecificationNode... specificationNodes) {
-<span class="fc" id="L65">        return Stream.of(specificationNodes);</span>
+<span class="fc" id="L70">        return Stream.of(specificationNodes);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

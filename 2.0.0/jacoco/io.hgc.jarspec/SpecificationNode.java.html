@@ -33,8 +33,20 @@ public abstract class SpecificationNode {
      */
     public abstract SpecificationNode only();
 
+    /**
+     * Add a rule to be applied to all descendant tests of this node.
+     *
+     * @param rule a JUnit TestRule to apply to tests under this node.
+     * @return a new node representing the original node with the rule applied to all of its tests
+     */
     public abstract SpecificationNode withRule(TestRule rule);
 
+    /**
+     * Add a rule to be applied to this node itself (not its descendant tests)
+     *
+     * @param rule a JUnit TestRule to apply to this node
+     * @return a new node representing the original node with the rule applied to it
+     */
     public abstract SpecificationNode withBlockRule(TestRule rule);
 
     abstract String description();
@@ -46,12 +58,12 @@ public abstract class SpecificationNode {
      */
     abstract Stream&lt;SpecificationNode&gt; children();
 
-<span class="fc" id="L49">    Stream&lt;TestRule&gt; rules() { return rules; }</span>
+<span class="fc" id="L61">    Stream&lt;TestRule&gt; rules() { return rules; }</span>
 
-<span class="fc" id="L51">    Stream&lt;TestRule&gt; blockRules() { return blockRules; }</span>
+<span class="fc" id="L63">    Stream&lt;TestRule&gt; blockRules() { return blockRules; }</span>
 
     boolean isSolo() {
-<span class="fc" id="L54">        return solo;</span>
+<span class="fc" id="L66">        return solo;</span>
     }
 
     /**
@@ -63,7 +75,7 @@ public abstract class SpecificationNode {
      * @return a newly-created node
      */
     public static SpecificationNode internal(String description, Stream&lt;SpecificationNode&gt; children) {
-<span class="fc" id="L66">        return new Internal(description, children, false, Stream.empty(), Stream.empty());</span>
+<span class="fc" id="L78">        return new Internal(description, children, false, Stream.empty(), Stream.empty());</span>
     }
 
     /**
@@ -74,7 +86,7 @@ public abstract class SpecificationNode {
      * @return a newly-created node
      */
     public static SpecificationNode leaf(String description) {
-<span class="fc" id="L77">        return new Leaf(description, null, false, Stream.empty(), Stream.empty());</span>
+<span class="fc" id="L89">        return new Leaf(description, null, false, Stream.empty(), Stream.empty());</span>
     }
 
     /**
@@ -86,7 +98,7 @@ public abstract class SpecificationNode {
      * @return a newly-created node
      */
     public static SpecificationNode leaf(String description, Test test) {
-<span class="fc" id="L89">        return new Leaf(description, test, false, Stream.empty(), Stream.empty());</span>
+<span class="fc" id="L101">        return new Leaf(description, test, false, Stream.empty(), Stream.empty());</span>
     }
 
     /**
@@ -99,11 +111,11 @@ public abstract class SpecificationNode {
      * @return a newly-created node
      */
     public static SpecificationNode error(String description, Throwable throwable) {
-<span class="fc" id="L102">        return leaf(description, () -&gt; {</span>
-<span class="fc bfc" id="L103" title="All 2 branches covered.">            if (throwable instanceof Exception) {</span>
-<span class="fc" id="L104">                throw (Exception) throwable;</span>
+<span class="fc" id="L114">        return leaf(description, () -&gt; {</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">            if (throwable instanceof Exception) {</span>
+<span class="fc" id="L116">                throw (Exception) throwable;</span>
             } else {
-<span class="fc" id="L106">                throw new RuntimeException(throwable);</span>
+<span class="fc" id="L118">                throw new RuntimeException(throwable);</span>
             }
         });
     }
@@ -122,51 +134,51 @@ public abstract class SpecificationNode {
                 boolean solo,
                 Stream&lt;TestRule&gt; rules,
                 Stream&lt;TestRule&gt; blockRules) {
-<span class="fc" id="L125">            super(solo, rules, blockRules);</span>
-<span class="fc" id="L126">            this.unit = unit;</span>
-<span class="fc" id="L127">            this.children = children;</span>
-<span class="fc" id="L128">        }</span>
+<span class="fc" id="L137">            super(solo, rules, blockRules);</span>
+<span class="fc" id="L138">            this.unit = unit;</span>
+<span class="fc" id="L139">            this.children = children;</span>
+<span class="fc" id="L140">        }</span>
 
         @Override
         public SpecificationNode only() {
-<span class="fc" id="L132">            return new Internal(unit, children, true, rules(), blockRules());</span>
+<span class="fc" id="L144">            return new Internal(unit, children, true, rules(), blockRules());</span>
         }
 
         @Override
         public SpecificationNode withRule(TestRule rule) {
-<span class="fc" id="L137">            return new Internal(</span>
+<span class="fc" id="L149">            return new Internal(</span>
                     unit,
                     children,
-<span class="fc" id="L140">                    isSolo(),</span>
-<span class="fc" id="L141">                    Stream.concat(rules(), Stream.of(rule)),</span>
-<span class="fc" id="L142">                    blockRules()</span>
+<span class="fc" id="L152">                    isSolo(),</span>
+<span class="fc" id="L153">                    Stream.concat(rules(), Stream.of(rule)),</span>
+<span class="fc" id="L154">                    blockRules()</span>
             );
         }
 
         @Override
         public SpecificationNode withBlockRule(TestRule rule) {
-<span class="fc" id="L148">            return new Internal(</span>
+<span class="fc" id="L160">            return new Internal(</span>
                     unit,
                     children,
-<span class="fc" id="L151">                    isSolo(),</span>
-<span class="fc" id="L152">                    rules(),</span>
-<span class="fc" id="L153">                    Stream.concat(blockRules(), Stream.of(rule))</span>
+<span class="fc" id="L163">                    isSolo(),</span>
+<span class="fc" id="L164">                    rules(),</span>
+<span class="fc" id="L165">                    Stream.concat(blockRules(), Stream.of(rule))</span>
             );
         }
 
         @Override
         Optional&lt;Test&gt; test() {
-<span class="fc" id="L159">            return Optional.empty();</span>
+<span class="fc" id="L171">            return Optional.empty();</span>
         }
 
         @Override
         String description() {
-<span class="fc" id="L164">            return unit;</span>
+<span class="fc" id="L176">            return unit;</span>
         }
 
         @Override
         Stream&lt;SpecificationNode&gt; children() {
-<span class="fc" id="L169">            return children;</span>
+<span class="fc" id="L181">            return children;</span>
         }
     }
 
@@ -180,51 +192,51 @@ public abstract class SpecificationNode {
         private final Test test;
 
         private Leaf(String behaviour, Test test, boolean solo, Stream&lt;TestRule&gt; rules, Stream&lt;TestRule&gt; blockRules) {
-<span class="fc" id="L183">            super(solo, rules, blockRules);</span>
-<span class="fc" id="L184">            this.behaviour = behaviour;</span>
-<span class="fc" id="L185">            this.test = test;</span>
-<span class="fc" id="L186">        }</span>
+<span class="fc" id="L195">            super(solo, rules, blockRules);</span>
+<span class="fc" id="L196">            this.behaviour = behaviour;</span>
+<span class="fc" id="L197">            this.test = test;</span>
+<span class="fc" id="L198">        }</span>
 
         @Override
         public SpecificationNode only() {
-<span class="fc" id="L190">            return new Leaf(behaviour, test, true, rules(), blockRules());</span>
+<span class="fc" id="L202">            return new Leaf(behaviour, test, true, rules(), blockRules());</span>
         }
 
         @Override
         public SpecificationNode withRule(TestRule rule) {
-<span class="fc" id="L195">            return new Leaf(</span>
+<span class="fc" id="L207">            return new Leaf(</span>
                     behaviour,
                     test,
-<span class="fc" id="L198">                    isSolo(),</span>
-<span class="fc" id="L199">                    Stream.concat(rules(), Stream.of(rule)),</span>
-<span class="fc" id="L200">                    blockRules()</span>
+<span class="fc" id="L210">                    isSolo(),</span>
+<span class="fc" id="L211">                    Stream.concat(rules(), Stream.of(rule)),</span>
+<span class="fc" id="L212">                    blockRules()</span>
             );
         }
 
         @Override
         public SpecificationNode withBlockRule(TestRule rule) {
-<span class="fc" id="L206">            return new Leaf(</span>
+<span class="fc" id="L218">            return new Leaf(</span>
                     behaviour,
                     test,
-<span class="fc" id="L209">                    isSolo(),</span>
-<span class="fc" id="L210">                    rules(),</span>
-<span class="fc" id="L211">                    Stream.concat(blockRules(), Stream.of(rule))</span>
+<span class="fc" id="L221">                    isSolo(),</span>
+<span class="fc" id="L222">                    rules(),</span>
+<span class="fc" id="L223">                    Stream.concat(blockRules(), Stream.of(rule))</span>
             );
         }
 
         @Override
         Optional&lt;Test&gt; test() {
-<span class="fc" id="L217">            return Optional.ofNullable(test);</span>
+<span class="fc" id="L229">            return Optional.ofNullable(test);</span>
         }
 
         @Override
         String description() {
-<span class="fc" id="L222">            return behaviour;</span>
+<span class="fc" id="L234">            return behaviour;</span>
         }
 
         @Override
         Stream&lt;SpecificationNode&gt; children() {
-<span class="fc" id="L227">            return Stream.empty();</span>
+<span class="fc" id="L239">            return Stream.empty();</span>
         }
     }
 }

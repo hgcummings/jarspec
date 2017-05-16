@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>SpecificationNode (io.hgc:jarspec 2.0.0 API)</title>
-<meta name="date" content="2017-05-11">
+<meta name="date" content="2017-05-16">
 <link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
 <script type="text/javascript" src="../../../script.js"></script>
 </head>
@@ -172,11 +172,15 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>abstract <a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../io/hgc/jarspec/SpecificationNode.html#withBlockRule-org.junit.rules.TestRule-">withBlockRule</a></span>(org.junit.rules.TestRule&nbsp;rule)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../io/hgc/jarspec/SpecificationNode.html#withBlockRule-org.junit.rules.TestRule-">withBlockRule</a></span>(org.junit.rules.TestRule&nbsp;rule)</code>
+<div class="block">Add a rule to be applied to this node itself (not its descendant tests)</div>
+</td>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>abstract <a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../io/hgc/jarspec/SpecificationNode.html#withRule-org.junit.rules.TestRule-">withRule</a></span>(org.junit.rules.TestRule&nbsp;rule)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../io/hgc/jarspec/SpecificationNode.html#withRule-org.junit.rules.TestRule-">withRule</a></span>(org.junit.rules.TestRule&nbsp;rule)</code>
+<div class="block">Add a rule to be applied to all descendant tests of this node.</div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -235,6 +239,13 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>withRule</h4>
 <pre>public abstract&nbsp;<a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>&nbsp;withRule(org.junit.rules.TestRule&nbsp;rule)</pre>
+<div class="block">Add a rule to be applied to all descendant tests of this node.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>rule</code> - a JUnit TestRule to apply to tests under this node.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a new node representing the original node with the rule applied to all of its tests</dd>
+</dl>
 </li>
 </ul>
 <a name="withBlockRule-org.junit.rules.TestRule-">
@@ -244,6 +255,13 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>withBlockRule</h4>
 <pre>public abstract&nbsp;<a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>&nbsp;withBlockRule(org.junit.rules.TestRule&nbsp;rule)</pre>
+<div class="block">Add a rule to be applied to this node itself (not its descendant tests)</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>rule</code> - a JUnit TestRule to apply to this node</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a new node representing the original node with the rule applied to it</dd>
+</dl>
 </li>
 </ul>
 <a name="internal-java.lang.String-java.util.stream.Stream-">

@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Specification (io.hgc:jarspec 2.0.0 API)</title>
-<meta name="date" content="2017-05-11">
+<meta name="date" content="2017-05-16">
 <link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
 <script type="text/javascript" src="../../../script.js"></script>
 </head>
@@ -141,7 +141,7 @@ var activeTableTab = "activeTableTab";
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>default <a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../io/hgc/jarspec/Specification.html#describe-java.lang.String-io.hgc.jarspec.SpecificationNode...-">describe</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;unit,
-        <a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>...&nbsp;specificationNodes)</code>&nbsp;</td>
+        <a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>...&nbsp;specifications)</code>&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>default <a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a></code></td>
@@ -187,7 +187,14 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>describe</h4>
 <pre>default&nbsp;<a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>&nbsp;describe(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;unit,
-                                   <a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>...&nbsp;specificationNodes)</pre>
+                                   <a href="../../../io/hgc/jarspec/SpecificationNode.html" title="class in io.hgc.jarspec">SpecificationNode</a>...&nbsp;specifications)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>unit</code> - description of a unit of behaviour</dd>
+<dd><code>specifications</code> - nested specifications for the behaviour of the unit</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the overall specification</dd>
+</dl>
 </li>
 </ul>
 <a name="describe-java.lang.String-io.hgc.jarspec.BySingle-">
