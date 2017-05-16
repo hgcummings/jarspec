@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SpecificationNode.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">io.hgc:jarspec</a> &gt; <a href="index.source.html" class="el_package">io.hgc.jarspec</a> &gt; <span class="el_source">SpecificationNode.java</span></div><h1>SpecificationNode.java</h1><pre class="source lang-java linenums">package io.hgc.jarspec;
+
+import org.junit.rules.TestRule;
+
+import java.util.Optional;
+import java.util.stream.Stream;
+
+/**
+ * Internal implementation of {@link Specification} as a tree structure.
+ */
+public abstract class SpecificationNode {
+    private final boolean solo;
+    private final Stream&lt;TestRule&gt; rules;
+    private final Stream&lt;TestRule&gt; blockRules;
+
+<span class="fc" id="L16">    private SpecificationNode(boolean solo, Stream&lt;TestRule&gt; rules, Stream&lt;TestRule&gt; blockRules) {</span>
+<span class="fc" id="L17">        this.solo = solo;</span>
+<span class="fc" id="L18">        this.rules = rules;</span>
+<span class="fc" id="L19">        this.blockRules = blockRules;</span>
+<span class="fc" id="L20">    }</span>
+
+    /**
+     * Mark this node to be skipped (along with its children and any other nodes similarly marked)
+     * @return a new node representing a skipped version of the original node
+     */
+    public SpecificationNode skip() {
+<span class="fc" id="L27">        return leaf(this.description());</span>
+    }
+
+    /**
+     * Mark this node to be run exclusively (along with its children and any other nodes similarly marked)
+     * @return a new node representing an exclusive version of the original node
+     */
+    public abstract SpecificationNode only();
+
+    /**
+     * Add a rule to be applied to all descendant tests of this node.
+     *
+     * @param rule a JUnit TestRule to apply to tests under this node.
+     * @return a new node representing the original node with the rule applied to all of its tests
+     */
+    public abstract SpecificationNode withRule(TestRule rule);
+
+    /**
+     * Add a rule to be applied to this node itself (not its descendant tests)
+     *
+     * @param rule a JUnit TestRule to apply to this node
+     * @return a new node representing the original node with the rule applied to it
+     */
+    public abstract SpecificationNode withBlockRule(TestRule rule);
+
+    abstract String description();
+
+    abstract Optional&lt;Test&gt; test();
+
+    /**
+     * @return Child nodes of this node
+     */
+    abstract Stream&lt;SpecificationNode&gt; children();
+
+<span class="fc" id="L61">    Stream&lt;TestRule&gt; rules() { return rules; }</span>
+
+<span class="fc" id="L63">    Stream&lt;TestRule&gt; blockRules() { return blockRules; }</span>
+
+    boolean isSolo() {
+<span class="fc" id="L66">        return solo;</span>
+    }
+
+    /**
+     * Factory method for internal nodes in the tree representing a specification.
+     * Consumers should generally use the default methods on {@link Specification}
+     * instead, unless creating their own behaviour mixin.
+     * @param description description for this node
+     * @param children stream of child nodes
+     * @return a newly-created node
+     */
+    public static SpecificationNode internal(String description, Stream&lt;SpecificationNode&gt; children) {
+<span class="fc" id="L78">        return new Internal(description, children, false, Stream.empty(), Stream.empty());</span>
+    }
+
+    /**
+     * Factory method for leaf nodes in the tree representing a specification.
+     * Consumers should generally use the default methods on {@link Specification}
+     * instead, unless creating their own behaviour mixin.
+     * @param description description for this node
+     * @return a newly-created node
+     */
+    public static SpecificationNode leaf(String description) {
+<span class="fc" id="L89">        return new Leaf(description, null, false, Stream.empty(), Stream.empty());</span>
+    }
+
+    /**
+     * Factory method for leaf nodes in the tree representing a specification.
+     * Consumers should generally use the default methods on {@link Specification}
+     * instead, unless creating their own behaviour mixin.
+     * @param description description for this node
+     * @param test optional automated test for this node
+     * @return a newly-created node
+     */
+    public static SpecificationNode leaf(String description, Test test) {
+<span class="fc" id="L101">        return new Leaf(description, test, false, Stream.empty(), Stream.empty());</span>
+    }
+
+    /**
+     * Factory method for error nodes in the tree representing a specification,
+     * indicating an exception thrown while building the specification tree itself.
+     * Consumers should generally use the default methods on {@link Specification}
+     * instead, unless creating their own behaviour mixin.
+     * @param description description for this node
+     * @param throwable the original error
+     * @return a newly-created node
+     */
+    public static SpecificationNode error(String description, Throwable throwable) {
+<span class="fc" id="L114">        return leaf(description, () -&gt; {</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">            if (throwable instanceof Exception) {</span>
+<span class="fc" id="L116">                throw (Exception) throwable;</span>
+            } else {
+<span class="fc" id="L118">                throw new RuntimeException(throwable);</span>
+            }
+        });
+    }
+
+    /**
+     * Represents the top-level node for a unit of behaviour. Objects of this
+     * type are immutable iff the provided children are immutable.
+     */
+    private static class Internal extends SpecificationNode {
+        private final String unit;
+        private final Stream&lt;SpecificationNode&gt; children;
+
+        private Internal(
+                String unit,
+                Stream&lt;SpecificationNode&gt; children,
+                boolean solo,
+                Stream&lt;TestRule&gt; rules,
+                Stream&lt;TestRule&gt; blockRules) {
+<span class="fc" id="L137">            super(solo, rules, blockRules);</span>
+<span class="fc" id="L138">            this.unit = unit;</span>
+<span class="fc" id="L139">            this.children = children;</span>
+<span class="fc" id="L140">        }</span>
+
+        @Override
+        public SpecificationNode only() {
+<span class="fc" id="L144">            return new Internal(unit, children, true, rules(), blockRules());</span>
+        }
+
+        @Override
+        public SpecificationNode withRule(TestRule rule) {
+<span class="fc" id="L149">            return new Internal(</span>
+                    unit,
+                    children,
+<span class="fc" id="L152">                    isSolo(),</span>
+<span class="fc" id="L153">                    Stream.concat(rules(), Stream.of(rule)),</span>
+<span class="fc" id="L154">                    blockRules()</span>
+            );
+        }
+
+        @Override
+        public SpecificationNode withBlockRule(TestRule rule) {
+<span class="fc" id="L160">            return new Internal(</span>
+                    unit,
+                    children,
+<span class="fc" id="L163">                    isSolo(),</span>
+<span class="fc" id="L164">                    rules(),</span>
+<span class="fc" id="L165">                    Stream.concat(blockRules(), Stream.of(rule))</span>
+            );
+        }
+
+        @Override
+        Optional&lt;Test&gt; test() {
+<span class="fc" id="L171">            return Optional.empty();</span>
+        }
+
+        @Override
+        String description() {
+<span class="fc" id="L176">            return unit;</span>
+        }
+
+        @Override
+        Stream&lt;SpecificationNode&gt; children() {
+<span class="fc" id="L181">            return children;</span>
+        }
+    }
+
+    /**
+     * Represents a single statement, optionally with an automated test.
+     * Objects of this type are immutable, although the test itself may
+     * form a closure over immutable variables (in fact this is likely).
+     */
+    private static class Leaf extends SpecificationNode {
+        private final String behaviour;
+        private final Test test;
+
+        private Leaf(String behaviour, Test test, boolean solo, Stream&lt;TestRule&gt; rules, Stream&lt;TestRule&gt; blockRules) {
+<span class="fc" id="L195">            super(solo, rules, blockRules);</span>
+<span class="fc" id="L196">            this.behaviour = behaviour;</span>
+<span class="fc" id="L197">            this.test = test;</span>
+<span class="fc" id="L198">        }</span>
+
+        @Override
+        public SpecificationNode only() {
+<span class="fc" id="L202">            return new Leaf(behaviour, test, true, rules(), blockRules());</span>
+        }
+
+        @Override
+        public SpecificationNode withRule(TestRule rule) {
+<span class="fc" id="L207">            return new Leaf(</span>
+                    behaviour,
+                    test,
+<span class="fc" id="L210">                    isSolo(),</span>
+<span class="fc" id="L211">                    Stream.concat(rules(), Stream.of(rule)),</span>
+<span class="fc" id="L212">                    blockRules()</span>
+            );
+        }
+
+        @Override
+        public SpecificationNode withBlockRule(TestRule rule) {
+<span class="fc" id="L218">            return new Leaf(</span>
+                    behaviour,
+                    test,
+<span class="fc" id="L221">                    isSolo(),</span>
+<span class="fc" id="L222">                    rules(),</span>
+<span class="fc" id="L223">                    Stream.concat(blockRules(), Stream.of(rule))</span>
+            );
+        }
+
+        @Override
+        Optional&lt;Test&gt; test() {
+<span class="fc" id="L229">            return Optional.ofNullable(test);</span>
+        }
+
+        @Override
+        String description() {
+<span class="fc" id="L234">            return behaviour;</span>
+        }
+
+        @Override
+        Stream&lt;SpecificationNode&gt; children() {
+<span class="fc" id="L239">            return Stream.empty();</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExceptionBehaviour.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">io.hgc:jarspec</a> &gt; <a href="index.source.html" class="el_package">io.hgc.jarspec.mixins</a> &gt; <span class="el_source">ExceptionBehaviour.java</span></div><h1>ExceptionBehaviour.java</h1><pre class="source lang-java linenums">package io.hgc.jarspec.mixins;
+
+import io.hgc.jarspec.SpecificationNode;
+import io.hgc.jarspec.Test;
+import org.junit.rules.ExpectedException;
+
+/**
+ * Mixin providing convenience method for Specifications making statements about exception behaviour
+ */
+public interface ExceptionBehaviour {
+    /**
+     * Statement that a unit should throw a specific exception for a particular case
+     *
+     * @param throwable the class of the expected exception type
+     * @param forCase   a description of the case in which it should be thrown
+     * @param testCase  an implementation of the case in which is should be thrown
+     * @param &lt;T&gt;       the expected exception type
+     * @return a Specification representing the single description
+     */
+    default &lt;T extends Throwable&gt; SpecificationNode itThrows(Class&lt;T&gt; throwable, String forCase, Test testCase) {
+<span class="fc" id="L21">        ExpectedException expectedException = ExpectedException.none();</span>
+<span class="fc" id="L22">        expectedException.expect(throwable);</span>
+<span class="fc" id="L23">        return SpecificationNode.leaf(</span>
+<span class="fc" id="L24">            String.format(&quot;throws %s %s&quot;, throwable.getSimpleName(), forCase),</span>
+<span class="fc" id="L25">            testCase).withRule(expectedException);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

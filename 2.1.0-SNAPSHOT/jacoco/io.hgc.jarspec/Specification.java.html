@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Specification.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">io.hgc:jarspec</a> &gt; <a href="index.source.html" class="el_package">io.hgc.jarspec</a> &gt; <span class="el_source">Specification.java</span></div><h1>Specification.java</h1><pre class="source lang-java linenums">package io.hgc.jarspec;
+
+import java.util.stream.Stream;
+
+/**
+ * Represents a Specification consisting of statements about behaviour and automated tests
+ * for those statements. Primary interface for all specs written with JarSpec.
+ */
+public interface Specification {
+    SpecificationNode root();
+
+    /**
+     * @param unit description of a unit of behaviour
+     * @param specifications nested specifications for the behaviour of the unit
+     * @return the overall specification
+     */
+    default SpecificationNode describe(String unit, SpecificationNode... specifications) {
+<span class="fc" id="L18">        return SpecificationNode.internal(unit, Stream.of(specifications));</span>
+    }
+
+    /**
+     * @param unit description of a unit of behaviour
+     * @param specification nested specification for the behaviour of the unit
+     * @return the overall specification
+     */
+    default SpecificationNode describe(String unit, BySingle specification) {
+        try {
+<span class="fc" id="L28">            return SpecificationNode.internal(unit, Stream.of(specification.get()));</span>
+<span class="fc" id="L29">        } catch (Throwable e) {</span>
+<span class="fc" id="L30">            return SpecificationNode.error(unit, e);</span>
+        }
+    }
+
+    /**
+     * @param unit description of a unit of behaviour
+     * @param specifications nested specifications for the behaviour of the unit
+     * @return the overall specification
+     */
+    default SpecificationNode describe(String unit, ByMultiple specifications) {
+        try {
+<span class="fc" id="L41">            return SpecificationNode.internal(unit, specifications.get());</span>
+<span class="fc" id="L42">        } catch (Throwable e) {</span>
+<span class="fc" id="L43">            return SpecificationNode.error(unit, e);</span>
+        }
+    }
+
+    /**
+     * @param statement a statement about the behaviour of a unit
+     * @param test an automated test for the statement
+     * @return a specification consisting of single automatically verifiable statement
+     */
+    default SpecificationNode it(String statement, Test test) {
+<span class="fc" id="L53">        return SpecificationNode.leaf(statement, test);</span>
+    }
+
+    /**
+     * @param statement a statement about the behaviour of a unit
+     * @return a specification consisting of single statement with no automated test
+     */
+    default SpecificationNode it(String statement) {
+<span class="fc" id="L61">        return SpecificationNode.leaf(statement);</span>
+    }
+
+    /**
+     * Convenience method providing a concise syntax for combining specifications into a list
+     * @param specificationNodes specifications to be combined
+     * @return a List containing all of the specifications in the order provided
+     */
+    default Stream&lt;SpecificationNode&gt; byAllOf(SpecificationNode... specificationNodes) {
+<span class="fc" id="L70">        return Stream.of(specificationNodes);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
