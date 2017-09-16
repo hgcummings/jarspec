@@ -1,7 +1,7 @@
 # ![JarSpec](http://hgc.io/jarspec/2.1.0-SNAPSHOT/images/logo.svg)
 
 ## What?
-[RSpec](http://rspec.info/) (or [Jasmine](http://jasmine.github.io/2.0/introduction.html)/[Mocha](http://visionmedia.github.io/mocha/)) style tests for native Java 8, a bit like the following:
+[RSpec](http://rspec.info/) (or [Jasmine](http://jasmine.github.io/2.0/introduction.html)/[Mocha](http://mochajs.org/)) style tests for native Java 8, a bit like the following:
 
 ```java
 @RunWith(JarSpecJUnitRunner.class)
